@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.SysUserMapper">
+
+    <select id="getSysUserList" resultType="com.insigma.ordercenter.entity.vo.sysuservo.SysUserListVO">
+        select su.user_id,
+        su.user_account,
+        su.user_name,
+        su.mobile_phone,
+        su.is_stopped,
+        su.create_time,
+        su.create_id
+        from sys_user su
+        where su.is_deleted = 0
+        <if test="userAccount != null and userAccount != ''">
+            and su.user_account like #{userAccount}
+        </if>
+        order by su.create_time desc
+    </select>
+
+    <resultMap id="getSysUserListResult" type="com.insigma.ordercenter.entity.vo.sysuservo.SysUserListVO">
+        <id property="userId" column="user_id"></id>
+        <result property="userAccount" column="user_account"></result>
+        <result property="userName" column="user_name"></result>
+        <result property="mobilePhone" column="mobile_phone"></result>
+        <result property="isStopped" column="is_stopped"></result>
+        <result property="createId" column="create_id"></result>
+        <result property="createTime" column="create_time"></result>
+
+        <collection property="roles" ofType="com.insigma.ordercenter.entity.vo.sysuservo.SysRoleListVO">
+            <id property="roleId" column="role_id"></id>
+            <result property="roleName" column="role_name"></result>
+        </collection>
+    </resultMap>
+
+    <select id="getSysUserByAccount" resultType="com.insigma.ordercenter.entity.SysUser">
+        SELECT user_id, user_account, user_password, user_name, mobile_phone, email, is_stopped
+        FROM sys_user su
+        WHERE su.user_account = #{userAccount}
+        AND is_deleted = 0
+    </select>
+
+
+
+</mapper>

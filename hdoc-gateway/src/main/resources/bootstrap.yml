@@ -1,0 +1,7 @@
+server:
+  port: 8100
+spring:
+  application:
+    name: hdoc-gateway
+  profiles:
+    active: dev

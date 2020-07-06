@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.SysRoleMapper">
+
+    <select id="queryByRoleId" resultMap="queryByRoleIdResult">
+        SELECT
+            su.user_account,
+            su.user_name,
+            su.mobile_phone,
+            su.create_time,
+            ( SELECT sus.user_name FROM sys_user sus WHERE sus.user_id = su.user_id ) create_name
+        FROM
+            t_user_role_relation rr
+            LEFT JOIN sys_role sr ON sr.role_id = rr.role_id
+            LEFT JOIN sys_user su ON su.user_id = rr.user_id
+        WHERE
+            rr.role_id =#{id}
+    </select>
+
+    <resultMap id="queryByRoleIdResult" type="com.insigma.ordercenter.entity.vo.SysRoleVO">
+        <result property="userAccount" column="user_account"></result>
+        <result property="userName" column="user_name"></result>
+        <result property="mobilePhone" column="mobile_phone"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="createName" column="create_name"></result>
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.SysMenuMapper">
+
+    <select id="queryAllMenu" resultType="com.insigma.ordercenter.entity.vo.SysMenuVO">
+        SELECT
+            m.menu_id,
+            m.menu_name,
+            m.create_time,
+            m.description,
+            m.is_deleted,
+            m.menu_code,
+            m.menu_icon,
+            m.menu_url,
+            m.parent_id,
+            m.route,
+            m.show_order,
+            m.menu_level
+        FROM
+            sys_menu m
+        WHERE
+            m.parent_id =#{parentId}
+    </select>
+
+    <select id="listLevelOneMenuByRoleIds" resultType="com.insigma.ordercenter.entity.SysLoginUserMenu">
+        SELECT DISTINCT
+            sm.menu_id,
+            sm.menu_name,
+            sm.menu_code,
+            sm.menu_url,
+            sm.route,
+            sm.parent_id,
+            sm.menu_icon,
+            sm.menu_level
+        FROM
+            t_role_menu_relation rmr
+        LEFT JOIN sys_menu sm ON sm.menu_id = rmr.menu_id
+        WHERE
+            rmr.role_id IN
+            <foreach collection="rolesId" item="roleId" open="(" separator="," close=")">
+                #{roleId}
+            </foreach>
+        AND sm.menu_level = 1
+        AND sm.is_deleted = 0
+        ORDER BY
+            sm.menu_id
+    </select>
+
+    <select id="listLowerMenuByRoleIds" resultType="com.insigma.ordercenter.entity.SysLoginUserMenu">
+        SELECT DISTINCT
+            sm.menu_id,
+            sm.menu_name,
+            sm.menu_code,
+            sm.menu_url,
+            sm.route,
+            sm.parent_id,
+            sm.menu_icon,
+            sm.menu_level
+        FROM
+            t_role_menu_relation rmr
+        LEFT JOIN sys_menu sm ON sm.menu_id = rmr.menu_id
+        WHERE
+            rmr.role_id IN
+            <foreach collection="rolesId" item="roleId" open="(" separator="," close=")">
+                #{roleId}
+            </foreach>
+        AND sm.parent_id = #{pid}
+        AND sm.menu_level != 1
+        AND sm.is_deleted = 0
+        ORDER BY
+            sm.menu_id
+    </select>
+</mapper>
