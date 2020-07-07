@@ -1,11 +1,11 @@
-package com.insigma.zerocode.service;
+package com.insigma.ordercenter.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.SysFile;
-import com.insigma.zerocode.entity.FileReq;
+import com.insigma.ordercenter.entity.FileReq;
 
 /**
  * <p>

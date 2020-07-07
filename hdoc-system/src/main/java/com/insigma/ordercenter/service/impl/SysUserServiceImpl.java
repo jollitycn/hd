@@ -5,32 +5,24 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import com.insigma.ordercenter.base.BaseRequest;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.constant.SysUserStopEnum;
-import com.insigma.ordercenter.entity.LoginUser;
-import com.insigma.ordercenter.enums.RedisKeyEnum;
-import com.insigma.ordercenter.utils.JwtTokenUtil;
-import com.insigma.ordercenter.utils.PasswordUtil;
-import com.insigma.ordercenter.utils.RedisUtil;
-import com.insigma.ordercenter.utils.StringUtil;
-import com.insigma.ordercenter.entity.SysLoginUserMenu;
-import com.insigma.ordercenter.entity.SysRole;
-import com.insigma.ordercenter.entity.SysUser;
-import com.insigma.ordercenter.entity.UserRoleRelation;
+import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.entity.query.*;
 import com.insigma.ordercenter.entity.vo.sysuservo.SysRoleListVO;
 import com.insigma.ordercenter.entity.vo.sysuservo.SysUserDetailVO;
 import com.insigma.ordercenter.entity.vo.sysuservo.SysUserListVO;
+import com.insigma.ordercenter.enums.RedisKeyEnum;
 import com.insigma.ordercenter.mapper.SysMenuMapper;
 import com.insigma.ordercenter.mapper.SysUserMapper;
 import com.insigma.ordercenter.mapper.UserRoleRelationMapper;
 import com.insigma.ordercenter.service.ISysRoleService;
 import com.insigma.ordercenter.service.ISysUserService;
 import com.insigma.ordercenter.service.IUserRoleRelationService;
+import com.insigma.ordercenter.utils.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,17 +109,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public Result<LoginUser> login(UserLoginQuery userLoginQuery, HttpServletRequest request,
                                    HttpServletResponse response) {
         // 查看验证码是否正确
-//        HttpSession session = request.getSession();
-//        String verifyCodeRedisKey = session.getId() + Constant.Sys.RAND_IMAGE_VALIDATE_CODE;
-//        if (!redisUtil.hasKey(verifyCodeRedisKey)) {
-//            return Result.error(CodeMsg.IMAGE_VALIDATE_CODE_ERROR);
-//        }
-//        Object verifyCode = redisUtil.get(verifyCodeRedisKey);
-//        if (!userLoginQuery.getRandImageValidateCode().toLowerCase().equals(verifyCode)) {
-//            return Result.error(CodeMsg.IMAGE_VALIDATE_CODE_ERROR);
-//        }
+        HttpSession session = request.getSession();
+        String verifyCodeRedisKey = session.getId() + Constant.Sys.RAND_IMAGE_VALIDATE_CODE;
+        if (!redisUtil.hasKey(verifyCodeRedisKey)) {
+            return Result.error(CodeMsg.IMAGE_VALIDATE_CODE_ERROR);
+        }
+        Object verifyCode = redisUtil.get(verifyCodeRedisKey);
+        if (!userLoginQuery.getRandImageValidateCode().toLowerCase().equals(verifyCode)) {
+            return Result.error(CodeMsg.IMAGE_VALIDATE_CODE_ERROR);
+        }
         //从缓存中移除验证码
-//        redisUtil.del(verifyCodeRedisKey);
+        redisUtil.del(verifyCodeRedisKey);
         SysUser user = baseMapper.getSysUserByAccount(userLoginQuery.getUserAccount());
         // 判断用户是否存在
         if (null == user) {
@@ -165,7 +157,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         String redisUserKey = UUID.randomUUID().toString().replaceAll("-", "");
         loginUser.setToken(redisUserKey);
-        String jsonStr = new Gson().toJson(loginUser);
+        String jsonStr = JsonUtil.beanToJson(loginUser);
         //生成token
         final String randomKey = jwtTokenUtil.getRandomKey();
         // randomKey和token已经生成完毕

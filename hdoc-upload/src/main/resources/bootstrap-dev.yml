@@ -2,10 +2,11 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 100.168.2.136:8848
-        namespace: afa2a27c-a78f-48d8-a272-63090322da4a
+        server-addr: 100.168.2.115:8848
+        namespace: fd570590-90fc-498d-900b-85a8ebc79208
+        group: hdoc
       config:
-        server-addr: 100.168.2.136:8848
+        server-addr: 100.168.2.115:8848
         file-extension: yml
-        namespace: afa2a27c-a78f-48d8-a272-63090322da4a
+        namespace: fd570590-90fc-498d-900b-85a8ebc79208
         group: hdoc

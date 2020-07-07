@@ -1,4 +1,4 @@
-package com.insigma.zerocode.entity;
+package com.insigma.ordercenter.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

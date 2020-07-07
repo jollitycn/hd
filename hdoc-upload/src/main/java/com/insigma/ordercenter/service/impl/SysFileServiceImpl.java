@@ -1,14 +1,17 @@
-package com.insigma.zerocode.service.impl;
+package com.insigma.ordercenter.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.SysFile;
-import com.insigma.zerocode.entity.FileReq;
-import com.insigma.zerocode.mapper.SysFileMapper;
-import com.insigma.zerocode.service.ISysFileService;
+import com.insigma.ordercenter.entity.FileReq;
+import com.insigma.ordercenter.mapper.SysFileMapper;
+import com.insigma.ordercenter.service.ISysFileService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -24,12 +27,13 @@ import java.time.LocalDateTime;
  * @since 2020-05-12
  */
 @Service
+@Slf4j
 public class SysFileServiceImpl extends ServiceImpl<SysFileMapper, SysFile> implements ISysFileService {
 
-    @Value("${zc.fileServer.path}")
+    @Value("${hdoc.fileServer.path}")
     private String fileServerPath;
 
-    @Value("${zc.fileServer.remote-url}")
+    @Value("${hdoc.fileServer.remoteUrl}")
     private String remoteUrl;
 
     @Override
@@ -55,4 +59,5 @@ public class SysFileServiceImpl extends ServiceImpl<SysFileMapper, SysFile> impl
         this.baseMapper.insert(sysFile);
         return Result.success(sysFile);
     }
+
 }

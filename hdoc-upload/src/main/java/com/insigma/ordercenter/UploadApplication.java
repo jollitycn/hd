@@ -1,4 +1,4 @@
-package com.insigma.zerocode;
+package com.insigma.ordercenter;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @Version 1.0
  */
 @SpringBootApplication
-@MapperScan(basePackages = "com.insigma.zerocode.mapper")
+@MapperScan(basePackages = "com.insigma.ordercenter.mapper")
 @ComponentScan(basePackages = "com.insigma")
 public class UploadApplication {
 

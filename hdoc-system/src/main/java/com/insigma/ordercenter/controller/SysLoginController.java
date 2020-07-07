@@ -4,21 +4,18 @@ package com.insigma.ordercenter.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
-import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.LoginUser;
-import com.insigma.ordercenter.enums.RedisKeyEnum;
-import com.insigma.ordercenter.model.RedisUser;
-import com.insigma.ordercenter.utils.PasswordUtil;
-import com.insigma.ordercenter.utils.RandImageValidateCodeUtils;
 import com.insigma.ordercenter.entity.SysUser;
 import com.insigma.ordercenter.entity.query.UserLoginQuery;
 import com.insigma.ordercenter.entity.query.VerifyCodeQuery;
 import com.insigma.ordercenter.entity.query.VerifyMsgQuery;
+import com.insigma.ordercenter.enums.RedisKeyEnum;
 import com.insigma.ordercenter.service.ISysUserService;
+import com.insigma.ordercenter.utils.PasswordUtil;
+import com.insigma.ordercenter.utils.RandImageValidateCodeUtils;
 import com.insigma.ordercenter.utils.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -93,8 +90,9 @@ public class SysLoginController extends BaseController {
         LoginUser redisUser = this.redisUser();
         Object listUuid = redisUtil.get(RedisKeyEnum.REDIS_KEY_USER_ID.getKey() + redisUser.getUserId());
         if (null != listUuid) {
-            List<String> list = new Gson().fromJson(listUuid.toString(),List.class);
-            List<String> list0 = JSON.parseObject((String) listUuid, new TypeReference<List<String>>() {
+            List<String> list = new ObjectMapper().convertValue(listUuid.toString(), List.class);
+//            List<String> list1 = new Gson().fromJson(listUuid.toString(),List.class);
+            List<String> list2 = JSON.parseObject((String) listUuid, new TypeReference<List<String>>() {
             });
             int index = -1;
             int size = list.size();

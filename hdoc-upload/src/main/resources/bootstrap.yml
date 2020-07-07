@@ -8,10 +8,4 @@ spring:
   profiles:
     active: dev
   application:
-    name: zc-upload
-  datasource:
-    url: jdbc:mysql://${zc.datasource.ip}:3306/zc_dev?useUnicode=true&useSSL=false&characterEncoding=utf8
-    #    url: jdbc:mysql://127.0.0.1:3306/dcc?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${zc.datasource.username}
-    password: ${zc.datasource.password}
+    name: hdoc-upload

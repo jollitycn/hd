@@ -1,4 +1,4 @@
-package com.insigma.zerocode.config;
+package com.insigma.ordercenter.config;
 
 
 import org.springframework.context.annotation.Bean;
@@ -45,7 +45,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .select()
                 //为当前包路径
-                .apis(RequestHandlerSelectors.basePackage("com.insigma.zerocode.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.insigma.ordercenter.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

@@ -1,10 +1,12 @@
 package com.insigma.ordercenter.controller;
 
-import com.google.gson.Gson;
+import cn.hutool.json.JSONUtil;
 import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.enums.RedisKeyEnum;
+import com.insigma.ordercenter.utils.JsonUtil;
 import com.insigma.ordercenter.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -34,7 +36,7 @@ public class BaseController {
         if (!StringUtils.isEmpty(authToken)) {
             //解析token
             String userInfo = jwtTokenUtil.getUsernameFromToken(authToken);
-            LoginUser redisUser = new Gson().fromJson(userInfo, LoginUser.class);
+            LoginUser redisUser = JsonUtil.jsonToBean(userInfo, LoginUser.class);
             return redisUser;
         }
         return null;

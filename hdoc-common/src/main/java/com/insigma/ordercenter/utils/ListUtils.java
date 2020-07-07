@@ -1,7 +1,5 @@
 package com.insigma.ordercenter.utils;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +78,5 @@ public class ListUtils {
         list.add(stu3);
         list.add(stu4);
         
-        Gson son = new Gson();
-
     }
 }

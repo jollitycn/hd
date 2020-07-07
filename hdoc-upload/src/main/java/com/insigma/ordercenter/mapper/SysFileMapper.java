@@ -1,4 +1,4 @@
-package com.insigma.zerocode.mapper;
+package com.insigma.ordercenter.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
