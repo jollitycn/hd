@@ -2,8 +2,8 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 100.168.2.115:8848
-        namespace: fd570590-90fc-498d-900b-85a8ebc79208
+        server-addr: 127.0.0.1:8848
+        namespace: f57d9814-d090-43d3-8bb6-b895effd8ab7
         group: hdoc
       config:
         server-addr: 100.168.2.115:8848

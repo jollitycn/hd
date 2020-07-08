@@ -1,6 +1,6 @@
 package com.insigma.ordercenter.mapper;
 
-import com.insigma.ordercenter.entity.WharehouseRegion;
+import com.insigma.ordercenter.entity.WarehouseRegion;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author LiuHao
  * @since 2020-07-08
  */
-public interface WharehouseRegionMapper extends BaseMapper<WharehouseRegion> {
+public interface WarehouseRegionMapper extends BaseMapper<WarehouseRegion> {
 
 }

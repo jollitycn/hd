@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-07-08
  */
 @RestController
-@RequestMapping("/wharehouse-region")
-public class WharehouseRegionController {
+@RequestMapping("/warehouse-region")
+public class WarehouseRegionController {
 
 }
