@@ -1,9 +1,7 @@
 package com.insigma.ordercenter.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
@@ -91,9 +89,6 @@ public class SysLoginController extends BaseController {
         Object listUuid = redisUtil.get(RedisKeyEnum.REDIS_KEY_USER_ID.getKey() + redisUser.getUserId());
         if (null != listUuid) {
             List<String> list = new ObjectMapper().convertValue(listUuid.toString(), List.class);
-//            List<String> list1 = new Gson().fromJson(listUuid.toString(),List.class);
-            List<String> list2 = JSON.parseObject((String) listUuid, new TypeReference<List<String>>() {
-            });
             int index = -1;
             int size = list.size();
             for (int i = 0; i < size; i++) {
@@ -116,7 +111,6 @@ public class SysLoginController extends BaseController {
     @ApiOperation(value = "忘记密码验证短信发送")
     public Result<?> codeVerify(@RequestBody VerifyCodeQuery verifyCodeQuery, HttpServletRequest request,
                                 HttpServletResponse response) {
-
         return sysUserService.codeVerify(verifyCodeQuery, request, response);
     }
 
