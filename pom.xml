@@ -13,6 +13,7 @@
         <module>hdoc-gateway</module>
         <module>hdoc-upload</module>
         <module>hdoc-system</module>
+        <module>hdoc-order</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
