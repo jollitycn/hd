@@ -74,5 +74,6 @@ public class Product implements Serializable {
     @ApiModelProperty(value = "商品描述")
     private String description;
 
-
+    @ApiModelProperty(value = "是否上架（0：未上架，1：已上架）")
+    private Integer isPutOn;
 }
