@@ -23,6 +23,6 @@ public interface ISysRoleService extends IService<SysRole> {
      * @param
      * @return
      */
-    IPage<SysRoleVO> queryByRoleId(Page<SysRoleVO> page, BaseRequest request);
+    IPage<SysRoleVO> queryByRoleId(IPage<SysRoleVO> page, BaseRequest request);
 
 }

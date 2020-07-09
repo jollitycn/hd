@@ -1,40 +1,29 @@
 package com.insigma.ordercenter.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-
-import java.time.LocalDateTime;
-
 import com.baomidou.mybatisplus.annotation.TableId;
-
-import java.io.Serializable;
-
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
- * <p>
- * 仓库表
- * </p>
- *
- * @author LiuHao
- * @since 2020-07-08
+ * @author youwk
+ * @ClassName WareHouseVo
+ * @description TODO
+ * @date 2020/7/9 14:35
+ * @Version 1.0
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-@TableName("t_warehouse")
-@ApiModel(value = "Warehouse对象", description = "仓库表")
-public class Warehouse implements Serializable {
+public class WarehouseVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "仓库ID ")
-    @TableId(value = "warehouse_id", type = IdType.AUTO)
-    private Integer warehouseId;
+    private Long warehouseId;
 
     @ApiModelProperty(value = "省份")
     private String province;
@@ -63,18 +52,6 @@ public class Warehouse implements Serializable {
     @ApiModelProperty(value = "仓库名称")
     private String warehouseName;
 
-    @ApiModelProperty(value = "创建人id")
-    private Long createId;
-
-    @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
-
-    @ApiModelProperty(value = "修改人id")
-    private Long modifyId;
-
-    @ApiModelProperty(value = "修改时间")
-    private LocalDateTime modifyTime;
-
     @ApiModelProperty(value = "是否删除（0：未删除，1：已删除）")
     private Integer isDeleted;
 
@@ -84,5 +61,10 @@ public class Warehouse implements Serializable {
     @ApiModelProperty(value = "联系电话")
     private String mobilePhone;
 
+    @ApiModelProperty("仓库管理员用户编号")
+    private WarehouseManager[] managers;
+
+    @ApiModelProperty("地区编号")
+    private Integer[] regionIds;
 
 }

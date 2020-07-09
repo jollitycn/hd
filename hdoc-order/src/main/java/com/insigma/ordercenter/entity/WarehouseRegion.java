@@ -30,14 +30,14 @@ public class WarehouseRegion implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "仓库负责区域ID")
-    @TableId(value = "warehouse_region_id", type = IdType.ID_WORKER)
-    private Long warehouseRegionId;
+    @TableId(value = "warehouse_region_id", type = IdType.AUTO)
+    private Integer warehouseRegionId;
 
     @ApiModelProperty(value = "仓库ID ")
-    private Long warehouseId;
+    private Integer warehouseId;
 
     @ApiModelProperty(value = "地区ID")
-    private Long regionId;
+    private Integer regionId;
 
 
 }

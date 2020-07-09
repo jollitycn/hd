@@ -2,6 +2,7 @@ package com.insigma.ordercenter.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.entity.SysRole;
 import com.insigma.ordercenter.entity.vo.SysRoleVO;
@@ -24,6 +25,6 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      * @param id 角色Id
      * @return
      */
-    List<SysRoleVO> queryByRoleId(Page<SysRoleVO> page, @Param("id")Long id);
+    List<SysRoleVO> queryByRoleId(IPage<SysRoleVO> page, @Param("id")Long id);
 
 }

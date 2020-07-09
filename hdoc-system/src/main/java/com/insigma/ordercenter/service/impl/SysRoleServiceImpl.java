@@ -24,11 +24,10 @@ import java.util.List;
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements ISysRoleService {
 
     @Override
-    public IPage<SysRoleVO> queryByRoleId(Page<SysRoleVO> page, BaseRequest request) {
+    public IPage<SysRoleVO> queryByRoleId(IPage<SysRoleVO> page, BaseRequest request) {
         List<SysRoleVO> sysRoleVOS = baseMapper.queryByRoleId(page, request.getId());
-        IPage<SysRoleVO> iPage = page;
-        iPage.setRecords(sysRoleVOS);
-        return iPage;
+        page.setRecords(sysRoleVOS);
+        return page;
     }
 
 }

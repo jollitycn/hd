@@ -110,17 +110,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public Result<LoginUser> login(UserLoginQuery userLoginQuery, HttpServletRequest request,
                                    HttpServletResponse response) {
         // 查看验证码是否正确
-        HttpSession session = request.getSession();
-        String verifyCodeRedisKey = session.getId() + Constant.Sys.RAND_IMAGE_VALIDATE_CODE;
-        if (!redisUtil.hasKey(verifyCodeRedisKey)) {
-            return Result.error(CodeMsg.IMAGE_VALIDATE_CODE_ERROR);
-        }
-        Object verifyCode = redisUtil.get(verifyCodeRedisKey);
-        if (!userLoginQuery.getRandImageValidateCode().toLowerCase().equals(verifyCode)) {
-            return Result.error(CodeMsg.IMAGE_VALIDATE_CODE_ERROR);
-        }
-        //从缓存中移除验证码
-        redisUtil.del(verifyCodeRedisKey);
+//        HttpSession session = request.getSession();
+//        String verifyCodeRedisKey = session.getId() + Constant.Sys.RAND_IMAGE_VALIDATE_CODE;
+//        if (!redisUtil.hasKey(verifyCodeRedisKey)) {
+//            return Result.error(CodeMsg.IMAGE_VALIDATE_CODE_ERROR);
+//        }
+//        Object verifyCode = redisUtil.get(verifyCodeRedisKey);
+//        if (!userLoginQuery.getRandImageValidateCode().toLowerCase().equals(verifyCode)) {
+//            return Result.error(CodeMsg.IMAGE_VALIDATE_CODE_ERROR);
+//        }
+//        //从缓存中移除验证码
+//        redisUtil.del(verifyCodeRedisKey);
         SysUser user = baseMapper.getSysUserByAccount(userLoginQuery.getUserAccount());
         // 判断用户是否存在
         if (null == user) {

@@ -13,7 +13,7 @@ public class CodeMsg {
 
     // 按照模块定义CodeMsg
     // 通用异常
-    public static CodeMsg SUCCESS = new CodeMsg(0, "success");
+    public static CodeMsg SUCCESS = new CodeMsg(0, "操作成功");
     public static CodeMsg SERVER_EXCEPTION = new CodeMsg(500100, "服务端异常");
     public static CodeMsg PARAMETER_ISNULL = new CodeMsg(500101, "输入参数为空");
     public static CodeMsg PERMISSION_ERROR = new CodeMsg(500001, "您的账号已被停用，请重新申请");
@@ -41,7 +41,7 @@ public class CodeMsg {
     public static CodeMsg ROLE_NAME_REPEAT=new CodeMsg(500132,"角色名称不能重复");
     public static CodeMsg AGENT_DENY = new CodeMsg(500171, "业代只有经销商角色的操作权限");
     public static CodeMsg MOBILE_USED = new CodeMsg(500131, "该手机号已注册");
-
+    public static CodeMsg LACK_OF_PARAM = new CodeMsg(500131, "该手机号已注册");
 
     private CodeMsg(int retCode, String message) {
         this.retCode = retCode;

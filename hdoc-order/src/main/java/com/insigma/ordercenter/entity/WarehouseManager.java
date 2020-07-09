@@ -30,11 +30,11 @@ public class WarehouseManager implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "仓库管理员表ID")
-    @TableId(value = "warehouse_manager_id", type = IdType.ID_WORKER)
-    private Long warehouseManagerId;
+    @TableId(value = "warehouse_manager_id", type = IdType.AUTO)
+    private Integer warehouseManagerId;
 
     @ApiModelProperty(value = "仓库ID ")
-    private Long warehouseId;
+    private Integer warehouseId;
 
     @ApiModelProperty(value = "用户ID")
     private Long userId;
