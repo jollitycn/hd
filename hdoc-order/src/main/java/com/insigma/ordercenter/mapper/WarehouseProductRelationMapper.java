@@ -2,6 +2,10 @@ package com.insigma.ordercenter.mapper;
 
 import com.insigma.ordercenter.entity.WarehouseProductRelation;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.insigma.ordercenter.entity.vo.ProductStockInfoVO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface WarehouseProductRelationMapper extends BaseMapper<WarehouseProductRelation> {
 
+    int getTotalStock(@Param("productId") Long productId);
+
+    List<ProductStockInfoVO> getProductStockInfo(@Param("productId") Long productId);
 }

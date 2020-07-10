@@ -2,6 +2,9 @@ package com.insigma.ordercenter.service;
 
 import com.insigma.ordercenter.entity.WarehouseProductRelation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.vo.ProductStockInfoVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IWarehouseProductRelationService extends IService<WarehouseProductRelation> {
 
+    int getTotalStock(Long productId);
+
+    List<ProductStockInfoVO> getProductStockInfo(Long productId);
 }

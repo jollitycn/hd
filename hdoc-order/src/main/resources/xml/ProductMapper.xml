@@ -2,4 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.ProductMapper">
 
+    <select id="getProductListPage" resultType="com.insigma.ordercenter.entity.vo.ProductListPageVO">
+        SELECT
+            product_id,
+            product_sku,
+            product_name,
+            product_price,
+            discount_price,
+            product_specs,
+            put_on_time,
+            sub_title
+        FROM
+            t_product
+        WHERE
+            1 = 1
+        <if test="productName != null and productName != ''">
+            AND product_name like #{productName}
+        </if>
+        <if test="productSku != null and productSku != ''">
+            AND product_sku like #{productSku}
+        </if>
+    </select>
 </mapper>

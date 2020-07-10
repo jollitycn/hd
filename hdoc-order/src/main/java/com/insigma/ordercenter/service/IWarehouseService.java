@@ -18,5 +18,5 @@ public interface IWarehouseService extends IService<Warehouse> {
 
     Result<?> addWarehouse(WarehouseVo wareHouseVo, LoginUser redisUser);
 
-    Result<?> updateWarehouse(WarehouseVo warehouseVo, LoginUser loginUser);
+//    Result<?> updateWarehouse(WarehouseVo warehouseVo, LoginUser loginUser);
 }

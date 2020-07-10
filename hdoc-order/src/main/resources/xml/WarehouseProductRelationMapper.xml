@@ -2,4 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.WarehouseProductRelationMapper">
 
+    <select id="getTotalStock" resultType="java.lang.Integer">
+        SELECT
+            SUM(quantity)
+        FROM
+            t_warehouse_product_relation
+        WHERE
+            product_id = #{productId}
+    </select>
+    <select id="getProductStockInfo" resultType="com.insigma.ordercenter.entity.vo.ProductStockInfoVO">
+        SELECT
+            wpr.warehouse_id,
+            w.warehouse_name,
+            wpr.product_id,
+            p.product_name,
+            wpr.quantity
+        FROM
+            t_warehouse_product_relation wpr
+        LEFT JOIN t_warehouse w ON wpr.warehouse_id = w.warehouse_id
+        LEFT JOIN t_product p ON wpr.product_id = p.product_id
+        WHERE
+            wpr.product_id = #{productId}
+    </select>
 </mapper>
