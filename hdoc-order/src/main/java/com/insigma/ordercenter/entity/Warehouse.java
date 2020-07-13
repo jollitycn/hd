@@ -84,5 +84,7 @@ public class Warehouse implements Serializable {
     @ApiModelProperty(value = "联系电话")
     private String mobilePhone;
 
+    public static final String WAREHOUSE_NO = "warehouse_no";
 
+    public static final String WAREHOUSE_NAME = "warehouse_name";
 }
