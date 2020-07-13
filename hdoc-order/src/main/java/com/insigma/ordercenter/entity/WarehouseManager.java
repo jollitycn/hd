@@ -42,5 +42,6 @@ public class WarehouseManager implements Serializable {
     @ApiModelProperty(value = "用户名称")
     private String userName;
 
+    public static final String WAREHOUSE_ID = "warehouse_id";
 
 }

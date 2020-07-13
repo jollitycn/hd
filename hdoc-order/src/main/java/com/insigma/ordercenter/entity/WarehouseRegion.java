@@ -39,5 +39,6 @@ public class WarehouseRegion implements Serializable {
     @ApiModelProperty(value = "地区ID")
     private Integer regionId;
 
+    public static final String WAREHOUSE_ID = "warehouse_id";
 
 }

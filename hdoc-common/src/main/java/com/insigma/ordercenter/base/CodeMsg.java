@@ -39,9 +39,11 @@ public class CodeMsg {
     public static CodeMsg MSG_WRONG = new CodeMsg(500130, "短信验证码错误");
     public static CodeMsg ROLE_UPDATE_FAIL=new CodeMsg(500131,"角色更新失败");
     public static CodeMsg ROLE_NAME_REPEAT=new CodeMsg(500132,"角色名称不能重复");
-    public static CodeMsg AGENT_DENY = new CodeMsg(500171, "业代只有经销商角色的操作权限");
-    public static CodeMsg MOBILE_USED = new CodeMsg(500131, "该手机号已注册");
-    public static CodeMsg LACK_OF_PARAM = new CodeMsg(500131, "该手机号已注册");
+    public static CodeMsg MOBILE_USED = new CodeMsg(500133, "该手机号已注册");
+    public static CodeMsg LACK_OF_PARAM = new CodeMsg(500134, "缺少参数");
+    public static CodeMsg LACK_OF_WHID = new CodeMsg(500135,"仓库id不能为空");
+    public static CodeMsg PRODUCT_NOT_EXIST = new CodeMsg(500136,"商品不存在");
+    public static CodeMsg STOKE_NOT_EXIST = new CodeMsg(500136,"库存记录不存在");
 
     private CodeMsg(int retCode, String message) {
         this.retCode = retCode;

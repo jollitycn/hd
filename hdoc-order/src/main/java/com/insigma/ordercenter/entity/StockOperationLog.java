@@ -33,11 +33,11 @@ public class StockOperationLog implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "库存记录操作日志ID")
-    @TableId(value = "stock_operation_log_id", type = IdType.ID_WORKER)
+    @TableId(value = "stock_operation_log_id", type = IdType.AUTO)
     private Long stockOperationLogId;
 
     @ApiModelProperty(value = "库存表ID")
-    private Long warehouseProductRelationId;
+    private Integer warehouseProductRelationId;
 
     @ApiModelProperty(value = "创建人id")
     private Long createId;

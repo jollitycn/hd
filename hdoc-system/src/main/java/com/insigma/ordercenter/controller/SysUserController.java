@@ -81,40 +81,6 @@ public class SysUserController extends BaseController {
     @ApiOperation("更新用户信息")
     public Result<?> update(@RequestBody UpdateUserQuery userInfo) {
 
-        //判断登录用户是否是业代
-        boolean isAgent = false;
-        List<Long> rolesId = redisUser().getRolesId();
-        for (Long roleId : rolesId) {
-            if (roleId == 3L) {
-                isAgent = true;
-            } else if (roleId == 2L) {
-                isAgent = false;
-                break;
-            }
-        }
-
-        if (isAgent) {
-            //如果是业代则只让编辑角色为经销商的用户
-            SysUser sysUser = sysUserService.getById(userInfo.getUserId());
-            //判断修改用户角色
-            QueryWrapper<UserRoleRelation> wrapper = new QueryWrapper<>();
-            wrapper.eq("user_id", userInfo.getUserId());
-            List<UserRoleRelation> list = userRoleRelationService.list(wrapper);
-
-            for (UserRoleRelation userRoleRelation : list) {
-                //如果角色不是经销商则禁止编辑
-                if (userRoleRelation.getRoleId() != 4L) {
-                    return Result.error(CodeMsg.AGENT_DENY);
-                }
-            }
-
-            for (Long roleId : userInfo.getRoleIds()) {
-                if (roleId != 4L) {
-                    return Result.error(CodeMsg.AGENT_DENY);
-                }
-            }
-        }
-
         boolean status = sysUserService.updateUserInfo(redisUser(), userInfo);
 
         if (status) {
@@ -159,28 +125,6 @@ public class SysUserController extends BaseController {
     @PostMapping("/add")
     @ApiOperation("创建用户")
     public Result<?> add(@Valid @RequestBody CreateUserQuery user) {
-
-        //判断登录用户是否是业代
-//        boolean isAgent = false;
-//        List<Long> rolesId = redisUser().getRolesId();
-//        for (Long roleId : rolesId) {
-//            if (roleId == 3L) {
-//                isAgent = true;
-//            } else if (roleId == 2L) {
-//                isAgent = false;
-//                break;
-//            }
-//        }
-//
-//        if (isAgent) {
-//            //如果是业代则只让创建角色为经销商的用户
-//            List<Long> roleList = user.getRoleIds();
-//            for (Long roleId : roleList) {
-//                if (roleId != 4L) {
-//                    return Result.error(CodeMsg.AGENT_DENY);
-//                }
-//            }
-//        }
 
         QueryWrapper<SysUser> wrapper = new QueryWrapper<>();
         wrapper.eq("user_account", user.getUserAccount());
@@ -228,40 +172,6 @@ public class SysUserController extends BaseController {
 
         List<SysRole> sysRoleList = sysRoleService.list();
         return Result.success(sysRoleList);
-    }
-
-    @GetMapping("/verify/{userId}")
-    @ApiOperation("验证角色权限")
-    public Result<?> verify(@PathVariable Long userId) {
-
-        //判断登录用户是否是业代
-        boolean isAgent = false;
-        List<Long> rolesId = redisUser().getRolesId();
-        for (Long roleId : rolesId) {
-            if (roleId == 3L) {
-                isAgent = true;
-            } else if (roleId == 2L) {
-                isAgent = false;
-                break;
-            }
-        }
-
-        if (isAgent) {
-            //如果是业代则只让编辑角色为经销商的用户
-            SysUser sysUser = sysUserService.getById(userId);
-            //判断修改用户角色
-            QueryWrapper<UserRoleRelation> wrapper = new QueryWrapper<>();
-            wrapper.eq("user_id", userId);
-            List<UserRoleRelation> list = userRoleRelationService.list(wrapper);
-
-            for (UserRoleRelation userRoleRelation : list) {
-                //如果角色不是经销商则禁止编辑
-                if (userRoleRelation.getRoleId() != 4L) {
-                    return Result.error(CodeMsg.AGENT_DENY);
-                }
-            }
-        }
-        return Result.success();
     }
 
     @PostMapping("/test")

@@ -30,11 +30,11 @@ public class WarehouseProductRelation implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "库存表ID")
-    @TableId(value = "warehouse_product_relation_id", type = IdType.ID_WORKER)
-    private Long warehouseProductRelationId;
+    @TableId(value = "warehouse_product_relation_id", type = IdType.AUTO)
+    private Integer warehouseProductRelationId;
 
     @ApiModelProperty(value = "仓库ID ")
-    private Long warehouseId;
+    private Integer warehouseId;
 
     @ApiModelProperty(value = "商品ID")
     private Long productId;

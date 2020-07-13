@@ -18,12 +18,12 @@ import java.util.Map;
  * @Version 1.0
  */
 @Data
-public class WarehouseVo implements Serializable {
+public class WarehouseReq implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "仓库ID ")
-    private Long warehouseId;
+    private Integer warehouseId;
 
     @ApiModelProperty(value = "省份")
     private String province;
