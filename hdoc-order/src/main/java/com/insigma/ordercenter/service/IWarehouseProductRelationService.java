@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface IWarehouseProductRelationService extends IService<WarehouseProductRelation> {
 
-    int getTotalStock(Long productId);
+    Integer getTotalStock(Long productId);
 
     List<ProductStockInfoVO> getProductStockInfo(Long productId);
 }

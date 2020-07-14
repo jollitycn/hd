@@ -15,7 +15,7 @@
         FROM
             t_product
         WHERE
-            1 = 1
+            is_deleted = 0
         <if test="productName != null and productName != ''">
             AND product_name like #{productName}
         </if>

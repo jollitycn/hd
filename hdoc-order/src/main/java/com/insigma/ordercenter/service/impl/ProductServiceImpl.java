@@ -49,10 +49,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
         //获取商品的总库存数量
         for (ProductListPageVO productListPageVO : resultList) {
-            int stockQuantity = warehouseProductRelationService.getTotalStock(productListPageVO.getProductId());
+            Integer stockQuantity = warehouseProductRelationService.getTotalStock(productListPageVO.getProductId());
             productListPageVO.setStockQuantity(stockQuantity);
         }
         IPage<ProductListPageVO> ipage = page;
+
         ipage.setRecords(resultList);
         return ipage;
     }

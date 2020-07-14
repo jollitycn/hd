@@ -23,7 +23,7 @@ import java.util.List;
 public class WarehouseProductRelationServiceImpl extends ServiceImpl<WarehouseProductRelationMapper, WarehouseProductRelation> implements IWarehouseProductRelationService {
 
     @Override
-    public int getTotalStock(Long productId) {
+    public Integer getTotalStock(Long productId) {
 
         return baseMapper.getTotalStock(productId);
     }

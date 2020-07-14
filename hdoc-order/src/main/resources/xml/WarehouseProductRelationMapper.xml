@@ -4,7 +4,7 @@
 
     <select id="getTotalStock" resultType="java.lang.Integer">
         SELECT
-            SUM(quantity)
+            IFNULL(SUM(quantity), 0)
         FROM
             t_warehouse_product_relation
         WHERE
