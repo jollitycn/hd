@@ -193,7 +193,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUser.setUserPassword(PasswordUtil.sha256HexByMd5Str(user.getUserPassword()));
         sysUser.setUserName(user.getUserName());
         sysUser.setMobilePhone(user.getMobilePhone());
-//        sysUser.setCreateId(loginUser.getUserId());
+        sysUser.setCreateId(loginUser.getUserId());
         sysUser.setCreateTime(LocalDateTime.now());
         boolean status = save(sysUser);
         if (!status) {
