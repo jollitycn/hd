@@ -1,24 +1,25 @@
-package com.insigma.ordercenter.entity;
+package com.insigma.ordercenter.entity.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.insigma.ordercenter.entity.SysRegion;
+import com.insigma.ordercenter.entity.WarehouseManager;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author youwk
- * @ClassName WareHouseVo
+ * @ClassName WarehouseVo
  * @description TODO
- * @date 2020/7/9 14:35
+ * @date 2020/7/17 9:37
  * @Version 1.0
  */
 @Data
-public class WarehouseReq implements Serializable {
+public class WarehouseVo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -52,8 +53,17 @@ public class WarehouseReq implements Serializable {
     @ApiModelProperty(value = "仓库名称")
     private String warehouseName;
 
-    @ApiModelProperty(value = "是否删除（0：未删除，1：已删除）")
-    private Integer isDeleted;
+    @ApiModelProperty(value = "创建人id")
+    private Long createId;
+
+    @ApiModelProperty(value = "创建时间")
+    private LocalDateTime createTime;
+
+    @ApiModelProperty(value = "修改人id")
+    private Long modifyId;
+
+    @ApiModelProperty(value = "修改时间")
+    private LocalDateTime modifyTime;
 
     @ApiModelProperty(value = "备注")
     private String remark;
@@ -61,10 +71,8 @@ public class WarehouseReq implements Serializable {
     @ApiModelProperty(value = "联系电话")
     private String mobilePhone;
 
-    @ApiModelProperty("仓库管理员用户编号")
-    private WarehouseManager[] managers;
+    private List<SysRegion> regions;
 
-    @ApiModelProperty("地区编号")
-    private Integer[] regionIds;
+    private List<WarehouseManager> managers;
 
 }

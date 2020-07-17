@@ -3,6 +3,10 @@ package com.insigma.ordercenter.service;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.*;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.dto.WarehouseDTO;
+import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -14,11 +18,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IWarehouseService extends IService<Warehouse> {
 
-    Result<?> addWarehouse(WarehouseReq wareHouseReq, LoginUser redisUser);
+    Result<?> addWarehouse(WarehouseDTO wareHouseDTO, LoginUser redisUser);
 
-    Result<?> updateWarehouse(WarehouseReq warehouseReq, LoginUser loginUser);
+    Result<?> updateWarehouse(WarehouseDTO warehouseDTO, LoginUser loginUser);
 
-    Result<?> addProduct(WarehouseProductReq req);
+    Result<?> addProduct(WarehouseProductDTO req);
 
     Result<?> modifyStock(WarehouseProductRelation whp, LoginUser redisUser);
+
+    Result<?> deleteWarehouse(Serializable warehouseId);
 }

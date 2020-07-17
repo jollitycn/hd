@@ -1,7 +1,7 @@
 package com.insigma.ordercenter.mapper;
 
-import com.insigma.ordercenter.entity.SysRegion;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.insigma.ordercenter.entity.SysRegion;
 
 /**
  * <p>

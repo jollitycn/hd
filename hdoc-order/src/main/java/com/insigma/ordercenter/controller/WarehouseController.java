@@ -2,22 +2,31 @@ package com.insigma.ordercenter.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
-import com.insigma.ordercenter.entity.Warehouse;
-import com.insigma.ordercenter.entity.WarehouseProductRelation;
-import com.insigma.ordercenter.entity.WarehouseProductReq;
-import com.insigma.ordercenter.entity.WarehouseReq;
+import com.insigma.ordercenter.entity.*;
+import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
+import com.insigma.ordercenter.entity.dto.WarehouseDTO;
+import com.insigma.ordercenter.entity.vo.WarehouseVo;
+import com.insigma.ordercenter.feign.RegionService;
+import com.insigma.ordercenter.service.IWarehouseManagerService;
+import com.insigma.ordercenter.service.IWarehouseRegionService;
 import com.insigma.ordercenter.service.IWarehouseService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -35,22 +44,31 @@ public class WarehouseController extends BaseController {
     @Autowired
     private IWarehouseService warehouseService;
 
+    @Autowired
+    private IWarehouseManagerService managerService;
+
+    @Autowired
+    private IWarehouseRegionService warehouseRegionService;
+
+    @Autowired
+    private RegionService regionService;
+
     @PutMapping
     @ApiOperation("新增仓库")
-    public Result<?> addWarehouse(@RequestBody WarehouseReq wareHouseReq) {
-        if (StringUtils.isBlank(wareHouseReq.getWarehouseName())) {
+    public Result<?> addWarehouse(@RequestBody WarehouseDTO wareHouseDTO) {
+        if (StringUtils.isBlank(wareHouseDTO.getWarehouseName())) {
             return Result.error(CodeMsg.LACK_OF_PARAM);
         }
-        return warehouseService.addWarehouse(wareHouseReq,redisUser());
+        return warehouseService.addWarehouse(wareHouseDTO,redisUser());
     }
 
     @PostMapping
     @ApiOperation("修改仓库")
-    public Result<?> modifyWarehouse(@RequestBody WarehouseReq warehouseReq) {
-        if (null == warehouseReq.getWarehouseId()) {
+    public Result<?> modifyWarehouse(@RequestBody WarehouseDTO warehouseDTO) {
+        if (null == warehouseDTO.getWarehouseId()) {
             return Result.error(CodeMsg.LACK_OF_WHID);
         }
-        return warehouseService.updateWarehouse(warehouseReq,redisUser());
+        return warehouseService.updateWarehouse(warehouseDTO,redisUser());
     }
 
     @GetMapping
@@ -75,9 +93,35 @@ public class WarehouseController extends BaseController {
         return Result.success(warehouseService.page(page,wrapper));
     }
 
+    @DeleteMapping("/{warehouseId}")
+    public Result<?> deleteWarehouse(@PathVariable Serializable warehouseId) {
+        return warehouseService.deleteWarehouse(warehouseId);
+    }
+
+    @GetMapping("/{warehouseId}")
+    @ApiOperation(value = "仓库详情",response = WarehouseVo.class)
+    public Result warehouseDetail(@PathVariable Integer warehouseId) {
+        Warehouse warehouse = warehouseService.getById(warehouseId);
+        WarehouseVo warehouseVo = new WarehouseVo();
+        if (null != warehouse) {
+            BeanUtils.copyProperties(warehouse,warehouseVo);
+            List<WarehouseManager> managerList = managerService.list(Wrappers.<WarehouseManager>lambdaQuery().eq(WarehouseManager::getWarehouseId, warehouse.getWarehouseId()));
+            warehouseVo.setManagers(managerList);
+            List<SysRegion> regions = new ArrayList<>();
+            List<WarehouseRegion> list = warehouseRegionService.list(Wrappers.<WarehouseRegion>lambdaQuery().eq(WarehouseRegion::getWarehouseId, warehouseVo.getWarehouseId()));
+            list.forEach(warehouseRegion -> {
+                SysRegion region = regionService.detail(warehouseRegion.getRegionId());
+                regions.add(region);
+            });
+            warehouseVo.setRegions(regions);
+            return Result.success(warehouseVo);
+        }
+        return Result.success();
+    }
+
     @PostMapping("/product")
     @ApiOperation("仓库添加商品库存")
-    public Result<?> addProduct(@RequestBody WarehouseProductReq req) {
+    public Result<?> addProduct(@RequestBody WarehouseProductDTO req) {
         return warehouseService.addProduct(req);
     }
 
@@ -86,5 +130,7 @@ public class WarehouseController extends BaseController {
     public Result<?> stock(@RequestBody WarehouseProductRelation whp) {
         return warehouseService.modifyStock(whp,redisUser());
     }
+
+
 
 }

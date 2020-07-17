@@ -14,7 +14,7 @@
             LEFT JOIN sys_role sr ON sr.role_id = rr.role_id
             LEFT JOIN sys_user su ON su.user_id = rr.user_id
         WHERE
-            rr.role_id =#{id}
+            rr.role_id =#{id} and su.is_deleted = 0
     </select>
 
     <resultMap id="queryByRoleIdResult" type="com.insigma.ordercenter.entity.vo.SysRoleVO">

@@ -79,10 +79,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             List<UserRoleRelation> userRoleRelations = userRoleRelationService.listByUserId(user.getUserId());
             for (UserRoleRelation userRoleRelation : userRoleRelations) {
                 SysRole sysRole = sysRoleService.getById(userRoleRelation.getRoleId());
-                SysRoleListVO sysRoleListVO = new SysRoleListVO();
-                sysRoleListVO.setRoleId(sysRole.getRoleId());
-                sysRoleListVO.setRoleName(sysRole.getRoleName());
-                list.add(sysRoleListVO);
+                if (null != sysRole) {
+                    SysRoleListVO sysRoleListVO = new SysRoleListVO();
+                    sysRoleListVO.setRoleId(sysRole.getRoleId());
+                    sysRoleListVO.setRoleName(sysRole.getRoleName());
+                    list.add(sysRoleListVO);
+                }
             }
             user.setRoles(list);
         }
