@@ -3,16 +3,17 @@ package com.insigma.ordercenter.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.entity.dto.OrderSourceAddDTO;
 import com.insigma.ordercenter.entity.dto.OrderSourceDTO;
+import com.insigma.ordercenter.entity.dto.OrderSourceEditDTO;
 import com.insigma.ordercenter.entity.vo.OrderSourceListVO;
 import com.insigma.ordercenter.service.IOrderSourceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
 import com.insigma.ordercenter.controller.BaseController;
 
 import javax.annotation.Resource;
@@ -37,13 +38,75 @@ public class OrderSourceController extends BaseController {
     @ApiOperation(value = "货主信息列表", response = OrderSourceListVO.class)
     public Result<?> list(OrderSourceDTO orderSourceDTO) {
 
-        Page<OrderSourceListVO> page = new Page<>();
+        Page<OrderSourceListVO> page = new Page<>(orderSourceDTO.getPageNum(), orderSourceDTO.getPageSize());
 
         IPage<OrderSourceListVO> result = orderSourceService.getOrderSourceList(page, orderSourceDTO);
 
         return Result.success(result);
     }
 
-//    @GetMapping("/detail/{productId}")
-//    @ApiOperation(value = "获取商品详情",
+    @PostMapping("/add")
+    @ApiOperation(value = "新增货主")
+    public Result<?> add(OrderSourceAddDTO orderSourceAddDTO) {
+
+        boolean status = orderSourceService.add(orderSourceAddDTO, redisUser());
+
+        if (status) {
+            return Result.success();
+        } else {
+            return Result.error(CodeMsg.DATA_INSERT_ERROR);
+        }
+    }
+
+    @PutMapping("/edit")
+    @ApiOperation(value = "编辑货主")
+    public Result<?> edit(OrderSourceEditDTO orderSourceEditDTO) {
+
+        boolean status = orderSourceService.edit(orderSourceEditDTO);
+
+        if (status) {
+            return Result.success();
+        } else {
+            return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete/{orderSourceId}")
+    @ApiOperation(value = "删除货主")
+    public Result<?> delete(@PathVariable Long orderSourceId) {
+
+        boolean status = orderSourceService.delete(orderSourceId);
+
+        if (status) {
+            return Result.success();
+        } else {
+            return Result.error(CodeMsg.DATA_DELETE_ERROR);
+        }
+    }
+
+    @PutMapping("/block/{orderSourceId}")
+    @ApiOperation(value = "停用货主")
+    public Result<?> block(@PathVariable Long orderSourceId) {
+
+        boolean status = orderSourceService.block(orderSourceId);
+
+        if (status) {
+            return Result.success();
+        } else {
+            return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+        }
+    }
+
+    @PutMapping("/unblock/{orderSourceId}")
+    @ApiOperation(value = "启用货主")
+    public Result<?> unblock(@PathVariable Long orderSourceId) {
+
+        boolean status = orderSourceService.unblock(orderSourceId);
+
+        if (status) {
+            return Result.success();
+        } else {
+            return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+        }
+    }
 }

@@ -17,30 +17,30 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 订单来源定义表
+ * 物流公司
  * </p>
  *
  * @author LiuHao
- * @since 2020-07-16
+ * @since 2020-07-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("t_order_source")
-@ApiModel(value = "OrderSource对象", description = "货主信息表")
-public class OrderSource implements Serializable {
+@TableName("t_express_company")
+@ApiModel(value = "ExpressCompany对象", description = "物流公司")
+public class ExpressCompany implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "货主ID")
-    @TableId(value = "order_source_id", type = IdType.ID_WORKER)
-    private Long orderSourceId;
+    @ApiModelProperty(value = "物流公司ID")
+    @TableId(value = "express_company_id", type = IdType.ID_WORKER)
+    private Long expressCompanyId;
 
-    @ApiModelProperty(value = "货主编号")
-    private String sourceNo;
+    @ApiModelProperty(value = "物流公司名称")
+    private String companyName;
 
-    @ApiModelProperty(value = "货主名称")
-    private String sourceName;
+    @ApiModelProperty(value = "物流公司编码")
+    private String companyNo;
 
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
@@ -57,11 +57,12 @@ public class OrderSource implements Serializable {
     @ApiModelProperty(value = "创建人ID")
     private Long createId;
 
-    public static final String ORDER_SOURCE_ID = "order_source_id";
 
-    public static final String SOURCE_NO = "source_no";
+    public static final String EXPRESS_COMPANY_ID = "express_company_id";
 
-    public static final String SOURCE_NAME = "source_name";
+    public static final String COMPANY_NAME = "company_name";
+
+    public static final String COMPANY_NO = "company_no";
 
     public static final String CREATE_TIME = "create_time";
 
