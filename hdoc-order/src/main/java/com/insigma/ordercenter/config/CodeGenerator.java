@@ -49,7 +49,7 @@ class CodeGenerator {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "/hdoc-order/src/main/java");
+        gc.setOutputDir(projectPath + "/hdoc-system/src/main/java");
         gc.setAuthor("LiuHao");
         gc.setIdType(IdType.ID_WORKER);
         gc.setOpen(false);
@@ -59,10 +59,10 @@ class CodeGenerator {
         // 数据源配置
 
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://100.168.2.115:3306/oc_dev?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=GMT%2B8");
+        dsc.setUrl("jdbc:mysql://100.168.2.62:3306/oc_dev?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=GMT%2B8");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("insigma");
+        dsc.setUsername("root");
         dsc.setPassword("123456");
         mpg.setDataSource(dsc);
 
@@ -91,7 +91,7 @@ class CodeGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath + "/hdoc-order/src/main/resources/xml/"
+                return projectPath + "/hdoc-system/src/main/resources/xml/"
                         + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });

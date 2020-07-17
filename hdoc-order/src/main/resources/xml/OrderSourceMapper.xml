@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.OrderSourceMapper">
+
+    <select id="getOrderSourceList" resultType="com.insigma.ordercenter.entity.vo.OrderSourceListVO">
+        SELECT
+            os.order_source_id,
+            os.source_no,
+            os.source_name,
+            os.create_time,
+            os.remark,
+            os.is_stop,
+            os.create_id,
+            su.user_name as createName
+        FROM
+            t_order_source os
+        LEFT JOIN sys_user su ON os.create_id = su.user_id
+        WHERE
+            os.is_deleted = 0
+        AND os.is_stop = 0
+        <if test="sourceName != null and sourceName != ''">
+            AND os.source_name like #{sourceName}
+        </if>
+        <if test="sourceNo != null and sourceNo != ''">
+            AND os.source_no like #{sourceNo}
+        </if>
+    </select>
+</mapper>
