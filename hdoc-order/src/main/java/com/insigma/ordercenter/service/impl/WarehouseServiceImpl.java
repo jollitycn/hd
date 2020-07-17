@@ -1,18 +1,21 @@
 package com.insigma.ordercenter.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.*;
+import com.insigma.ordercenter.entity.dto.WarehouseDTO;
+import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
 import com.insigma.ordercenter.mapper.WarehouseMapper;
 import com.insigma.ordercenter.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -30,7 +33,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     private IWarehouseManagerService managerService;
 
     @Autowired
-    private IWarehouseRegionService regionService;
+    private IWarehouseRegionService warehouseRegionService;
 
     @Autowired
     private IWarehouseProductRelationService productRelationService;
@@ -43,23 +46,23 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     @Transactional
-    public Result<?> addWarehouse(WarehouseReq wareHouseReq, LoginUser redisUser) {
+    public Result<?> addWarehouse(WarehouseDTO wareHouseDTO, LoginUser redisUser) {
         //新增仓库
         Warehouse warehouse = new Warehouse();
-        BeanUtils.copyProperties(wareHouseReq,warehouse);
+        BeanUtils.copyProperties(wareHouseDTO,warehouse);
         warehouse.setCreateId(redisUser.getUserId());
         warehouse.setCreateTime(LocalDateTime.now());
         boolean res = this.save(warehouse);
         //新增仓库地区
-        Integer[] regionIds = wareHouseReq.getRegionIds();
+        Integer[] regionIds = wareHouseDTO.getRegionIds();
         for (Integer regionId : regionIds) {
             WarehouseRegion region = new WarehouseRegion();
             region.setWarehouseId(warehouse.getWarehouseId());
             region.setRegionId(regionId);
-            regionService.save(region);
+            warehouseRegionService.save(region);
         }
         //新增仓库管理员
-        WarehouseManager[] managers = wareHouseReq.getManagers();
+        WarehouseManager[] managers = wareHouseDTO.getManagers();
 
         for (WarehouseManager manager : managers) {
             WarehouseManager wm = new WarehouseManager();
@@ -77,10 +80,10 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public Result<?> updateWarehouse(WarehouseReq warehouseReq, LoginUser loginUser) {
+    public Result<?> updateWarehouse(WarehouseDTO warehouseDTO, LoginUser loginUser) {
         //修改仓库信息
         Warehouse warehouse = new Warehouse();
-        BeanUtils.copyProperties(warehouseReq,warehouse);
+        BeanUtils.copyProperties(warehouseDTO,warehouse);
         warehouse.setModifyId(loginUser.getUserId());
         warehouse.setModifyTime(LocalDateTime.now());
         this.updateById(warehouse);
@@ -90,17 +93,17 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         managerService.remove(wrapper1);
         QueryWrapper<WarehouseRegion> wrapper2 = new QueryWrapper<>();
         wrapper2.eq(WarehouseRegion.WAREHOUSE_ID,warehouse.getWarehouseId());
-        regionService.remove(wrapper2);
+        warehouseRegionService.remove(wrapper2);
         //重新添加仓库地区和管理员
-        Integer[] regionIds = warehouseReq.getRegionIds();
+        Integer[] regionIds = warehouseDTO.getRegionIds();
         for (Integer regionId : regionIds) {
             WarehouseRegion region = new WarehouseRegion();
             region.setWarehouseId(warehouse.getWarehouseId());
             region.setRegionId(regionId);
-            regionService.save(region);
+            warehouseRegionService.save(region);
         }
 
-        WarehouseManager[] managers = warehouseReq.getManagers();
+        WarehouseManager[] managers = warehouseDTO.getManagers();
 
         for (WarehouseManager manager : managers) {
             WarehouseManager wm = new WarehouseManager();
@@ -113,7 +116,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     }
 
     @Override
-    public Result<?> addProduct(WarehouseProductReq req) {
+    public Result<?> addProduct(WarehouseProductDTO req) {
         //遍历商品编号 ，新增仓库商品记录
         for (Long productId : req.getProductIds()) {
             WarehouseProductRelation whp = new WarehouseProductRelation();
@@ -152,5 +155,21 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         log.setWarehouseProductRelationId(whp.getWarehouseProductRelationId());
         stockLogService.save(log);
         return Result.success(CodeMsg.SUCCESS);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public Result<?> deleteWarehouse(Serializable warehouseId) {
+        //删除仓库相关负责人
+        UpdateWrapper<WarehouseManager> wrapper1 = new UpdateWrapper<>();
+        wrapper1.eq(WarehouseManager.WAREHOUSE_ID,warehouseId);
+        managerService.remove(wrapper1);
+        //删除仓库地区
+        UpdateWrapper<WarehouseRegion> wrapper2 = new UpdateWrapper<>();
+        wrapper2.eq(WarehouseRegion.WAREHOUSE_ID,warehouseId);
+        warehouseRegionService.remove(wrapper2);
+        //删除仓库
+        this.removeById(warehouseId);
+        return Result.success();
     }
 }

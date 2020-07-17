@@ -1,7 +1,7 @@
 package com.insigma.ordercenter.service;
 
-import com.insigma.ordercenter.entity.SysRegion;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.SysRegion;
 
 /**
  * <p>

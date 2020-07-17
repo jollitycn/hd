@@ -1,5 +1,7 @@
 package com.insigma.ordercenter.base;
 
+import java.io.Serializable;
+
 /**
  * @program: hd
  * @description: 返回封装类
@@ -7,7 +9,7 @@ package com.insigma.ordercenter.base;
  * @create: 2019-12-24 14:57
  **/
 
-public class Result<T> {
+public class Result<T> implements Serializable {
 
     private String message;
     private int retCode;

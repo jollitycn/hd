@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
-import com.insigma.ordercenter.controller.BaseController;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -62,6 +61,13 @@ public class SysRegionController extends BaseController {
         wrapper.eq("parent_id", cityId);
         List<SysRegion> result = sysRegionService.list(wrapper);
         return Result.success(result);
+    }
+
+    @GetMapping("/{regionId}")
+    @ApiOperation("地区编号详情")
+    public SysRegion detail(@PathVariable Integer regionId) {
+        SysRegion region = this.sysRegionService.getById(regionId);
+        return region;
     }
 
 }

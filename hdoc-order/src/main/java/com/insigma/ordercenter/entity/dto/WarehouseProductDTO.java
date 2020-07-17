@@ -1,4 +1,4 @@
-package com.insigma.ordercenter.entity;
+package com.insigma.ordercenter.entity.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel("仓库绑定产品请求体")
-public class WarehouseProductReq implements Serializable {
+public class WarehouseProductDTO implements Serializable {
 
     @ApiModelProperty("仓库编号")
     private Integer warehouseId;
