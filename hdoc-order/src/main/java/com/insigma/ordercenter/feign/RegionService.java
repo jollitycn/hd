@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface RegionService {
 
     @GetMapping("/system/sys-region/{id}")
-    public SysRegion detail(@PathVariable Integer id);
+    public SysRegion detail(@PathVariable(value ="id") Integer id);
 }

@@ -30,11 +30,4 @@ public class UserLoginQuery extends BaseQuery {
     @ApiModelProperty(value = "用户密码（MD5加密之后）", name = "password", required = true)
     @NotBlank(message = "密码不能为空")
     private String password;
-
-    /**
-     * 用户密码MD5加密之后的密码
-     */
-    @ApiModelProperty(value = "图形验证码", name = "randImageValidateCode", required = true)
-    @NotBlank(message = "图形验证码不能为空")
-    private String randImageValidateCode;
 }

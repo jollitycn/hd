@@ -253,7 +253,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             SysRoleListVO sysRoleListVO = new SysRoleListVO();
             sysRoleListVO.setRoleId(userRoleRelation.getRoleId());
             SysRole sysRole = sysRoleService.getById(userRoleRelation.getRoleId());
-            sysRoleListVO.setRoleName(sysRole.getRoleName());
+            if (null != sysRole) {
+                sysRoleListVO.setRoleName(sysRole.getRoleName());
+            }
             roleList.add(sysRoleListVO);
         }
         userInfo.setRoles(roleList);
