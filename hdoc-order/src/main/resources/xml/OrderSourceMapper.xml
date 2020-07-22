@@ -17,12 +17,14 @@
         LEFT JOIN sys_user su ON os.create_id = su.user_id
         WHERE
             os.is_deleted = 0
-        AND os.is_stop = 0
-        <if test="sourceName != null and sourceName != ''">
-            AND os.source_name like #{sourceName}
+        <if test="orderSource.sourceName != null and orderSource.sourceName != ''">
+            AND os.source_name like #{orderSource.sourceName}
         </if>
-        <if test="sourceNo != null and sourceNo != ''">
-            AND os.source_no like #{sourceNo}
+        <if test="orderSource.sourceNo != null and orderSource.sourceNo != ''">
+            AND os.source_no like #{orderSource.sourceNo}
+        </if>
+        <if test="orderSource.isStop != null and orderSource.isStop != ''">
+            AND os.is_stop = #{orderSource.isStop}
         </if>
     </select>
 </mapper>

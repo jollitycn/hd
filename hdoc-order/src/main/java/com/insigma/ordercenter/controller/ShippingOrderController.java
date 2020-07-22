@@ -1,20 +1,130 @@
 package com.insigma.ordercenter.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.insigma.ordercenter.base.CodeMsg;
+import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
+import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
+import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
+import com.insigma.ordercenter.service.IShippingOrderService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
- * 发货单表 前端控制器
+ * 发货单模块
  * </p>
  *
- * @author LiuHao
- * @since 2020-07-08
+ * @author Xuchao
+ * @since 2020-07-21
  */
 @RestController
 @RequestMapping("/shipping-order")
-public class ShippingOrderController {
+@Api(tags = {"发货单模块-xuchao"})
+public class ShippingOrderController extends BaseController{
 
+
+    @Autowired
+    private IShippingOrderService shippingOrderService;
+
+    @GetMapping("/list")
+    @ApiOperation(value = "发货单列表", response = ShippingOrderVO.class)
+    public Result list(ShippingOrderDTO shippingOrderDTO) {
+
+        IPage<ShippingOrderVO> result = shippingOrderService.getShippingOrderList(shippingOrderDTO);
+
+        return Result.success(result);
+    }
+
+    @PostMapping("/increaseCargo")
+    @ApiOperation("增加补货单")
+    public Result increaseCargo(EditShippingOrderDTO editShippingOrderDTO) {
+
+        Boolean result = shippingOrderService.increaseCargo(editShippingOrderDTO);
+
+        if(result){
+            return Result.success();
+        }
+
+        return Result.error(CodeMsg.DATA_INSERT_ERROR);
+    }
+
+    @PutMapping("/changeAddress/{shippingOrderId}")
+    @ApiOperation(value ="更改地址")
+    public Result changeAddress(@PathVariable Long shippingOrderId,
+                                EditShippingOrderDTO editShippingOrderDTO) {
+
+        Boolean result = shippingOrderService.changeAddress(shippingOrderId,editShippingOrderDTO);
+
+        if(result){
+            return Result.success();
+        }
+
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @PutMapping("/changeProduct/{shippingOrderId}")
+    @ApiOperation(value ="更改商品")
+    public Result changeProduct(@PathVariable Long shippingOrderId,
+                                EditShippingOrderDTO editShippingOrderDTO) {
+
+        Boolean result = shippingOrderService.changeProduct(shippingOrderId,editShippingOrderDTO);
+
+        if(result){
+            return Result.success();
+        }
+
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @PutMapping("/changeWarehouse/{shippingOrderId}")
+    @ApiOperation(value ="更改仓库")
+    public Result changeWarehouse(@PathVariable Long shippingOrderId,
+                                  EditShippingOrderDTO editShippingOrderDTO) {
+
+        Boolean result = shippingOrderService.changeWarehouse(shippingOrderId,editShippingOrderDTO);
+
+        if(result){
+            return Result.success();
+        }
+
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @PutMapping("/cancel/{shippingOrderId}")
+    @ApiOperation(value ="取消发货单")
+    public Result cancel(@PathVariable Long shippingOrderId) {
+
+        Boolean result = shippingOrderService.cancel(shippingOrderId);
+
+        if(result){
+            return Result.success();
+        }
+
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+
+    }
+
+    @PutMapping("/frozen/{shippingOrderId}")
+    @ApiOperation("冻结发货单")
+    public Result frozen(@PathVariable Long shippingOrderId) {
+
+        Boolean result = shippingOrderService.frozen(shippingOrderId);
+
+        if(result){
+            return Result.success();
+        }
+
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @PutMapping("/add")
+    @ApiOperation("新建发货单")
+    public Result add(EditShippingOrderDTO editShippingOrderDTO) {
+
+        return Result.success();
+    }
 }

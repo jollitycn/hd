@@ -33,8 +33,8 @@ public class OrderSource implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "货主ID")
-    @TableId(value = "order_source_id", type = IdType.ID_WORKER)
-    private Long orderSourceId;
+    @TableId(value = "order_source_id", type = IdType.AUTO)
+    private Integer orderSourceId;
 
     @ApiModelProperty(value = "货主编号")
     private String sourceNo;
