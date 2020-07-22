@@ -3,8 +3,7 @@ package com.insigma.ordercenter.service.sf;
 
 import cn.hutool.core.codec.Base64;
 import com.alibaba.fastjson.JSONObject;
-import com.educiot.common.util.HttpClientUtil;
-import com.example.express.common.ExpressRequest;
+import com.insigma.ordercenter.utils.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -240,7 +239,7 @@ private String getOrderServiceRequestXml(Map<String,String> params){
         }
 
         public static void main(String args[]) throws Exception {
-        com.example.express.api.sf.SFExpressRequest request = new com.example.express.api.sf.SFExpressRequest();
+         SFExpressRequest request = new SFExpressRequest();
         Map<String,String > map = new HashMap<>();
         map.put(ORDER_NO,"testOrder");
         request.sfExpressMethod(map,1);
