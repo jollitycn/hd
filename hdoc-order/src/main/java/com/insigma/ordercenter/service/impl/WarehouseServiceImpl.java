@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse> implements IWarehouseService {
 
     @Autowired
-    private IWarehouseManagerService managerService;
+    private IWarehouseTypeService typeService;
 
     @Autowired
     private IWarehouseRegionService warehouseRegionService;
@@ -61,16 +61,14 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
             region.setRegionId(regionId);
             warehouseRegionService.save(region);
         }
-        //新增仓库管理员
-        WarehouseManager[] managers = wareHouseDTO.getManagers();
-
-        for (WarehouseManager manager : managers) {
-            WarehouseManager wm = new WarehouseManager();
-            wm.setUserId(manager.getUserId());
-            wm.setUserName(manager.getUserName());
-            wm.setWarehouseId(warehouse.getWarehouseId());
-            managerService.save(wm);
+        Integer[] productTypes = wareHouseDTO.getProductTypes();
+        for (Integer productType : productTypes) {
+            WarehouseType warehouseType = new WarehouseType();
+            warehouseType.setProductType(productType);
+            warehouseType.setWarehouseId(wareHouseDTO.getWarehouseId());
+            typeService.save(warehouseType);
         }
+
 
         if (res) {
             return Result.success(CodeMsg.SUCCESS);
@@ -88,9 +86,9 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         warehouse.setModifyTime(LocalDateTime.now());
         this.updateById(warehouse);
         //先删除仓库地区和仓库管理员
-        QueryWrapper<WarehouseManager> wrapper1 = new QueryWrapper<>();
+        QueryWrapper<WarehouseType> wrapper1 = new QueryWrapper<>();
         wrapper1.eq(WarehouseManager.WAREHOUSE_ID,warehouse.getWarehouseId());
-        managerService.remove(wrapper1);
+        typeService.remove(wrapper1);
         QueryWrapper<WarehouseRegion> wrapper2 = new QueryWrapper<>();
         wrapper2.eq(WarehouseRegion.WAREHOUSE_ID,warehouse.getWarehouseId());
         warehouseRegionService.remove(wrapper2);
@@ -101,16 +99,6 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
             region.setWarehouseId(warehouse.getWarehouseId());
             region.setRegionId(regionId);
             warehouseRegionService.save(region);
-        }
-
-        WarehouseManager[] managers = warehouseDTO.getManagers();
-
-        for (WarehouseManager manager : managers) {
-            WarehouseManager wm = new WarehouseManager();
-            wm.setUserId(manager.getUserId());
-            wm.setUserName(manager.getUserName());
-            wm.setWarehouseId(warehouse.getWarehouseId());
-            managerService.save(wm);
         }
         return Result.success(CodeMsg.SUCCESS);
     }
@@ -161,9 +149,9 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     @Transactional(rollbackFor = RuntimeException.class)
     public Result<?> deleteWarehouse(Serializable warehouseId) {
         //删除仓库相关负责人
-        UpdateWrapper<WarehouseManager> wrapper1 = new UpdateWrapper<>();
+        UpdateWrapper<WarehouseType> wrapper1 = new UpdateWrapper<>();
         wrapper1.eq(WarehouseManager.WAREHOUSE_ID,warehouseId);
-        managerService.remove(wrapper1);
+        typeService.remove(wrapper1);
         //删除仓库地区
         UpdateWrapper<WarehouseRegion> wrapper2 = new UpdateWrapper<>();
         wrapper2.eq(WarehouseRegion.WAREHOUSE_ID,warehouseId);

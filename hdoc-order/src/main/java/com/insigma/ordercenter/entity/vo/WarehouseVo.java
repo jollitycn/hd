@@ -71,8 +71,15 @@ public class WarehouseVo implements Serializable {
     @ApiModelProperty(value = "联系电话")
     private String mobilePhone;
 
+    @ApiModelProperty("货主编号")
+    private Integer orderSourceId;
+
+    @ApiModelProperty("承运商编号")
+    private Integer expressCompanyId;
+
     private List<SysRegion> regions;
 
-    private List<WarehouseManager> managers;
+    @ApiModelProperty(value = "联系电话")
+    private String managerName;
 
 }

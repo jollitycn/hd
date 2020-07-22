@@ -105,8 +105,6 @@ public class WarehouseController extends BaseController {
         WarehouseVo warehouseVo = new WarehouseVo();
         if (null != warehouse) {
             BeanUtils.copyProperties(warehouse,warehouseVo);
-            List<WarehouseManager> managerList = managerService.list(Wrappers.<WarehouseManager>lambdaQuery().eq(WarehouseManager::getWarehouseId, warehouse.getWarehouseId()));
-            warehouseVo.setManagers(managerList);
             List<SysRegion> regions = new ArrayList<>();
             List<WarehouseRegion> list = warehouseRegionService.list(Wrappers.<WarehouseRegion>lambdaQuery().eq(WarehouseRegion::getWarehouseId, warehouseVo.getWarehouseId()));
             list.forEach(warehouseRegion -> {

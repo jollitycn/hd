@@ -42,4 +42,7 @@ public class ExpressCompanyListVO extends BaseVO {
     @ApiModelProperty(value = "创建人ID")
     @JsonSerialize(using = ToStringSerializer.class)
     private Long createId;
+
+    @ApiModelProperty("创建人姓名")
+    private String createName;
 }

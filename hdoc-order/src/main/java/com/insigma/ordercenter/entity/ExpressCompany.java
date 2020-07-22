@@ -33,8 +33,8 @@ public class ExpressCompany implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "物流公司ID")
-    @TableId(value = "express_company_id", type = IdType.ID_WORKER)
-    private Long expressCompanyId;
+    @TableId(value = "express_company_id", type = IdType.AUTO)
+    private Integer expressCompanyId;
 
     @ApiModelProperty(value = "物流公司名称")
     private String companyName;

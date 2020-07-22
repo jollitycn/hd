@@ -32,16 +32,19 @@ public class OrderSourceServiceImpl extends ServiceImpl<OrderSourceMapper, Order
     @Override
     public IPage<OrderSourceListVO> getOrderSourceList(Page<OrderSourceListVO> page, OrderSourceDTO orderSourceDTO) {
 
+        OrderSource orderSource = new OrderSource();
         String sourceName = null;
         if (orderSourceDTO.getSourceName() != null) {
             sourceName = StringUtil.addPercent(orderSourceDTO.getSourceName());
+            orderSource.setSourceName(sourceName);
         }
         String sourceNo = null;
         if (orderSourceDTO.getSourceNo() != null) {
             sourceNo = StringUtil.addPercent(orderSourceDTO.getSourceNo());
+            orderSource.setSourceNo(sourceNo);
         }
 
-        return baseMapper.getOrderSourceList(page, sourceName, sourceNo);
+        return baseMapper.getOrderSourceList(page,orderSource);
     }
 
     @Override

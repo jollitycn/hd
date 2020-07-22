@@ -6,6 +6,7 @@ import com.insigma.ordercenter.entity.OrderSource;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.insigma.ordercenter.entity.vo.OrderSourceListVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * <p>
@@ -18,6 +19,5 @@ import org.apache.ibatis.annotations.Param;
 public interface OrderSourceMapper extends BaseMapper<OrderSource> {
 
     IPage<OrderSourceListVO> getOrderSourceList(Page<OrderSourceListVO> page,
-                                                @Param("sourceName") String sourceName,
-                                                @Param("sourceNo") String sourceNo);
+                                               @Param("orderSource") OrderSource orderSource);
 }
