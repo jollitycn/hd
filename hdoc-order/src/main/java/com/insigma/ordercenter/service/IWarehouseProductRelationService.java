@@ -19,4 +19,5 @@ public interface IWarehouseProductRelationService extends IService<WarehouseProd
     Integer getTotalStock(Long productId);
 
     List<ProductStockInfoVO> getProductStockInfo(Long productId);
+
 }

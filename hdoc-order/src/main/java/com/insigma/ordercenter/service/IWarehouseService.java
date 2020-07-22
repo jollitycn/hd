@@ -1,8 +1,10 @@
 package com.insigma.ordercenter.service;
 
-import com.insigma.ordercenter.base.Result;
-import com.insigma.ordercenter.entity.*;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.entity.LoginUser;
+import com.insigma.ordercenter.entity.Warehouse;
+import com.insigma.ordercenter.entity.WarehouseProductRelation;
 import com.insigma.ordercenter.entity.dto.WarehouseDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
 

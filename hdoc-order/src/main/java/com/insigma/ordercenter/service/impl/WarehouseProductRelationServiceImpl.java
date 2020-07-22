@@ -1,12 +1,10 @@
 package com.insigma.ordercenter.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.insigma.ordercenter.entity.Product;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.entity.WarehouseProductRelation;
 import com.insigma.ordercenter.entity.vo.ProductStockInfoVO;
 import com.insigma.ordercenter.mapper.WarehouseProductRelationMapper;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +33,10 @@ public class WarehouseProductRelationServiceImpl extends ServiceImpl<WarehousePr
 
         return baseMapper.getProductStockInfo(productId);
     }
-    public static void main(String[] args) {
+
+
+
+public static void main(String[] args) {
         String randomStr = "2d4s";
         String clientFlag = "test";
         String strData1 = " {\n" +

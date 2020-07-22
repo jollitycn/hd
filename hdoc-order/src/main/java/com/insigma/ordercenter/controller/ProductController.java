@@ -5,19 +5,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
-import com.insigma.ordercenter.entity.Product;
+import com.insigma.ordercenter.entity.dto.AddComboDTO;
 import com.insigma.ordercenter.entity.dto.ProductAddDTO;
 import com.insigma.ordercenter.entity.dto.ProductListDTO;
 import com.insigma.ordercenter.entity.dto.ProductUpdateDTO;
 import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ProductListPageVO;
 import com.insigma.ordercenter.entity.vo.ProductStockInfoVO;
+import com.insigma.ordercenter.service.IExpressWarehouseRelationService;
 import com.insigma.ordercenter.service.IProductService;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -42,6 +42,9 @@ public class ProductController extends BaseController {
     @Resource
     private IWarehouseProductRelationService warehouseProductRelationService;
 
+    @Autowired
+    private IExpressWarehouseRelationService expressWarehouseRelationService;
+
     @GetMapping("/list")
     @ApiOperation(value = "获取商品列表", response = ProductListPageVO.class)
     public Result<?> list(ProductListDTO productListDTO) {
@@ -55,11 +58,9 @@ public class ProductController extends BaseController {
 
     @GetMapping("/detail/{productId}")
     @ApiOperation(value = "获取商品详情", response = ProductDetailVO.class)
-    public Result<?> detail(@PathVariable Long productId) {
+    public Result detail(@PathVariable Long productId) {
 
-        ProductDetailVO productDetailVO = new ProductDetailVO();
-        Product product = productService.getById(productId);
-        BeanUtils.copyProperties(product, productDetailVO);
+        ProductDetailVO productDetailVO = productService.getProductDetail(productId);
 
         return Result.success(productDetailVO);
     }
@@ -122,4 +123,41 @@ public class ProductController extends BaseController {
             return Result.error(CodeMsg.DATA_DELETE_ERROR);
         }
     }
+
+    @PostMapping("/designatedWarehouse")
+    @ApiOperation(value = "指定仓库")
+    public Result designatedWarehouse(Long expressCompanyId,Long warehouseId) {
+
+        boolean status = expressWarehouseRelationService.designatedWarehouse(expressCompanyId,warehouseId);
+
+        if (status) {
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_INSERT_ERROR);
+    }
+
+    @PutMapping("/changePriority")
+    @ApiOperation(value = "更改优先级")
+    public Result changePriority(Long expressWarehouseRelationId,Integer value) {
+
+        boolean status = expressWarehouseRelationService.changePriority(expressWarehouseRelationId,value);
+
+        if (status) {
+            return Result.success();
+        }
+            return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @PostMapping("/addCombo")
+    @ApiOperation(value = "添加商品组合")
+    public Result addCombo(AddComboDTO addComboDTO) {
+
+        boolean status = productService.addCombo(addComboDTO);
+
+        if (status) {
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_INSERT_ERROR);
+    }
+
 }

@@ -2,18 +2,23 @@ package com.insigma.ordercenter.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.Product;
+import com.insigma.ordercenter.entity.ProductCombo;
+import com.insigma.ordercenter.entity.dto.AddComboDTO;
 import com.insigma.ordercenter.entity.dto.ProductAddDTO;
 import com.insigma.ordercenter.entity.dto.ProductListDTO;
 import com.insigma.ordercenter.entity.dto.ProductUpdateDTO;
+import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ProductListPageVO;
+import com.insigma.ordercenter.mapper.ProductComboMapper;
 import com.insigma.ordercenter.mapper.ProductMapper;
 import com.insigma.ordercenter.service.IProductService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
 import com.insigma.ordercenter.utils.StringUtil;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,6 +38,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Resource
     private IWarehouseProductRelationService warehouseProductRelationService;
+
+    @Autowired
+    private ProductComboMapper productComboMapper;
 
     @Override
     public IPage<ProductListPageVO> getProductListPage(Page<ProductListPageVO> page, ProductListDTO productListDTO) {
@@ -91,5 +99,44 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         } else {
             return false;
         }
+    }
+
+    /**
+     * 获取商品详情
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public ProductDetailVO getProductDetail(Long productId) {
+
+        //查询详情
+        ProductDetailVO result=baseMapper.getProductDetail(productId);
+
+        //查询标签
+        //TODO
+
+        return result;
+    }
+
+    /**
+     * 添加商品组合
+     *
+     * @param addComboDTO
+     * @return
+     */
+    @Override
+    public boolean addCombo(AddComboDTO addComboDTO) {
+
+        String[] productIds=addComboDTO.getProductIds().split(",");
+        Long parentProductId=addComboDTO.getProductId();
+        for (String productId:productIds) {
+            ProductCombo productCombo=new ProductCombo();
+            productCombo.setParentProductId(parentProductId);
+            productCombo.setChildProductId(Long.valueOf(productId));
+            productCombo.setQuantity(addComboDTO.getQuantity());
+            productComboMapper.insert(productCombo);
+        }
+        return true;
     }
 }
