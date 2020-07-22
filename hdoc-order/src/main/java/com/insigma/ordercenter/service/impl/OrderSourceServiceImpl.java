@@ -54,7 +54,6 @@ public class OrderSourceServiceImpl extends ServiceImpl<OrderSourceMapper, Order
         BeanUtils.copyProperties(orderSourceAddDTO, orderSource);
         orderSource.setCreateId(loginUser.getUserId());
         orderSource.setCreateTime(LocalDateTime.now());
-
         return save(orderSource);
     }
 

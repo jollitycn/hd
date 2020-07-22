@@ -2,10 +2,8 @@ package com.insigma.ordercenter.service.sf;
 
 
 import com.alibaba.fastjson.JSON;
-import com.educiot.common.base.BaseVO;
-import com.example.express.api.sf.APIResponse;
-import com.example.express.api.sf.service.EspServiceCode;
-import com.example.express.util.HttpClientUtil;
+import com.insigma.ordercenter.entity.vo.BaseVO;
+import com.insigma.ordercenter.util.HttpClientUtil;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -28,10 +26,10 @@ public class QiaoAPIService {
     private static final String CALL_URL_PROD = "https://sfapi.sf-express.com/std/service";
 
     public static void main(String[] args) throws UnsupportedEncodingException {
-        //	EspServiceCode testService = EspServiceCode.EXP_RECE_CREATE_ORDER; //下订单 //参数不对
-       // EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ORDER_RESP; //查订单 //查不到订单
-        //    EspServiceCode testService = EspServiceCode.EXP_RECE_UPDATE_ORDER;//订单取消
-       	com.example.express.api.sf.service.EspServiceCode testService = com.example.express.api.sf.service.EspServiceCode.EXP_RECE_FILTER_ORDER_BSP;//订单筛选
+        //   	EspServiceCode testService = EspServiceCode.EXP_RECE_CREATE_ORDER; //下订单 //ok
+      EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ORDER_RESP; //查订单 //ok
+      //   EspServiceCode testService = EspServiceCode.EXP_RECE_UPDATE_ORDER;//订单取消
+        //  	EspServiceCode testService = EspServiceCode.EXP_RECE_FILTER_ORDER_BSP;//订单筛选
           // EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ROUTES;//查路由 ok
         //	EspServiceCode testService = EspServiceCode.EXP_RECE_GET_SUB_MAILNO;//子单号
         //	EspServiceCode testService = EspServiceCode.EXP_RECE_QUERY_SFWAYBILL;//查运费
@@ -39,7 +37,7 @@ public class QiaoAPIService {
         query(testService);
     }
 
-    public static APIResponse query(com.example.express.api.sf.service.EspServiceCode testService, BaseVO data) throws UnsupportedEncodingException {
+    public static APIResponse query(EspServiceCode testService, BaseVO data) throws UnsupportedEncodingException {
         CallExpressServiceTools client = CallExpressServiceTools.getInstance();
 
         // set common header
@@ -69,7 +67,7 @@ public class QiaoAPIService {
         return JSON.parseObject(result, APIResponse.class);
     }
 
-    public static String query(com.example.express.api.sf.service.EspServiceCode testService) throws UnsupportedEncodingException {
+    public static String query(EspServiceCode testService) throws UnsupportedEncodingException {
         CallExpressServiceTools client = CallExpressServiceTools.getInstance();
 
         // set common header

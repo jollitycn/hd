@@ -18,7 +18,6 @@ public class DataUtil {
     public static final String formatter_yyyyMMddHHmmss = "yyyy-MM-dd HH:mm:ss";
     public static final String formatter_yyyyMMddHHmm = "yyyy-MM-dd HH:mm";
     public static final String formatter_yyyyMMdd = "yyyy-MM-dd";
-    
     /*将Date类型转化为指定格式字符串*/
     public static String getStringByDate(Date date, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
