@@ -6,15 +6,11 @@ import com.insigma.ordercenter.entity.FileReq;
 import com.insigma.ordercenter.service.ISysFileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.util.concurrent.FailureCallback;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.SuccessCallback;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -33,8 +29,8 @@ public class SysFileController extends BaseController {
     @Autowired
     private ISysFileService fileService;
 
-    @Autowired
-    private KafkaTemplate kafkaTemplate;
+  /*  @Autowired
+    private KafkaTemplate kafkaTemplate;*/
 
     @PutMapping("uploadSingle")
     @ApiOperation("上传单个文件")
@@ -42,7 +38,7 @@ public class SysFileController extends BaseController {
         return fileService.uploadFile(req,redisUser());
     }
 
-    @PutMapping("/send")
+  /*  @PutMapping("/send")
     @ApiOperation("发送消息")
     public Result sendKafka(@RequestParam @ApiParam("消息") String  msg) {
         for (int i = 0; i < 20; i++) {
@@ -64,7 +60,7 @@ public class SysFileController extends BaseController {
             listenableFuture.addCallback(successCallback, failureCallback);
         }
         return Result.success();
-    }
+    }*/
 
 
 

@@ -75,7 +75,7 @@ public class WarehouseController extends BaseController {
 
     @GetMapping
     @ApiOperation("仓库列表")
-    public Result<?> list(Warehouse warehouse, @ApiParam("页面大小")@RequestParam(required = false) Integer pageSize ,
+    public Result<?> list(WarehouseDTO warehouse, @ApiParam("页面大小")@RequestParam(required = false) Integer pageSize ,
                           @ApiParam("当前页码") @RequestParam(required = false) Integer pageNum) {
 
         if (null == pageSize) {
@@ -84,15 +84,16 @@ public class WarehouseController extends BaseController {
         if (null == pageNum) {
             pageNum = 1;
         }
-        QueryWrapper<Warehouse> wrapper = new QueryWrapper<>();
-        if (StringUtils.isNotBlank(warehouse.getWarehouseNo())) {
-            wrapper.eq(Warehouse.WAREHOUSE_NO,warehouse.getWarehouseNo());
-        }
-        if (StringUtils.isNotBlank(warehouse.getWarehouseName())) {
-            wrapper.like(Warehouse.WAREHOUSE_NAME,warehouse.getWarehouseName());
-        }
-        IPage<Warehouse> page = new Page<>(pageNum,pageSize);
-        return Result.success(warehouseService.page(page,wrapper));
+//        QueryWrapper<Warehouse> wrapper = new QueryWrapper<>();
+//        if (StringUtils.isNotBlank(warehouse.getWarehouseNo())) {
+//            wrapper.eq(Warehouse.WAREHOUSE_NO,warehouse.getWarehouseNo());
+//        }
+//        if (StringUtils.isNotBlank(warehouse.getWarehouseName())) {
+//            wrapper.like(Warehouse.WAREHOUSE_NAME,warehouse.getWarehouseName());
+//        }
+        IPage<WarehouseVo> page = new Page<>(pageNum,pageSize);
+        Result<?> page1 = warehouseService.page(page, warehouse);
+        return page1;
     }
 
     @DeleteMapping("/{warehouseId}")
