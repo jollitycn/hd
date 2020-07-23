@@ -178,7 +178,24 @@ public class Demo2 {
 				"}";
 
 		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.TRANSPORT);
-		Demo2.demo(source);		
+		Demo2.demo(source);
+		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_TRANSPORT);
+		Demo2.demo(source);
+		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.ROUTE_QUERY);
+		Demo2.demo(source);
+		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.QUERY_WAYBILL);
+		Demo2.demo(source);
+		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.INBOUND);
+		Demo2.demo(source);
+		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.OUTBOUND);
+		Demo2.demo(source);
+		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_INBOUND);
+		Demo2.demo(source);
+		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_OUTBOUND);
+		Demo2.demo(source);
+		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.COMMODITY_INFO);
+		Demo2.demo(source);
+
 	}
 }
 

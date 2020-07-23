@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.Shop;
+import com.insigma.ordercenter.entity.ShopWarehouse;
 import com.insigma.ordercenter.entity.vo.BaseVO;
 import com.insigma.ordercenter.utils.DataUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ShopEdit extends BaseVO {
@@ -32,5 +34,8 @@ public class ShopEdit extends BaseVO {
 
     @ApiModelProperty(value = "所属平台代码")
     private String platformNo;
+
+
+    private List<String> warehouseIds;
 
 }

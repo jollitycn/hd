@@ -16,6 +16,7 @@ import com.insigma.ordercenter.utils.DataUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -41,6 +42,7 @@ public class ShopController extends BaseController {
 
     @GetMapping("/list")
     @ApiOperation(value = "获取列表", response = ShopQueryResponse.class)
+    @Transactional(rollbackFor = RuntimeException.class)
     public Result<?> list(@Valid ShopQueryRequest request) {
         IPage<ShopQueryResponse> result = shopService.page(request);
         return Result.success(result);
@@ -48,6 +50,7 @@ public class ShopController extends BaseController {
 
     @PostMapping("/add")
     @ApiOperation(value = "新增")
+    @Transactional(rollbackFor = RuntimeException.class)
     public Result<?> add(@Valid @RequestBody ShopEdit data) {
 
         boolean status = shopService.add(data,redisUser().getUserId());
@@ -60,6 +63,7 @@ public class ShopController extends BaseController {
 
     @PutMapping("/edit")
     @ApiOperation(value = "编辑")
+    @Transactional(rollbackFor = RuntimeException.class)
     public Result<?> edit(@Valid @RequestBody ShopEdit data) {
         boolean status = shopService.edit(data);
         if (status) {
@@ -71,6 +75,7 @@ public class ShopController extends BaseController {
 
     @PutMapping("/setting")
     @ApiOperation(value = "设置")
+    @Transactional(rollbackFor = RuntimeException.class)
     public Result<?> setting(@Valid @RequestBody ShopSetting data) {
         boolean status = shopService.setting(data);
         if (status) {
@@ -82,6 +87,7 @@ public class ShopController extends BaseController {
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "删除")
+    @Transactional(rollbackFor = RuntimeException.class)
     public Result<?> delete(@PathVariable Long id) {
         boolean status = shopService.delete(id);
         if (status) {
@@ -93,6 +99,7 @@ public class ShopController extends BaseController {
 
     @PutMapping("/disable/{id}")
     @ApiOperation(value = "停用")
+    @Transactional(rollbackFor = RuntimeException.class)
     public Result<?> disable(@PathVariable Long id) {
         boolean status = shopService.disable(id);
         if (status) {
@@ -104,6 +111,7 @@ public class ShopController extends BaseController {
 
     @PutMapping("/enable/{id}")
     @ApiOperation(value = "启用")
+    @Transactional(rollbackFor = RuntimeException.class)
     public Result<?> enable(@PathVariable Long id) {
         boolean status = shopService.enable(id);
         if (status) {
