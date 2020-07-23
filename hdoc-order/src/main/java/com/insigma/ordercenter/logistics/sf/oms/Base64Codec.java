@@ -11,10 +11,12 @@ public class Base64Codec extends BaseCodec {
     public Base64Codec() {
     }
 
+    @Override
     public byte[] encrypt(byte[] data) {
         return Base64.encodeBase64(data);
     }
 
+    @Override
     public byte[] decrypt(byte[] value) {
         return Base64.decodeBase64(value);
     }
