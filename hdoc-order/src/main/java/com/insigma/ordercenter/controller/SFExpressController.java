@@ -30,7 +30,7 @@ import javax.validation.Valid;
  */
 
 
-@Api(tags = {"平台API接口"}, value = "SFExpressController")
+@Api(tags = {"顺丰速运接口"}, value = "SFExpressController")
 @RestController
 @RequestMapping("/sf")
 @Configuration
