@@ -23,7 +23,7 @@
         <if test="orderSource.sourceNo != null and orderSource.sourceNo != ''">
             AND os.source_no like #{orderSource.sourceNo}
         </if>
-        <if test="orderSource.isStop != null and orderSource.isStop != ''">
+        <if test="orderSource.isStop != null">
             AND os.is_stop = #{orderSource.isStop}
         </if>
     </select>

@@ -41,4 +41,7 @@ public class OrderSourceDTO {
 
     @ApiModelProperty(value = "货主名称")
     private String sourceName;
+
+    @ApiModelProperty("是否禁用")
+    private Integer isStop;
 }

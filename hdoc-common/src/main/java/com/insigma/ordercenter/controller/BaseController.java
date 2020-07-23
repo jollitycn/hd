@@ -6,7 +6,6 @@ import com.insigma.ordercenter.enums.RedisKeyEnum;
 import com.insigma.ordercenter.utils.JsonUtil;
 import com.insigma.ordercenter.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

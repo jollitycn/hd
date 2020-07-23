@@ -2,11 +2,13 @@ package com.insigma.ordercenter.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.entity.dto.WarehouseDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
+import com.insigma.ordercenter.entity.vo.WarehouseVo;
 import com.insigma.ordercenter.mapper.WarehouseMapper;
 import com.insigma.ordercenter.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -159,5 +162,12 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         //删除仓库
         this.removeById(warehouseId);
         return Result.success();
+    }
+
+    @Override
+    public Result<?> page(IPage<WarehouseVo> page, WarehouseDTO map) {
+        List<WarehouseVo> page1 = this.baseMapper.page(page, map);
+        page.setRecords(page1);
+        return Result.success(page);
     }
 }

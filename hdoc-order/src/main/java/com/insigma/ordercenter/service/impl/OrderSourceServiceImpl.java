@@ -43,6 +43,9 @@ public class OrderSourceServiceImpl extends ServiceImpl<OrderSourceMapper, Order
             sourceNo = StringUtil.addPercent(orderSourceDTO.getSourceNo());
             orderSource.setSourceNo(sourceNo);
         }
+        if (null != orderSourceDTO.getIsStop()) {
+            orderSource.setIsStop(orderSourceDTO.getIsStop());
+        }
 
         return baseMapper.getOrderSourceList(page,orderSource);
     }
