@@ -21,11 +21,10 @@ update  url_address = #{urlAddress}, request_time = #{requestTime} , account  =#
     </update>
 
     <select id="list" resultType="com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse">
-SELECT shop_id,user_name as createName,platform_name,remark,platform_no,create_id,create_time,is_stop,is_deleted,url_address,request_time,account,`password`,is_deleted FROM `t_shop` s
-left join sys_user su on s.createId= su.userId
-where  1=1
+        SELECT shop_id,shop_name,user_name as createName,platform_name,remark,s.platform_no,s.create_id,s.create_time,is_stop,s.is_deleted,s.url_address,request_time,account,`password` FROM `t_shop` s left join sys_user su on s.create_id= su.user_id where  1=1
+        and s.is_deleted = 0
   <if test=" request.shopName != null and request.shopName != ''">
-        AND platform_name = #{request.shopName}
+        AND s.shop_name = #{request.shopName}
     </if>
     </select>
 </mapper>
