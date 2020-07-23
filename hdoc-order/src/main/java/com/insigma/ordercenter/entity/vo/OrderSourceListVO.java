@@ -33,6 +33,7 @@ public class OrderSourceListVO extends BaseVO {
     private String sourceName;
 
     @ApiModelProperty(value = "创建时间")
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "说明")

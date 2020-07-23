@@ -25,17 +25,7 @@ public class QiaoAPIService {
     //生产环境的地址
     private static final String CALL_URL_PROD = "https://sfapi.sf-express.com/std/service";
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
-        //   	EspServiceCode testService = EspServiceCode.EXP_RECE_CREATE_ORDER; //下订单 //ok
-      EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ORDER_RESP; //查订单 //ok
-      //   EspServiceCode testService = EspServiceCode.EXP_RECE_UPDATE_ORDER;//订单取消
-        //  	EspServiceCode testService = EspServiceCode.EXP_RECE_FILTER_ORDER_BSP;//订单筛选
-          // EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ROUTES;//查路由 ok
-        //	EspServiceCode testService = EspServiceCode.EXP_RECE_GET_SUB_MAILNO;//子单号
-        //	EspServiceCode testService = EspServiceCode.EXP_RECE_QUERY_SFWAYBILL;//查运费
 
-        query(testService);
-    }
 
     public static APIResponse query(EspServiceCode testService, BaseVO data) throws UnsupportedEncodingException {
         CallExpressServiceTools client = CallExpressServiceTools.getInstance();
@@ -95,4 +85,16 @@ public class QiaoAPIService {
         System.out.println("===返回结果：" + result);
         return result;
     }
+
+//    public static void main(String[] args) throws UnsupportedEncodingException {
+//        //   	EspServiceCode testService = EspServiceCode.EXP_RECE_CREATE_ORDER; //下订单 //ok
+//        EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ORDER_RESP; //查订单 //ok
+//        //   EspServiceCode testService = EspServiceCode.EXP_RECE_UPDATE_ORDER;//订单取消
+//        //  	EspServiceCode testService = EspServiceCode.EXP_RECE_FILTER_ORDER_BSP;//订单筛选
+//        // EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ROUTES;//查路由 ok
+//        //	EspServiceCode testService = EspServiceCode.EXP_RECE_GET_SUB_MAILNO;//子单号
+//        //	EspServiceCode testService = EspServiceCode.EXP_RECE_QUERY_SFWAYBILL;//查运费
+//
+//        query(testService);
+//    }
 }

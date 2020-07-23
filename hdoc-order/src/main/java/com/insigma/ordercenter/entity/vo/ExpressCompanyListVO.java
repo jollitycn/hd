@@ -33,6 +33,7 @@ public class ExpressCompanyListVO extends BaseVO {
     private String companyNo;
 
     @ApiModelProperty(value = "创建时间")
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "说明")

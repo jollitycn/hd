@@ -115,67 +115,69 @@ public class Demo2 {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String source = "{\r\n" + 
-				"	\"orderItems\": [{\r\n" + 
-				"		\"monthlyAccount\": \"7550612539\",\r\n" + 
-				"		\"temperatureLevelName\": \"0至10\",\r\n" + 
-				"		\"remark\": \"这是备注\",\r\n" + 
-				"		\"skuName\": \"维生素C咀嚼片\",\r\n" + 
-				"		\"quantity\": \"50\",\r\n" + 
-				"		\"grossWeight\": \"12\",\r\n" + 
-				"		\"volume\": \"12\"\r\n" + 
-				"	}],\r\n" + 
-				"	\"erpOrder\": \"1233\",\r\n" + 
-				"	\"monthlyAccount\": \"7550612539\",\r\n" + 
-				"	\"consigneeProvinceName\": \"广东省\",\r\n" + 
-				"	\"paymentTypeCode\": \"PR_ACCOUNT\",\r\n" + 
-				"	\"shipperLocationName\": \"宝安M17大厦A栋07\",\r\n" + 
-				"	\"shipperProvinceName\": \"广东省\",\r\n" + 
-				"	\"shipperContactName\": \"奥特曼\",\r\n" + 
-				"	\"shipperCityName\": \"深圳市\",\r\n" + 
-				"	\"consigneeLocationName\": \"广东省深圳市南山区深圳南山深南大道58号\",\r\n" + 
-				"	\"extenSystemOrderNo\": \"A00000002\",\r\n" + 
-				"	\"shipperName\": \"M17星制药\",\r\n" + 
-				"	\"consigneeCityName\": \"深圳市\",\r\n" + 
-				"	\"remark\": \"这是备注\",\r\n" + 
-				"	\"consigneeName\": \"顺丰物流公司\",\r\n" + 
-				"	\"consigneeContactName\": \"李生\",\r\n" + 
-				"	\"multiReceiveAddress\": \"0\",\r\n" + 
-				"	\"consigneeContactTel\": \"13924222888\",\r\n" + 
-				"	\"consigneeDistrictName\": \"宝安区\",\r\n" + 
-				"	\"shipperContactTel\": \"13700000002\",\r\n" + 
-				"	\"shipperDistrictName\": \"福田区\",\r\n" + 
-				"	\"productCode\": \"SE0059\",\r\n" + 
-				"	\"temperatureLevelCode\": \"5\",\r\n" + 
+		String source = "{\r\n" +
+				"	\"orderItems\": [{\r\n" +
+//				"		\"monthlyAccount\": \"7550612539\",\r\n" +
+				"		\"temperatureLevelName\": \"0至10\",\r\n" +
+				"		\"remark\": \"这是备注\",\r\n" +
+				"		\"skuName\": \"维生素C咀嚼片\",\r\n" +
+				"		\"quantity\": \"50\",\r\n" +
+				"		\"grossWeight\": \"12\",\r\n" +
+				"		\"volume\": \"12\"\r\n" +
+				"	}],\r\n" +
+				"	\"erpOrder\": \"1233\",\r\n" +
+//				"	\"monthlyAccount\": \"7550612539\",\r\n" +
+				"	\"consigneeProvinceName\": \"广东省\",\r\n" +
+				"	\"paymentTypeCode\": \"PR_ACCOUNT\",\r\n" +
+				"	\"shipperLocationName\": \"宝安M17大厦A栋07\",\r\n" +
+				"	\"shipperProvinceName\": \"广东省\",\r\n" +
+				"	\"shipperContactName\": \"奥特曼\",\r\n" +
+				"	\"shipperCityName\": \"深圳市\",\r\n" +
+				"	\"consigneeLocationName\": \"广东省广州市南山区深圳南山深南大道58号\",\r\n" +
+				"	\"extenSystemOrderNo\": \"A00000002\",\r\n" +
+				"	\"shipperName\": \"M17星制药\",\r\n" +
+				"	\"consigneeCityName\": \"广州市\",\r\n" +
+				"	\"remark\": \"这是备注\",\r\n" +
+				"	\"consigneeName\": \"顺丰物流公司\",\r\n" +
+				"	\"consigneeContactName\": \"李生\",\r\n" +
+				"	\"multiReceiveAddress\": \"0\",\r\n" +
+				"	\"consigneeContactTel\": \"13924222888\",\r\n" +
+				"	\"consigneeDistrictName\": \"宝安区\",\r\n" +
+				"	\"shipperContactTel\": \"13700000002\",\r\n" +
+				"	\"shipperDistrictName\": \"福田区\",\r\n" +
+				"	\"productCode\": \"SE0059\",\r\n" +
+				"	\"temperatureLevelCode\": \"5\",\r\n" +
 				"	\"sourceCode\": \"demo-sysrem\",\r\n" +
 				"	\"sourceChannel\": \"demo-sysrem\",\r\n" +
 				"	\"orderTime\": \"2018-01-01 12:12:12\",\r\n" +
-				"	\"emergentFlag\": \"1\",\r\n" + 
-				"	\"transportType\": \"LAND\",\r\n" + 
-				"\r\n" + 
-				"	\"orderServices\": [{\r\n" + 
-				"\r\n" + 
-				"			\"serviceValue\": \"\",\r\n" + 
-				"			\"serviceCode\": \"VA0003\"\r\n" + 
-				"		},\r\n" + 
-				"\r\n" + 
-				"		{\r\n" + 
-				"\r\n" + 
-				"			\"serviceValue\": \"3000\",\r\n" + 
-				"			\"serviceCode\": \"VA0021\"\r\n" + 
-				"		},\r\n" + 
-				"		{\r\n" + 
-				"\r\n" + 
-				"			\"serviceValue\": \"\",\r\n" + 
-				"			\"serviceCode\": \"VA0059\"\r\n" + 
-				"		},\r\n" + 
-				"		{\r\n" + 
-				"\r\n" + 
-				"			\"serviceValue\": \"\",\r\n" + 
-				"			\"serviceCode\": \"VA0058\"\r\n" + 
-				"		}\r\n" + 
-				"	]\r\n" + 
+				"	\"emergentFlag\": \"1\",\r\n" +
+				"	\"transportType\": \"LAND\",\r\n" +
+				"\r\n" +
+				"	\"orderServices\": [{\r\n" +
+				"\r\n" +
+				"			\"serviceValue\": \"\",\r\n" +
+				"			\"serviceCode\": \"VA0003\"\r\n" +
+				"		},\r\n" +
+				"\r\n" +
+				"		{\r\n" +
+				"\r\n" +
+				"			\"serviceValue\": \"3000\",\r\n" +
+				"			\"serviceCode\": \"VA0021\"\r\n" +
+				"		},\r\n" +
+				"		{\r\n" +
+				"\r\n" +
+				"			\"serviceValue\": \"\",\r\n" +
+				"			\"serviceCode\": \"VA0059\"\r\n" +
+				"		},\r\n" +
+				"		{\r\n" +
+				"\r\n" +
+				"			\"serviceValue\": \"\",\r\n" +
+				"			\"serviceCode\": \"VA0058\"\r\n" +
+				"		}\r\n" +
+				"	]\r\n" +
 				"}";
+
+		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.TRANSPORT);
 		Demo2.demo(source);		
 	}
 }
