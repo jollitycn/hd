@@ -47,7 +47,7 @@ public class ProductController extends BaseController {
 
     @GetMapping("/list")
     @ApiOperation(value = "获取商品列表", response = ProductListPageVO.class)
-    public Result<?> list(ProductListDTO productListDTO) {
+    public Result list(ProductListDTO productListDTO) {
 
         Page<ProductListPageVO> page = new Page<>(productListDTO.getPageNum(), productListDTO.getPageSize());
 
@@ -67,7 +67,7 @@ public class ProductController extends BaseController {
 
     @GetMapping("/getProductTotalQuantity/{productId}")
     @ApiOperation(value = "获取商品库存总数量")
-    public Result<?> getProductTotalQuantity(@PathVariable Long productId) {
+    public Result getProductTotalQuantity(@PathVariable Long productId) {
 
         int totalQuantity = warehouseProductRelationService.getTotalStock(productId);
 
@@ -76,7 +76,7 @@ public class ProductController extends BaseController {
 
     @GetMapping("/getProductStockInfo/{productId}")
     @ApiOperation(value = "获取商品库存情况", response = ProductStockInfoVO.class)
-    public Result<?> getProductStockInfo(@PathVariable Long productId) {
+    public Result getProductStockInfo(@PathVariable Long productId) {
 
         List<ProductStockInfoVO> result = warehouseProductRelationService.getProductStockInfo(productId);
 
@@ -85,7 +85,7 @@ public class ProductController extends BaseController {
 
     @PostMapping("/add")
     @ApiOperation(value = "新增商品")
-    public Result<?> add(ProductAddDTO productAddDTO) {
+    public Result add(ProductAddDTO productAddDTO) {
 
         boolean status = productService.add(productAddDTO);
 
@@ -99,7 +99,7 @@ public class ProductController extends BaseController {
 
     @PutMapping("/edit")
     @ApiOperation(value = "编辑商品")
-    public Result<?> edit(ProductUpdateDTO productUpdateDTO) {
+    public Result edit(ProductUpdateDTO productUpdateDTO) {
 
         boolean status = productService.edit(productUpdateDTO);
 
@@ -113,7 +113,7 @@ public class ProductController extends BaseController {
 
     @DeleteMapping("/delete/{productId}")
     @ApiOperation(value = "删除商品")
-    public Result<?> delete(@PathVariable Long productId) {
+    public Result delete(@PathVariable Long productId) {
 
         boolean status = productService.delete(productId);
 

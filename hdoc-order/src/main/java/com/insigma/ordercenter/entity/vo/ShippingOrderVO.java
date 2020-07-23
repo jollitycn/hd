@@ -18,6 +18,9 @@ public class ShippingOrderVO {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long shippingOrderId;
 
+    @ApiModelProperty(value = "发货单号 ")
+    private String shippingOrderNo;
+
     @ApiModelProperty(value = "仓库名称")
     private String warehouseName;
 
