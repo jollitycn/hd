@@ -4,6 +4,7 @@ package com.insigma.ordercenter.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
@@ -42,6 +43,9 @@ public class ShippingOrderController extends BaseController{
     @PostMapping("/increaseCargo")
     @ApiOperation("增加补货单")
     public Result increaseCargo(EditShippingOrderDTO editShippingOrderDTO) {
+
+        //TODO
+        LoginUser loginUser=redisUser();
 
         Boolean result = shippingOrderService.increaseCargo(editShippingOrderDTO);
 

@@ -21,10 +21,18 @@ public class EditShippingOrderDTO {
     @ApiModelProperty(value = "收货人姓名")
     private String receiveName;
 
+    @ApiModelProperty(value = "收货人备注")
+    private String receiveRemark;
+
     @ApiModelProperty(value = "联系方式")
     private String mobilePhone;
 
     @ApiModelProperty(value = "收货人地址")
     private String address;
 
+    @ApiModelProperty(value = "仓库id")
+    private Long warehouseId;
+
+    @ApiModelProperty(value = "物流公司id")
+    private Long expressCompanyId;
 }
