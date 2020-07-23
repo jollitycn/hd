@@ -85,7 +85,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         List<ShopQueryResponse> list = baseMapper.list(page, request);
         for (ShopQueryResponse response:
         list) {
-            response.setWarehouseIds(shopWarehouseService.listByShopId(response.getShopId()));
+            response.setWarehouses(shopWarehouseService.listByShopId(response.getShopId()));
         }
         page.setRecords(list);
         return page;
