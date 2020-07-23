@@ -30,11 +30,11 @@ import javax.validation.Valid;
  */
 
 
-@Api(tags = {"顺丰速运接口"}, value = "SFExpressController")
+@Api(tags = {"顺丰冷运接口"}, value = "SFOMSExpressController")
 @RestController
-@RequestMapping("/sf")
+@RequestMapping("/sfoms")
 @Configuration
-public class SFExpressController extends BaseController {
+public class SFOMSExpressController extends BaseController {
 
     //    @Autowired
 //    private TestCallExpressNewAPIService testCallExpressNewAPIService;
@@ -88,7 +88,8 @@ public class SFExpressController extends BaseController {
 
     @PostMapping("/searchRoutes")
     @ApiOperation("路由查询接口:" +
-            "此路由查询接口支持三类查询方式: \n" +
+            "此路由查询接口支持三类查询方式:\n" +
+            "\n" +
             "1)根据顺丰运单号查询：查询请求中提供接入编码与运单号，验证接入编码与所有请求运单号的归属关系，系统只返回具有正确归属关系的运单路由信息。\n" +
             "\n" +
             "2)根据客户订单号查询：查询请求中提供接入编码与订单号，验证接入编码与所有请求订单号的归属关系，对于归属关系正确的订单号，找到对应的运单号，然后返回订单对应运单号的路由信息。适用于通过下单的客户订单。\n" +

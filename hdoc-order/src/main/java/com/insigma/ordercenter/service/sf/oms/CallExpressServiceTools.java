@@ -3,10 +3,11 @@
 // (powered by Fernflower decompiler)
 //
 
-package com.insigma.ordercenter.service.sf;
+package com.insigma.ordercenter.service.sf.oms;
 
 import com.alibaba.fastjson.JSON;
 import com.insigma.ordercenter.logistics.sf.qiao.*;
+import com.insigma.ordercenter.service.sf.qiao.EspServiceCode;
 import com.insigma.ordercenter.util.HttpClientUtil;
 import com.insigma.ordercenter.util.VerifyCodeUtil;
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ public class CallExpressServiceTools {
     public static String querySFAPIservice(String url, String xml, String verifyCode) {
         HttpClientUtil httpclient = new HttpClientUtil();
         if (url == null) {
-            url = "http://bsp-oisp.sf-express.com/bsp-oisp/sfexpressService";
+            url = OMSAPIService.CALL_URL_BOX;
         }
 
         String result = null;
@@ -78,28 +79,35 @@ public class CallExpressServiceTools {
 //    }
 
 
-    public static String packageMsgData( EspServiceCode espServiceCode) {
+    public static String packageMsgData( OMSServiceCode espServiceCode) {
+
         String request = "";
         switch (espServiceCode) {
-            case EXP_RECE_CREATE_ORDER:
+            case TRANSPORT:
                 request = expReceCreateOrder();
                 break;
-            case EXP_RECE_SEARCH_ORDER_RESP:
+            case INBOUND:
                 request = expReceSearchOrderResp();
                 break;
-            case EXP_RECE_UPDATE_ORDER:
+            case OUTBOUND:
                 request = expReceUpdateOrder();
                 break;
-            case EXP_RECE_FILTER_ORDER_BSP:
+            case CANCEL_TRANSPORT:
                 request = expReceFilterOrderBsp();
                 break;
-            case EXP_RECE_SEARCH_ROUTES:
+            case ROUTE_QUERY:
                 request = expReceSearchRoutes();
                 break;
-            case EXP_RECE_GET_SUB_MAILNO:
+            case QUERY_WAYBILL:
                 request = expReceGetSubMailno();
                 break;
-            case EXP_RECE_QUERY_SFWAYBILL:
+            case CANCEL_INBOUND:
+                request = expReceQuerySfwaybill();
+                break;
+            case CANCEL_OUTBOUND:
+                request = expReceQuerySfwaybill();
+                break;
+            case COMMODITY_INFO:
                 request = expReceQuerySfwaybill();
                 break;
             default:
@@ -110,52 +118,115 @@ public class CallExpressServiceTools {
     }
 
     private static String expReceCreateOrder() {
-        String request = "";
-        Order order = new Order();
-        List<CargoDetail> cargoDetails = new ArrayList<>();
-        CargoDetail cargoDetail = new CargoDetail();
-        cargoDetail.setCount(2.365);
-        cargoDetail.setUnit("个");
-        cargoDetail.setWeight(6.1);
-        cargoDetail.setAmount(100.5111);
-        cargoDetail.setCurrency("HKD");
-        cargoDetail.setName("护肤品1");
-        cargoDetail.setSourceArea("CHN");
-        cargoDetails.add(cargoDetail);
+        String request = "{\r\n" +
+                "	\"orderItems\": [{\r\n" +
+                "		\"monthlyAccount\": \"7550612539\",\r\n" +
+                "		\"temperatureLevelName\": \"0至10\",\r\n" +
+                "		\"remark\": \"这是备注\",\r\n" +
+                "		\"skuName\": \"维生素C咀嚼片\",\r\n" +
+                "		\"quantity\": \"50\",\r\n" +
+                "		\"grossWeight\": \"12\",\r\n" +
+                "		\"volume\": \"12\"\r\n" +
+                "	}],\r\n" +
+                "	\"erpOrder\": \"1233\",\r\n" +
+                "	\"monthlyAccount\": \"7550612539\",\r\n" +
+                "	\"consigneeProvinceName\": \"广东省\",\r\n" +
+                "	\"paymentTypeCode\": \"PR_ACCOUNT\",\r\n" +
+                "	\"shipperLocationName\": \"宝安M17大厦A栋07\",\r\n" +
+                "	\"shipperProvinceName\": \"广东省\",\r\n" +
+                "	\"shipperContactName\": \"奥特曼\",\r\n" +
+                "	\"shipperCityName\": \"深圳市\",\r\n" +
+                "	\"consigneeLocationName\": \"广东省深圳市南山区深圳南山深南大道58号\",\r\n" +
+                "	\"extenSystemOrderNo\": \"A00000002\",\r\n" +
+                "	\"shipperName\": \"M17星制药\",\r\n" +
+                "	\"consigneeCityName\": \"深圳市\",\r\n" +
+                "	\"remark\": \"这是备注\",\r\n" +
+                "	\"consigneeName\": \"顺丰物流公司\",\r\n" +
+                "	\"consigneeContactName\": \"李生\",\r\n" +
+                "	\"multiReceiveAddress\": \"0\",\r\n" +
+                "	\"consigneeContactTel\": \"13924222888\",\r\n" +
+                "	\"consigneeDistrictName\": \"宝安区\",\r\n" +
+                "	\"shipperContactTel\": \"13700000002\",\r\n" +
+                "	\"shipperDistrictName\": \"福田区\",\r\n" +
+                "	\"productCode\": \"SE0059\",\r\n" +
+                "	\"temperatureLevelCode\": \"5\",\r\n" +
+                "	\"sourceCode\": \"demo-sysrem\",\r\n" +
+                "	\"sourceChannel\": \"demo-sysrem\",\r\n" +
+                "	\"orderTime\": \"2018-01-01 12:12:12\",\r\n" +
+                "	\"emergentFlag\": \"1\",\r\n" +
+                "	\"transportType\": \"LAND\",\r\n" +
+                "\r\n" +
+                "	\"orderServices\": [{\r\n" +
+                "\r\n" +
+                "			\"serviceValue\": \"\",\r\n" +
+                "			\"serviceCode\": \"VA0003\"\r\n" +
+                "		},\r\n" +
+                "\r\n" +
+                "		{\r\n" +
+                "\r\n" +
+                "			\"serviceValue\": \"3000\",\r\n" +
+                "			\"serviceCode\": \"VA0021\"\r\n" +
+                "		},\r\n" +
+                "		{\r\n" +
+                "\r\n" +
+                "			\"serviceValue\": \"\",\r\n" +
+                "			\"serviceCode\": \"VA0059\"\r\n" +
+                "		},\r\n" +
+                "		{\r\n" +
+                "\r\n" +
+                "			\"serviceValue\": \"\",\r\n" +
+                "			\"serviceCode\": \"VA0058\"\r\n" +
+                "		}\r\n" +
+                "	]\r\n" +
+                "}";
+//        Order order = new Order();
+//        List<CargoDetail> cargoDetails = new ArrayList<>();
+//        CargoDetail cargoDetail = new CargoDetail();
+//        cargoDetail.setCount(2.365);
+//        cargoDetail.setUnit("个");
+//        cargoDetail.setWeight(6.1);
+//        cargoDetail.setAmount(100.5111);
+//        cargoDetail.setCurrency("HKD");
+//        cargoDetail.setName("护肤品1");
+//        cargoDetail.setSourceArea("CHN");
+//        cargoDetails.add(cargoDetail);
+//
+//        order.setCargoDetails(cargoDetails);
+//        List<ContactInfo> contactInfoList = new ArrayList<>();
+//        ContactInfo contactInfo = new ContactInfo();
+//        contactInfo.setContactType(1);
+//        contactInfo.setCountry("CN");
+//        contactInfo.setTel("4006789888");
+//        contactInfo.setPostCode("580058");
+//        contactInfo.setContact("小曾1");
+//        contactInfo.setAddress("广东省深圳市南山区软件产业基地11栋1");
+//        contactInfoList.add(contactInfo);
+//
+//        ContactInfo contactInfo1 = new ContactInfo();
+//        contactInfo1.setContactType(2);
+//        contactInfo1.setCompany("顺丰速运");
+//        contactInfo1.setCountry("CN");
+//        contactInfo1.setTel("18688806057");
+//        contactInfo1.setPostCode("580058");
+//        contactInfo1.setContact("小邱1");
+//        contactInfo1.setAddress("广东省广州市白云区湖北大厦1");
+//        contactInfoList.add(contactInfo1);
+//
+//        order.setContactInfoList(contactInfoList);
+//        order.setLanguage("zh_CN");
+//        order.setOrderId("QIAO-20200618-004");
+//        order.setCustomsInfo(new CustomsInfo());
+//        order.setExtraInfoList(new ArrayList<>());
+//        order.setIsOneselfPickup(0);
+//        order.setExpressTypeId(1);
+//        order.setMonthlyCard("7551234567");
+//        order.setParcelQty(1);
+//        order.setPayMethod(1);
+//        order.setTotalWeight(6.0);
+//        request = JSON.toJSONString(order);
 
-        order.setCargoDetails(cargoDetails);
-        List<ContactInfo> contactInfoList = new ArrayList<>();
-        ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setContactType(1);
-        contactInfo.setCountry("CN");
-        contactInfo.setTel("4006789888");
-        contactInfo.setPostCode("580058");
-        contactInfo.setContact("小曾1");
-        contactInfo.setAddress("广东省深圳市南山区软件产业基地11栋1");
-        contactInfoList.add(contactInfo);
 
-        ContactInfo contactInfo1 = new ContactInfo();
-        contactInfo1.setContactType(2);
-        contactInfo1.setCompany("顺丰速运");
-        contactInfo1.setCountry("CN");
-        contactInfo1.setTel("18688806057");
-        contactInfo1.setPostCode("580058");
-        contactInfo1.setContact("小邱1");
-        contactInfo1.setAddress("广东省广州市白云区湖北大厦1");
-        contactInfoList.add(contactInfo1);
 
-        order.setContactInfoList(contactInfoList);
-        order.setLanguage("zh_CN");
-        order.setOrderId("QIAO-20200618-004");
-        order.setCustomsInfo(new CustomsInfo());
-        order.setExtraInfoList(new ArrayList<>());
-        order.setIsOneselfPickup(0);
-        order.setExpressTypeId(1);
-        order.setMonthlyCard("7551234567");
-        order.setParcelQty(1);
-        order.setPayMethod(1);
-        order.setTotalWeight(6.0);
-        request = JSON.toJSONString(order);
         return request;
     }
 

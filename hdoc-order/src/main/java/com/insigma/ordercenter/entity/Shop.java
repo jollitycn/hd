@@ -6,8 +6,10 @@ package com.insigma.ordercenter.entity;
     import java.io.Serializable;
     import java.time.LocalDateTime;
 
+    import com.fasterxml.jackson.annotation.JsonFormat;
     import com.fasterxml.jackson.databind.annotation.JsonSerialize;
     import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+    import com.insigma.ordercenter.constant.Constant;
     import io.swagger.annotations.ApiModel;
     import io.swagger.annotations.ApiModelProperty;
     import lombok.Data;
@@ -53,6 +55,7 @@ package com.insigma.ordercenter.entity;
     private Long createId;
 
     @ApiModelProperty(value = "创建时间")
+
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "是否停用（0：未停用，1：已停用）")

@@ -8,6 +8,7 @@ import com.insigma.ordercenter.entity.dto.shop.ShopEdit;
 import com.insigma.ordercenter.entity.dto.shop.ShopQueryRequest;
 import com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse;
 import com.insigma.ordercenter.entity.dto.shop.ShopSetting;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public interface ShopMapper extends BaseMapper<Shop> {
 
-    List<ShopQueryResponse> list(Page page, ShopQueryRequest request);
+    List<ShopQueryResponse> list( @Param("page")  Page page,   @Param("request")  ShopQueryRequest request);
 
     boolean delete(Long id);
 

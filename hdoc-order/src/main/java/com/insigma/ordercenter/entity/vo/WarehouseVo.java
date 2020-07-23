@@ -2,6 +2,8 @@ package com.insigma.ordercenter.entity.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.SysRegion;
 import com.insigma.ordercenter.entity.WarehouseManager;
 import io.swagger.annotations.ApiModelProperty;

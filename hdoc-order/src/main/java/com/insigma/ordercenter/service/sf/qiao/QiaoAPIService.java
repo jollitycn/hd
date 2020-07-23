@@ -1,4 +1,4 @@
-package com.insigma.ordercenter.service.sf;
+package com.insigma.ordercenter.service.sf.qiao;
 
 
 import com.alibaba.fastjson.JSON;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class OMSAPIService {
+public class QiaoAPIService {
 
     //丰桥新沙箱测试顾客编码  Yg4Zf06w_sxZs3A5D
     //校验码                          3Xdk1jqeG1Xod9nUXus8Op7DNOkchTnw
@@ -25,19 +25,12 @@ public class OMSAPIService {
     //生产环境的地址
     private static final String CALL_URL_PROD = "https://sfapi.sf-express.com/std/service";
 
-    //https://scs-oms2-bspwms.sit.sf-express.com:45316/index.do?appId=111111&method=inboundquery&source
-    //=sfdemo&appToken=sfdemoapptoken&v=1.0×tamp=123456789&userToken=sfdemotoken
-
-//    private static final String CALL_URL_OMS2= "https://scs-oms2-bspwms.sit.sf-express.com:45316";
-    private static final String CALL_URL_OMS2= "https://scs-oms2-bspwms.sit.sf-express.com:45316/index.do?appId=111111&method=inboundquery&source=sfdemo&appToken=sfdemoapptoken&v=1.0×tamp=123456789&userToken=sfdemotoken" ;
-
-
     public static void main(String[] args) throws UnsupportedEncodingException {
-        //   EspServiceCode testService = EspServiceCode.EXP_RECE_CREATE_ORDER; //下订单
-        EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ORDER_RESP; //查订单
-        //     EspServiceCode testService = EspServiceCode.EXP_RECE_UPDATE_ORDER;//订单取消
-        //	EspServiceCode testService = EspServiceCode.EXP_RECE_FILTER_ORDER_BSP;//订单筛选
-        //   EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ROUTES;//查路由
+        //   	EspServiceCode testService = EspServiceCode.EXP_RECE_CREATE_ORDER; //下订单 //ok
+      EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ORDER_RESP; //查订单 //ok
+      //   EspServiceCode testService = EspServiceCode.EXP_RECE_UPDATE_ORDER;//订单取消
+        //  	EspServiceCode testService = EspServiceCode.EXP_RECE_FILTER_ORDER_BSP;//订单筛选
+          // EspServiceCode testService = EspServiceCode.EXP_RECE_SEARCH_ROUTES;//查路由 ok
         //	EspServiceCode testService = EspServiceCode.EXP_RECE_GET_SUB_MAILNO;//子单号
         //	EspServiceCode testService = EspServiceCode.EXP_RECE_QUERY_SFWAYBILL;//查运费
 
@@ -51,7 +44,8 @@ public class OMSAPIService {
         Map<String, String> params = new HashMap<String, String>();
 
         String timeStamp = String.valueOf(System.currentTimeMillis());
-        String msgData = JSON.toJSONString(data);//CallExpressServiceTools.packageMsgData(testService);
+        String msgData = JSON.toJSONString(data);
+        //CallExpressServiceTools.packageMsgData(testService);
 
         params.put("partnerID", CLIENT_CODE);  // 顾客编码 ，对应丰桥上获取的clientCode
         params.put("requestID", UUID.randomUUID().toString().replace("-", ""));
