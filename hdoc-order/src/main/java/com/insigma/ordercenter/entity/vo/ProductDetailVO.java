@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author liuhao
@@ -51,4 +51,37 @@ public class ProductDetailVO extends BaseVO {
     @ApiModelProperty(value = "商品描述")
     private String description;
 
+
+    @ApiModelProperty(value = "所属货主")
+    private String orderSourceName;
+
+    @ApiModelProperty(value = "品牌")
+    private String brand;
+
+    @ApiModelProperty(value = "商品代码")
+    private String productNo;
+
+    @ApiModelProperty(value = "NC代码")
+    private String productNc;
+
+    @ApiModelProperty(value = "是否启用折扣价（0：否，1：是）")
+    private Integer isDiscount;
+
+    @ApiModelProperty(value = "单位数量")
+    private Integer unitQuantity;
+
+    @ApiModelProperty(value = "重量")
+    private Double weight;
+
+    @ApiModelProperty(value = "物流重量")
+    private Double shipWeight;
+
+    @ApiModelProperty(value = "是否拆分发货 0：单品，1：组合")
+    private Integer isCombo;
+
+    @ApiModelProperty(value = "商品二维码")
+    private String qrCode;
+
+    @ApiModelProperty(value = "商品标签")
+    private List<String> tagList;
 }

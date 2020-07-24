@@ -2,6 +2,8 @@ package com.insigma.ordercenter.entity.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.SysRegion;
 import com.insigma.ordercenter.entity.WarehouseManager;
 import io.swagger.annotations.ApiModelProperty;
@@ -71,8 +73,21 @@ public class WarehouseVo implements Serializable {
     @ApiModelProperty(value = "联系电话")
     private String mobilePhone;
 
+    @ApiModelProperty("货主编号")
+    private Integer orderSourceId;
+
+    @ApiModelProperty("货主名称")
+    private String orderSourceName;
+
+    @ApiModelProperty("承运商编号")
+    private Integer expressCompanyId;
+
+    @ApiModelProperty("承运商名称")
+    private String expressCompanyName;
+
     private List<SysRegion> regions;
 
-    private List<WarehouseManager> managers;
+    @ApiModelProperty(value = "联系电话")
+    private String managerName;
 
 }

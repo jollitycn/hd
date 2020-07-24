@@ -1,7 +1,9 @@
 package com.insigma.ordercenter.entity.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.insigma.ordercenter.constant.Constant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -31,6 +33,7 @@ public class ExpressCompanyListVO extends BaseVO {
     private String companyNo;
 
     @ApiModelProperty(value = "创建时间")
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "说明")
@@ -42,4 +45,7 @@ public class ExpressCompanyListVO extends BaseVO {
     @ApiModelProperty(value = "创建人ID")
     @JsonSerialize(using = ToStringSerializer.class)
     private Long createId;
+
+    @ApiModelProperty("创建人姓名")
+    private String createName;
 }

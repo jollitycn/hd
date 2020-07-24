@@ -62,10 +62,19 @@ public class WarehouseDTO implements Serializable {
     @ApiModelProperty(value = "联系电话")
     private String mobilePhone;
 
-    @ApiModelProperty("仓库管理员用户编号")
-    private WarehouseManager[] managers;
+    @ApiModelProperty("负责人姓名")
+    private String managerName;
+
+    @ApiModelProperty("货主编号")
+    private Integer orderSourceId;
+
+    @ApiModelProperty("承运商编号")
+    private Integer expressCompanyId;
 
     @ApiModelProperty("地区编号")
     private Integer[] regionIds;
+
+    @ApiModelProperty("商品分类")
+    private Integer[] productTypes;
 
 }

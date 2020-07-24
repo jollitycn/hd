@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.ShopWarehouseMapper">
+
+    <delete id = "deleteByShopId">
+ delete from  t_shop_warehouse where shop_id= #{shopId}
+    </delete>
+
+    <select id="listByShopId" resultType="string">
+        SELECT warehouse_id from t_shop_warehouse
+            where shop_id = #{shopId}
+    </select>
+</mapper>

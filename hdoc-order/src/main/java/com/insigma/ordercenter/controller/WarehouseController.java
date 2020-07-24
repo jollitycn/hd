@@ -2,15 +2,17 @@ package com.insigma.ordercenter.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
-import com.insigma.ordercenter.entity.*;
-import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
+import com.insigma.ordercenter.entity.SysRegion;
+import com.insigma.ordercenter.entity.Warehouse;
+import com.insigma.ordercenter.entity.WarehouseProductRelation;
+import com.insigma.ordercenter.entity.WarehouseRegion;
 import com.insigma.ordercenter.entity.dto.WarehouseDTO;
+import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
 import com.insigma.ordercenter.entity.vo.WarehouseVo;
 import com.insigma.ordercenter.feign.RegionService;
 import com.insigma.ordercenter.service.IWarehouseManagerService;
@@ -73,7 +75,7 @@ public class WarehouseController extends BaseController {
 
     @GetMapping
     @ApiOperation("仓库列表")
-    public Result<?> list(Warehouse warehouse, @ApiParam("页面大小")@RequestParam(required = false) Integer pageSize ,
+    public Result<?> list(WarehouseDTO warehouse, @ApiParam("页面大小")@RequestParam(required = false) Integer pageSize ,
                           @ApiParam("当前页码") @RequestParam(required = false) Integer pageNum) {
 
         if (null == pageSize) {
@@ -82,15 +84,16 @@ public class WarehouseController extends BaseController {
         if (null == pageNum) {
             pageNum = 1;
         }
-        QueryWrapper<Warehouse> wrapper = new QueryWrapper<>();
-        if (StringUtils.isNotBlank(warehouse.getWarehouseNo())) {
-            wrapper.eq(Warehouse.WAREHOUSE_NO,warehouse.getWarehouseNo());
-        }
-        if (StringUtils.isNotBlank(warehouse.getWarehouseName())) {
-            wrapper.like(Warehouse.WAREHOUSE_NAME,warehouse.getWarehouseName());
-        }
-        IPage<Warehouse> page = new Page<>(pageNum,pageSize);
-        return Result.success(warehouseService.page(page,wrapper));
+//        QueryWrapper<Warehouse> wrapper = new QueryWrapper<>();
+//        if (StringUtils.isNotBlank(warehouse.getWarehouseNo())) {
+//            wrapper.eq(Warehouse.WAREHOUSE_NO,warehouse.getWarehouseNo());
+//        }
+//        if (StringUtils.isNotBlank(warehouse.getWarehouseName())) {
+//            wrapper.like(Warehouse.WAREHOUSE_NAME,warehouse.getWarehouseName());
+//        }
+        IPage<WarehouseVo> page = new Page<>(pageNum,pageSize);
+        Result<?> page1 = warehouseService.page(page, warehouse);
+        return page1;
     }
 
     @DeleteMapping("/{warehouseId}")
@@ -105,8 +108,6 @@ public class WarehouseController extends BaseController {
         WarehouseVo warehouseVo = new WarehouseVo();
         if (null != warehouse) {
             BeanUtils.copyProperties(warehouse,warehouseVo);
-            List<WarehouseManager> managerList = managerService.list(Wrappers.<WarehouseManager>lambdaQuery().eq(WarehouseManager::getWarehouseId, warehouse.getWarehouseId()));
-            warehouseVo.setManagers(managerList);
             List<SysRegion> regions = new ArrayList<>();
             List<WarehouseRegion> list = warehouseRegionService.list(Wrappers.<WarehouseRegion>lambdaQuery().eq(WarehouseRegion::getWarehouseId, warehouseVo.getWarehouseId()));
             list.forEach(warehouseRegion -> {

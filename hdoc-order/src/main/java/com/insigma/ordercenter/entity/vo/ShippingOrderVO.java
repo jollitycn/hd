@@ -1,0 +1,50 @@
+package com.insigma.ordercenter.entity.vo;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+/**
+ * @program: hdoc-parent
+ * @description: 发货单列表返回封装类
+ * @author: XuChao
+ * @create: 2020-07-21 10:50
+ **/
+@Data
+public class ShippingOrderVO {
+
+    @ApiModelProperty(value = "发货单ID ")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long shippingOrderId;
+
+    @ApiModelProperty(value = "发货单号 ")
+    private String shippingOrderNo;
+
+    @ApiModelProperty(value = "仓库名称")
+    private String warehouseName;
+
+    @ApiModelProperty(value = "发货单状态（0：待出库，1：待取货，2：已发货，3：冻结，4：冻结）")
+    private Integer status;
+
+    @ApiModelProperty(value = "物流公司(承运商)")
+    private String companyName;
+
+    @ApiModelProperty(value = "分配人")
+    private String createName;
+
+    @ApiModelProperty(value = "分配日期")
+    private String createTime;
+
+    @ApiModelProperty(value = "订单号")
+    private String orderNo;
+
+    @ApiModelProperty(value = "下单日期")
+    private String orderNoCreateTime;
+
+    @ApiModelProperty(value = "物流单号")
+    private String expressNo;
+
+    @ApiModelProperty(value = "运费")
+    private String freight;
+}

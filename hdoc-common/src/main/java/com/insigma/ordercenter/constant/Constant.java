@@ -34,6 +34,11 @@ public interface Constant {
         public static final String RAND_IMAGE_VALIDATE_CODE = "randImageValidateCode";
 
         /**
+         * 日期格式化
+         */
+        public static final String LOCALDATETIME_FORMATTER = "yyyy-MM-dd HH:mm:ss";
+        
+        /**
          * session中用户标识
          */
         public static final String LOGIN_USER_CODE = "loginUser";

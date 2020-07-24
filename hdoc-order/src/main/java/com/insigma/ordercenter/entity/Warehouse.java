@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.insigma.ordercenter.constant.Constant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -69,6 +71,9 @@ public class Warehouse implements Serializable {
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
+    @ApiModelProperty("负责人姓名")
+    private String managerName;
+
     @ApiModelProperty(value = "修改人id")
     private Long modifyId;
 
@@ -83,6 +88,12 @@ public class Warehouse implements Serializable {
 
     @ApiModelProperty(value = "联系电话")
     private String mobilePhone;
+
+    @ApiModelProperty("货主编号")
+    private Integer orderSourceId;
+
+    @ApiModelProperty("承运商编号")
+    private Integer expressCompanyId;
 
     public static final String WAREHOUSE_NO = "warehouse_no";
 

@@ -3,15 +3,13 @@ package com.insigma.ordercenter.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.entity.FileReq;
 import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.SysFile;
-import com.insigma.ordercenter.entity.FileReq;
 import com.insigma.ordercenter.mapper.SysFileMapper;
 import com.insigma.ordercenter.service.ISysFileService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.io.File;

@@ -11,13 +11,12 @@
             ex.remark,
             ex.is_stop,
             ex.create_id,
-            su.user_name
+            su.user_name as createName
             FROM
             t_express_company ex
             LEFT JOIN sys_user su ON ex.create_id = su.user_id
             WHERE
             ex.is_deleted = 0
-            AND ex.is_stop = 0
         <if test="companyName != null and companyName != ''">
             AND ex.company_name like #{companyName}
         </if>

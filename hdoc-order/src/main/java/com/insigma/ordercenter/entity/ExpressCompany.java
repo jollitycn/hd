@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.insigma.ordercenter.constant.Constant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,8 +35,8 @@ public class ExpressCompany implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "物流公司ID")
-    @TableId(value = "express_company_id", type = IdType.ID_WORKER)
-    private Long expressCompanyId;
+    @TableId(value = "express_company_id", type = IdType.AUTO)
+    private Integer expressCompanyId;
 
     @ApiModelProperty(value = "物流公司名称")
     private String companyName;

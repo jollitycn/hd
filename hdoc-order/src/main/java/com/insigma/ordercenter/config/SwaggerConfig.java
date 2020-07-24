@@ -29,41 +29,40 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfig  {
+public class SwaggerConfig {
 
 
-
-//可以注入多个doket，也就是多个版本的api，可以在看到有三个版本groupName不能是重复的，v1和v2是ant风格匹配，配置文件
-@Bean
-public Docket api() {
-    //可以添加多个header或参数
-    ParameterBuilder aParameterBuilder = new ParameterBuilder();
-    aParameterBuilder
-            .parameterType("header") //参数类型支持header, cookie, body, query etc
-            .name("x-token") //参数名
-            .defaultValue("token") //默认值
-            .description("header中token字段测试")
-            .modelRef(new ModelRef("string"))//指定参数值的类型
-            .required(false).build(); //非必需，这里是全局配置，然而在登陆的时候是不用验证的
-    List<Parameter> aParameters = new ArrayList<Parameter>();
-    aParameters.add(aParameterBuilder.build());
-    return new Docket(DocumentationType.SWAGGER_2)
-            .select()
-            .apis(RequestHandlerSelectors.basePackage("com.insigma.ordercenter.controller"))
+    //可以注入多个doket，也就是多个版本的api，可以在看到有三个版本groupName不能是重复的，v1和v2是ant风格匹配，配置文件
+    @Bean
+    public Docket api() {
+        //可以添加多个header或参数
+        ParameterBuilder aParameterBuilder = new ParameterBuilder();
+        aParameterBuilder
+                .parameterType("header") //参数类型支持header, cookie, body, query etc
+                .name("x-token") //参数名
+                .defaultValue("token") //默认值
+                .description("header中token字段测试")
+                .modelRef(new ModelRef("string"))//指定参数值的类型
+                .required(false).build(); //非必需，这里是全局配置，然而在登陆的时候是不用验证的
+        List<Parameter> aParameters = new ArrayList<Parameter>();
+        aParameters.add(aParameterBuilder.build());
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.insigma.ordercenter.controller"))
 //            .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-            .paths(PathSelectors.any())
-            .build()
-            .apiInfo(apiInfo1())
-            .globalOperationParameters(aParameters);
-}
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(apiInfo1())
+                .globalOperationParameters(aParameters);
+    }
 
-private ApiInfo apiInfo1() {
-    return new ApiInfoBuilder()
-            .title("订单中心")
-            .termsOfServiceUrl("www.insigma.com")
-            .contact(new Contact("Yuki", "http://baidu.com", "youwenkui@bis.com.cn"))
-            .version("v1.0")
-            .build();
+    private ApiInfo apiInfo1() {
+        return new ApiInfoBuilder()
+                .title("订单中心")
+                .termsOfServiceUrl("www.insigma.com")
+                .contact(new Contact("Yuki", "http://baidu.com", "youwenkui@bis.com.cn"))
+                .version("v1.0")
+                .build();
 
-}
+    }
 }

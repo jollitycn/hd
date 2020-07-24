@@ -2,4 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.ShippingOrderMapper">
 
+    <select id="getShippingOrderList" resultType="com.insigma.ordercenter.entity.vo.ShippingOrderVO">
+        SELECT
+                a.shipping_order_id,
+                a.shipping_order_no,
+                a.warehouse_id,
+                b.warehouse_name,
+                a.express_company_id,
+                c.company_name,
+                a.express_no,
+                d.user_name AS createName,
+                a.create_id,
+                a.create_time,
+                a.`status`,
+                a.is_combined
+            FROM
+                t_shipping_order AS a
+        LEFT JOIN t_warehouse b ON a.warehouse_id=b.warehouse_id
+        LEFT JOIN t_express_company c ON a.express_company_id=c.express_company_id
+        LEFT JOIN sys_user d ON a.create_id=d.user_id
+        WHERE 1=1
+        <if test="shippingOrderDTO.shippingNo !=null and shippingOrderDTO.shippingNo !=''">
+            AND a.shipping_order_no=#{shippingOrderDTO.shippingNo}
+        </if>
+        <if test="shippingOrderDTO.expressNo !=null and shippingOrderDTO.expressNo !=''">
+            AND a.express_no=#{shippingOrderDTO.shippingNo}
+        </if>
+    </select>
 </mapper>
