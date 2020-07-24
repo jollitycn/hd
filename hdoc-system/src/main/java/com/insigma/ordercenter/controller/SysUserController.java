@@ -12,6 +12,7 @@ import com.insigma.ordercenter.entity.SysRole;
 import com.insigma.ordercenter.entity.SysUser;
 import com.insigma.ordercenter.entity.query.CreateUserQuery;
 import com.insigma.ordercenter.entity.query.UpdateUserQuery;
+import com.insigma.ordercenter.entity.query.UpdateUserRoleQuery;
 import com.insigma.ordercenter.entity.query.UpdateUserShopQuery;
 import com.insigma.ordercenter.entity.vo.ShopInfoVO;
 import com.insigma.ordercenter.entity.vo.sysuservo.SysUserDetailVO;
@@ -204,6 +205,13 @@ public class SysUserController extends BaseController {
     @ApiOperation("修改该用户关联的店铺")
     public Result listShopByUserId(@Valid @RequestBody UpdateUserShopQuery param) {
         userShopRelationService.updateUserShop(param);
+        return Result.success();
+    }
+
+    @PutMapping("/updateUserRole")
+    @ApiOperation("修改该用户关联的角色")
+    public Result updateUserRole(@Valid @RequestBody UpdateUserRoleQuery param) {
+        sysUserService.updateUserRole(param);
         return Result.success();
     }
 

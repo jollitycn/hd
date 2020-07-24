@@ -307,5 +307,22 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
     }
 
+    @Override
+    public void updateUserRole(UpdateUserRoleQuery param) {
+        // 先删除原来关联的角色
+        QueryWrapper<UserRoleRelation> deleteWrapper = new QueryWrapper<>();
+        deleteWrapper.eq(UserShopRelation.USER_ID, param.getUserId());
+        userRoleRelationMapper.delete(deleteWrapper);
+
+        // 在重新关联新的角色
+        List<UserRoleRelation> list = Lists.newArrayList();
+        param.getRoleList().forEach(shopId -> {
+            UserRoleRelation userRoleRelation = new UserRoleRelation();
+            userRoleRelation.setUserId(param.getUserId());
+            userRoleRelation.setRoleId(shopId);
+            list.add(userRoleRelation);
+        });
+        userRoleRelationService.saveBatch(list);
+    }
 
 }
