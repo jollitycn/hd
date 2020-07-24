@@ -1,6 +1,7 @@
 package com.insigma.ordercenter.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.*;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -33,4 +34,8 @@ public interface IWarehouseService extends IService<Warehouse> {
     Result<?> deleteWarehouse(Serializable warehouseId);
 
     Result<?> page(IPage<WarehouseVo> page, WarehouseDTO dto);
+
+    Page listProducts(WarehouseProductDTO req);
+//
+//    Result<?> listProducts(WarehouseProductDTO req);
 }

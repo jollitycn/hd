@@ -133,5 +133,11 @@ public class WarehouseController extends BaseController {
     }
 
 
+    @PostMapping("/listProducts")
+    @ApiOperation("仓库商品库存列表")
+    public Result<?> listProducts(@RequestBody WarehouseProductDTO req) {
+        return warehouseService.listProducts(req);
+    }
+
 
 }

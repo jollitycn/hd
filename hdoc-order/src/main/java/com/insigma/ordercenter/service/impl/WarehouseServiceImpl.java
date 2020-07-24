@@ -3,11 +3,13 @@ package com.insigma.ordercenter.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.entity.dto.WarehouseDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
+import com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse;
 import com.insigma.ordercenter.entity.vo.WarehouseVo;
 import com.insigma.ordercenter.mapper.WarehouseMapper;
 import com.insigma.ordercenter.service.*;
@@ -170,4 +172,25 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         page.setRecords(page1);
         return Result.success(page);
     }
+
+    @Override
+    public Page listProducts(WarehouseProductDTO request) {
+      //  Page page = new Page<>(request.getPageNum(), request.getPageSize());
+//        List<ShopQueryResponse> list = baseMapper.list(page, request);
+//        for (ShopQueryResponse response:
+//                list) {
+//            response.setWarehouses(shopWarehouseService.listByShopId(response.getShopId()));
+//        }
+//        page.setRecords(list);
+       // return page;
+        return null;
+    }
+
+//    @Override
+//    public Result<?> listProducts(WarehouseProductDTO req) {
+//        List<WarehouseVo> page1 = this.baseMapper.page(page, map);
+//        page.setRecords(page1);
+//        return Result.success(page);
+//    }
+
 }
