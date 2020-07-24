@@ -3,7 +3,6 @@ package com.insigma.ordercenter.entity.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -41,4 +40,7 @@ public class ProductListDTO {
 
     @ApiModelProperty(value = "商品名称")
     private String productName;
+
+    @ApiModelProperty(value = "商品编码")
+    private String productNo;
 }

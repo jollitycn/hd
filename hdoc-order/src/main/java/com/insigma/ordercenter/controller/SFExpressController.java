@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -62,6 +65,26 @@ public class SFExpressController extends BaseController {
         } else {
             return Result.success(response);
         }
+    }
+
+
+    //    @Autowired
+//    private TestCallExpressNewAPIService testCallExpressNewAPIService;
+    @PostMapping("/cb")
+    @ApiOperation("cb")
+    public Result cb(HttpServletRequest request) throws Exception {
+
+        //  APIResponse response = QiaoAPIService.query(EspServiceCode.EXP_RECE_CREATE_ORDER, order);
+        //  if (response.getApiResultCode() != null) {
+        //      return Result.error(new CodeMsg(CodeMsg.API_FAILED.getRetCode(), response.toString()));
+        //  } else {
+        request.getParameterMap();
+        Map<Object, Object> map = new HashMap<Object, Object>() ;
+        map.put("parameterMap", request.getParameterMap());
+        map.put("queryString", request.getQueryString());
+        map.put("attributeNames", request.getAttributeNames());
+        return Result.success(map);
+        //  }
     }
 
     @PostMapping("/orderSearchService")

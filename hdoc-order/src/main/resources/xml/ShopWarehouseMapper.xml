@@ -6,8 +6,8 @@
  delete from  t_shop_warehouse where shop_id= #{shopId}
     </delete>
 
-    <select id="listByShopId" resultType="string">
-        SELECT warehouse_id from t_shop_warehouse
+    <select id="listByShopId" resultType="com.insigma.ordercenter.entity.Warehouse">
+        SELECT tw.warehouse_id,tw.warehouse_name from t_shop_warehouse tsw left join t_warehouse  tw on tsw.warehouse_id =tw.warehouse_id
             where shop_id = #{shopId}
     </select>
 </mapper>

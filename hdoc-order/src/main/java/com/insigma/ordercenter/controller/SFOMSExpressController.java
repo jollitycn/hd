@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.Serializable;
+import java.util.*;
 
 
 /**
@@ -38,6 +41,33 @@ public class SFOMSExpressController extends BaseController {
 
     //    @Autowired
 //    private TestCallExpressNewAPIService testCallExpressNewAPIService;
+    @PostMapping("/cb")
+    @ApiOperation("cb")
+    public Result cb(HttpServletRequest request) throws Exception {
+
+        //  APIResponse response = QiaoAPIService.query(EspServiceCode.EXP_RECE_CREATE_ORDER, order);
+        //  if (response.getApiResultCode() != null) {
+        //      return Result.error(new CodeMsg(CodeMsg.API_FAILED.getRetCode(), response.toString()));
+        //  } else {
+        request.getParameterMap();
+        HashMap<Object, Object> map = new HashMap<Object, Object>();
+        HashMap parameterMap = new HashMap();
+        parameterMap.putAll(request.getParameterMap());
+        map.put("parameterMap", parameterMap);
+        map.put("queryString", request.getQueryString());
+        List<String> list = new ArrayList<String>();
+        Vector v = new Vector();
+        for (Enumeration e = request.getAttributeNames(); e.hasMoreElements();){
+            v.add(e.nextElement());
+        }
+
+        map.put("attributeNames", v);
+        return Result.success(map);
+        //  }
+    }
+
+    //    @Autowired
+//    private TestCallExpressNewAPIService testCallExpressNewAPIService;
     @PostMapping("/createOrder")
     @ApiOperation("下单")
     public Result createOrder(@Valid @RequestBody Order order) throws Exception {
@@ -54,7 +84,6 @@ public class SFOMSExpressController extends BaseController {
 //        params.put("commodityName", info.getCommodityName());
 //        //商品数量
 //        params.put("orderNum", info.getOrderNum());
-
 
         APIResponse response = QiaoAPIService.query(EspServiceCode.EXP_RECE_CREATE_ORDER, order);
         if (response.getApiResultCode() != null) {

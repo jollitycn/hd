@@ -1,12 +1,12 @@
 package com.insigma.ordercenter.service.impl;
 
 import com.insigma.ordercenter.entity.ShopWarehouse;
+import com.insigma.ordercenter.entity.Warehouse;
 import com.insigma.ordercenter.mapper.ShopWarehouseMapper;
 import com.insigma.ordercenter.service.IShopWarehouseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class ShopWarehouseServiceImpl extends ServiceImpl<ShopWarehouseMapper, S
     }
 
     @Override
-    public List<String> listByShopId(Long shopId) {
+    public List<Warehouse> listByShopId(Long shopId) {
       return  shopWarehouseMapper.listByShopId(shopId);
     }
 }

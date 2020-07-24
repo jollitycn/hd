@@ -2,6 +2,7 @@ package com.insigma.ordercenter.service;
 
 import com.insigma.ordercenter.entity.ShopWarehouse;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.Warehouse;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface IShopWarehouseService extends IService<ShopWarehouse> {
 
     void update(Long shopId, List<String> warehouseIds);
 
-    List<String> listByShopId(Long shopId);
+    List<Warehouse> listByShopId(Long shopId);
 }

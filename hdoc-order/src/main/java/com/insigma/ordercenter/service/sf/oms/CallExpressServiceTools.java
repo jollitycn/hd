@@ -92,6 +92,9 @@ public class CallExpressServiceTools {
             case OUTBOUND:
                 request = expReceUpdateOrder();
                 break;
+            case OUTBOUND_CONFIRM:
+                request = outboundConfirm();
+                break;
             case CANCEL_TRANSPORT:
                 request = expReceFilterOrderBsp();
                 break;
@@ -117,10 +120,86 @@ public class CallExpressServiceTools {
         return request;
     }
 
+    private static String outboundConfirm() {
+        String request ="{\n" +
+                "\"actualShipDateTime\": 1559715069000,\n" +
+                "\"carrier\": \"CP\",\n" +
+                "\"carrierProduct\": \"SE0030\",\n" +
+                "\"companyCode\": \"SUBWAY886\",\n" +
+                "\"dataStatus\": \"900\",\n" +
+                "\"erpOrder\": \"3236745471812081\",\n" +
+                "\"outboundContainer\": [{\n" +
+                "\"containerNo\": \"101000042296013\",\n" +
+                "\"containerType\": \"0\",\n" +
+                "\"items\": [{\n" +
+                "\"actualQty\": 1.0,\n" +
+                "\"erpOrderLineNum\": \"1\",\n" +
+                "\"inventoryStatus\": \"10\",\n" +
+                "\"lot\": \"\",\n" +
+                "\"lotattdesc\": \";;2019-04-22;;;;;N;;;;;\",\n" +
+                "\"skuNo\": \"WMSTESTID3\",\n" +
+                "\"userDef1\": \"\",\n" +
+                "\"userDef11\": \"\",\n" +
+                "\"userDef2\": \"10\",\n" +
+                "\"userDef3\": \"1\",\n" +
+                "\"userDef4\": \"\",\n" +
+                "\"userDef5\": \"\",\n" +
+                "\"userDef6\": \"\",\n" +
+                "\"userDef7\": \"0\",\n" +
+                "\"userDef8\": \"1\",\n" +
+                "\"weight\": 2.0,\n" +
+                "\"weightUm\": \"KG\"\n" +
+                "}],\n" +
+                "\"userDef1\": \"\",\n" +
+                "\"userDef2\": \"\",\n" +
+                "\"userDef3\": \"\",\n" +
+                "参数名\n" +
+                "类型\n" +
+                "说明\n" +
+                "code\n" +
+                "字符(32)\n" +
+                "接口状态 200 成功 其它异常\n" +
+                "message\n" +
+                "字符(500)\n" +
+                "接口状态 200 成功 其它异常\n" +
+                "返回参数说明\n" +
+                "返回示例\n" +
+                "备注\n" +
+                "更多返回错误代码请看附录的错误代码描述\n" +
+                "\"userDef4\": \"\",\n" +
+                "\"userDef5\": \"\",\n" +
+                "\"userDef6\": \"\",\n" +
+                "\"userDef7\": \"0\",\n" +
+                "\"userDef8\": \"1\",\n" +
+                "\"weight\": 2.0,\n" +
+                "\"weightUm\": \"KG\"\n" +
+                "}],\n" +
+                "\"outboundDetail\": [{\n" +
+                "\"actualQty\": 1.0,\n" +
+                "\"erpOrderLineNum\": \"1\",\n" +
+                "\"skuNo\": \"WMSTESTID3\"\n" +
+                "}],\n" +
+                "\"returnTracking\": \"\",\n" +
+                "\"sfOrderNo\": \"OB412459453353034489-100\",\n" +
+                "\"transactionId\": \"203SO190605000009\",\n" +
+                "\"userDef1\": \"\",\n" +
+                "\"userDef2\": \"000001308000*1,\",\n" +
+                "\"userDef3\": \"\",\n" +
+                "\"userDef4\": \"\",\n" +
+                "\"userDef5\": \"\",\n" +
+                "\"userDef6\": \"\",\n" +
+                "\"userDef7\": \"0\",\n" +
+                "\"userDef8\": \"0\",\n" +
+                "\"warehouseCode\": \"010VB\",\n" +
+                "\"wayBillNo\": \"SF7001001199534\"\n" +
+                "}";
+        return request;
+    }
+
     private static String expReceCreateOrder() {
         String request = "{\r\n" +
                 "	\"orderItems\": [{\r\n" +
-                "		\"monthlyAccount\": \"7550612539\",\r\n" +
+              //  "		\"monthlyAccount\": \"7550612539\",\r\n" +
                 "		\"temperatureLevelName\": \"0至10\",\r\n" +
                 "		\"remark\": \"这是备注\",\r\n" +
                 "		\"skuName\": \"维生素C咀嚼片\",\r\n" +
@@ -129,7 +208,7 @@ public class CallExpressServiceTools {
                 "		\"volume\": \"12\"\r\n" +
                 "	}],\r\n" +
                 "	\"erpOrder\": \"1233\",\r\n" +
-                "	\"monthlyAccount\": \"7550612539\",\r\n" +
+           //     "	\"monthlyAccount\": \"7550612539\",\r\n" +
                 "	\"consigneeProvinceName\": \"广东省\",\r\n" +
                 "	\"paymentTypeCode\": \"PR_ACCOUNT\",\r\n" +
                 "	\"shipperLocationName\": \"宝安M17大厦A栋07\",\r\n" +
@@ -243,39 +322,165 @@ public class CallExpressServiceTools {
     }
 
     private static String expReceUpdateOrder() {
-        String request = "";
+        String request = "{\n" +
+                "\"carrierCode\": \"CP\",\n" +
+                "\"carrierServiceType\": \"SE0004\",\n" +
+                "\"erpOrder\": \"68121638522904\",\n" +
+                "\"orderTime\": \"2018-10-09 12:01:15\",\n" +
+                " \"sfOrderType\": \"PO\",\n" +
+                "\"warehouseCode\": \"P024CSB\",\n" +
+                "	\"sourceChannel\": \"demo-sysrem\",\r\n" +
+                "\"remark\": \"订单备注：不要辣\",\n" +
+                "\"paymentTypeCode\": \"PR_ACCOUNT\",\n" +
+                "\"deliveryDate\": \"2018-10-15 12:01:15\",\n" +
+                "\"customer\": {\n" +
+                "\"companyCode\": \"7550137864\",\n" +
+                "\"customerMonthlyCard\": \"7550760040\"\n" +
+                "},\n" +
+                "\"shipper\": {\n" +
+                "\"shipperContactName\": \"李小明\",\n" +
+                "\"shipperContactPhone\": \"10086\",\n" +
+                "\"shipperContactTel\": \"18645787890\",\n" +
+                "\"shipperContactEmail\": \"ling.lina@126.com\",\n" +
+                "\"shipperCountryName\": \"中国\",\n" +
+                "\"shipperCityName\": \"梅州市\",\n" +
+                "\"shipperDistrictName\": \"平远县\",\n" +
+                "\"shipperRegionName\": \"大柘镇\",\n" +
+                "\"shipperLocationName\": \"广东省梅州市平远县大柘镇光明乳业分公司\",\n" +
+                "\"shipperCompany\": \"深圳光明乳业有限公司平远分公司\"\n" +
+                "},\n" +
+                "\"consignee\": {\n" +
+                "\"consigneeCityName\": \"深圳市\",\n" +
+                "\"consigneeContactName\": \"莫怡然\",\n" +
+                "\"consigneeContactPhone\": \"67627773\",\n" +
+                "\"consigneeLocationName\": \"广东省深圳市龙岗区横岗街道红棉4路森城工业区A2栋\",\n" +
+                "\"consigneeProvinceName\": \"广东省\",\n" +
+                "\"consigneeCountryName\": \"中国\",\n" +
+                "\"consigneeContactEmail\": \"shangbai@123.com\",\n" +
+                "\"consigneeContactZipCode\": \"7553121251\",\n" +
+                "\"consigneeContactTel\": \"1524545412222\",\n" +
+                "\"consigneeDistrictName\": \"龙岗\",\n" +
+                "\"consigneeRegionName\": \"龙岗区\",\n" +
+                "\"consigneeCompany\": \"瑞意森城有限公司\"\n" +
+                "},\n" +
+                "\"addedService\": [{\n" +
+                "\"serviceCode\": \"VA0021\",\n" +
+                "\"value\": \"1000\"\n" +
+                "},\n" +
+                "{\n" +
+                "\"serviceCode\": \"VA0003\",\n" +
+                "\"value\": \"Y\"\n" +
+                "},\n" +
+                "{\n" +
+                "\"serviceCode\": \"VA0042\",\n" +
+                "\"value\": \"1000\"\n" +
+                "},\n" +
+                "{\n" +
+                "\"serviceCode\": \"VA0019\",\n" +
+                "\"value\": \"4000\"\n" +
+                "}\n" +
+                "],\n" +
+                "\"detail\": [{\n" +
+                "\"erpOrderLineNum\": 1,\n" +
+                "\"skuNo\": \"6422731233\",\n" +
+                "\"skuName\": \"Topfer特福芬 新妈妈茶（混合花草冲饮） 200g\",\n" +
+                "\"packageUnitCode\": \"件\",\n" +
+                "\"lot\": \"1505444444\",\n" +
+                "\"quantity\": 10\n" +
+                "},\n" +
+                "{\n" +
+                "\"erpOrderLineNum\": 2,\n" +
+                "\"skuNo\": \"8139526156\",\n" +
+                "\"skuName\": \"WEI-I味一 旗鱼松 105g\",\n" +
+                "\"packageUnitCode\": \"包\",\n" +
+                "\"lot\": \"1505444444\",\n" +
+                "\"quantity\": 10\n" +
+                "}\n" +
+                "]\n" +
+                "}\n" +
+                "{\n" +
+                "\"carrierCode\": \"CP\",\n" +
+                "\"carrierServiceType\": \"SE0059\",\n" +
+                "\"completeDelivery\": \"Y\",\n" +
+                "\"consignee\": {\n" +
+                "\"consigneeCityName\": \"深圳市\",\n" +
+                "\"consigneeCompany\": \"测试\",\n" +
+                "\"consigneeContactName\": \"程旭\",\n" +
+                "\"consigneeContactPhone\": \"136954213690\",\n" +
+                "\"consigneeLocationName\": \"广东省深圳市龙岗区横岗街道红棉4路森城工业区A2栋\",\n" +
+                "\"consigneeProvinceName\": \"广东省\"\n" +
+                "},\n" +
+                "\"shipper\": {},\n" +
+                "\"customer\": {\n" +
+                "\"companyCode\": \"0294873527\",\n" +
+                "\"customerMonthlyCard\": \"7553000088\"\n" +
+                "},\n" +
+                "\"detail\": [{\n" +
+                "\"erpOrderLineNum\": \"1\",\n" +
+                "\"inventoryStatus\": \"10\",\n" +
+                "\"packageUnitCode\": \"EA\",\n" +
+                "\"quantity\": 1.0,\n" +
+                "\"skuName\": \"如康整切眼肉牛排3片装【340g】\",\n" +
+                "\"skuNo\": \"6970374185860\"\n" +
+                "}],\n" +
+                "\"addedService\": [{\n" +
+                "\"serviceCode\": \"VA0021\",\n" +
+                "\"value\": \"20000\"\n" +
+                "},\n" +
+                "{\n" +
+                "\"serviceCode\": \"VA0003\",\n" +
+                "\"value\": \"Y\"\n" +
+                "参数名\n" +
+                "类型\n" +
+                "说明\n" +
+                "code\n" +
+                "字符(32)\n" +
+                "接口状态 200 成功 其它异常\n" +
+                "message\n" +
+                "字符(500)\n" +
+                "接口状态 200 成功 其它异常\n" +
+                "items\n" +
+                "对象\n" +
+                "详细请见items\n" +
+                "参数名\n" +
+                "类型\n" +
+                "说明\n" +
+                "sfOrderNo\n" +
+                "字符(64)\n" +
+                "SF生成订单号 (失败不产生)\n" +
+                "erpOrder\n" +
+                "字符(64)\n" +
+                "外部系统订单号(客户方系统订单号)\n" +
+                "code\n" +
+                "字符(32)\n" +
+                "接口状态 200 成功 其它异常\n" +
+                "errMsg\n" +
+                "字符(128)\n" +
+                "失败原因\n" +
+                "返回参数说明\n" +
+                "items对象\n" +
+                "返回示例\n" +
+                "},\n" +
+                "{\n" +
+                "\"serviceCode\": \"VA0041\",\n" +
+                "\"value\": \"Y\"\n" +
+                "}\n" +
+                "],\n" +
+                "\"erpOrder\": \"32367454718150251233445\",\n" +
+                "\"orderTime\": \"2019-01-21 19:18:47\",\n" +
+                "\"sfOrderType\": \"PO\",\n" +
+                "\"warehouseCode\": \"010VB\",\n" +
+                "\"deliveryDate\": \"2019-01-22 19:18:47\"\n" +
+                "}";
         return request;
     }
 
     private static String expReceFilterOrderBsp() {
-        String request = "";
-        OrderFilter filter = new OrderFilter();
-        List<ContactInfo> contactInfoList = new ArrayList<>();
-        ContactInfo contactInfo = new ContactInfo();
-        contactInfo.setContactType(1);
-        contactInfo.setCountry("CN");
-        contactInfo.setTel("4006789888");
-        contactInfo.setPostCode("580058");
-        contactInfo.setContact("小曾");
-        contactInfo.setAddress("测试订单，请不要接单12");
-        contactInfoList.add(contactInfo);
-
-        ContactInfo contactInfo1 = new ContactInfo();
-        contactInfo1.setContactType(2);
-        contactInfo1.setCompany("顺丰速运1");
-        contactInfo1.setCountry("CN");
-        contactInfo1.setTel("18688806057");
-        contactInfo1.setPostCode("580058");
-        contactInfo1.setContact("小邱");
-        contactInfo1.setAddress("测试订单，请不要接单1");
-        contactInfoList.add(contactInfo1);
-
-        filter.setContactInfos(contactInfoList);
-        filter.setFilterType(1);
-        //filter.setMonthlyCard();
-        filter.setOrderId("TE201407020016");
-        OrderFilter[] filters = new OrderFilter[]{filter};
-        request = JSON.toJSONString(filters);
+        String request = "{\n" +
+                "\"erpOrder\": \"客户erp单号\",\n" +
+                "\"sfOrderNo\": \"SF生成订单号\",\n" +
+                "\"sourceCode\": \"SFTEST\"\n" +
+                "}";
         return request;
     }
 
