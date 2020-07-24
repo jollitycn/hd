@@ -3,6 +3,8 @@ package com.insigma.ordercenter.entity.vo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.SysRegion;
 import com.insigma.ordercenter.entity.WarehouseManager;
@@ -56,15 +58,19 @@ public class WarehouseVo implements Serializable {
     private String warehouseName;
 
     @ApiModelProperty(value = "创建人id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long createId;
 
     @ApiModelProperty(value = "创建时间")
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "修改人id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long modifyId;
 
     @ApiModelProperty(value = "修改时间")
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime modifyTime;
 
     @ApiModelProperty(value = "备注")
