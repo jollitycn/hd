@@ -32,24 +32,27 @@ public class MQProducerConfiguration {
     if (StringUtils.isEmpty(this.groupName)) {
       throw new RocketMQException(RocketMQErrorEnum.PARAMM_NULL, "groupName is blank", Boolean.valueOf(false));
     }
+
     if (StringUtils.isEmpty(this.namesrvAddr)) {
       throw new RocketMQException(RocketMQErrorEnum.PARAMM_NULL, "nameServerAddr is blank", Boolean.valueOf(false));
     }
-    
+
     DefaultMQProducer producer = new DefaultMQProducer(this.groupName);
     producer.setNamesrvAddr(this.namesrvAddr);
 
     if (this.maxMessageSize != null) {
       producer.setMaxMessageSize(this.maxMessageSize.intValue());
     }
+
     if (this.sendMsgTimeout != null) {
       producer.setSendMsgTimeout(this.sendMsgTimeout.intValue());
     }
-    
+
     if (this.retryTimesWhenSendFailed != null) {
       producer.setRetryTimesWhenSendFailed(this.retryTimesWhenSendFailed.intValue());
     }
-      log.info(String.format("RocketMQ producer is start ! groupName:[%s],namesrvAddr:[%s]", new Object[] { this.groupName, this.namesrvAddr }));
+
+    log.info(String.format("RocketMQ producer is start ! groupName:[%s],namesrvAddr:[%s]", new Object[]{this.groupName, this.namesrvAddr}));
     return producer;
   }
 }
