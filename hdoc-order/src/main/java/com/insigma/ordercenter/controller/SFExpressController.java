@@ -79,7 +79,7 @@ public class SFExpressController extends BaseController {
         //      return Result.error(new CodeMsg(CodeMsg.API_FAILED.getRetCode(), response.toString()));
         //  } else {
         request.getParameterMap();
-        Map<Object, Object> map = new HashMap<Object, Object>() {};
+        Map<Object, Object> map = new HashMap<Object, Object>() ;
         map.put("parameterMap", request.getParameterMap());
         map.put("queryString", request.getQueryString());
         map.put("attributeNames", request.getAttributeNames());

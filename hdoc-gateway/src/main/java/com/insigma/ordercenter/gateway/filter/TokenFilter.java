@@ -62,12 +62,13 @@ public class TokenFilter implements GlobalFilter, Ordered {
         String authToken = "";
         try {
             String path = serverHttpRequest.getURI().getPath();
-            String[] ignoresUrl = {"/validateCode/getValidateCodeImage","login","/v2/api-docs","/swagger-ui.html"};
+            String[] ignoresUrl = {"/validateCode/getValidateCodeImage","login","order/*/cb","/v2/api-docs","/swagger-ui.html"};
             for (String url : ignoresUrl) {
                 if (path.contains(url)) {
                     return chain.filter(exchange);
                 }
             }
+
             if (StringUtils.isBlank(uuid)) {
                 return JwtResponse.jwtResponse(exchange, HttpStatus.UNAUTHORIZED.value(), "token出错");
             } else {
