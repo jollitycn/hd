@@ -3,9 +3,7 @@ package com.insigma.ordercenter.entity;
     import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-    import com.fasterxml.jackson.annotation.JsonFormat;
-    import com.insigma.ordercenter.constant.Constant;
-    import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -104,6 +102,9 @@ public class Product implements Serializable {
 
     @ApiModelProperty(value = "条形码")
     private String qrCode;
+
+    @ApiModelProperty(value = "长宽高")
+    private String lengthWidthHeight;
 
 
         public static final String PRODUCT_ID = "product_id";

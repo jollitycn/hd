@@ -1,11 +1,13 @@
 package com.insigma.ordercenter.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.Product;
 import com.insigma.ordercenter.entity.ProductCombo;
+import com.insigma.ordercenter.entity.Tag;
 import com.insigma.ordercenter.entity.dto.AddComboDTO;
 import com.insigma.ordercenter.entity.dto.ProductAddDTO;
 import com.insigma.ordercenter.entity.dto.ProductListDTO;
@@ -14,6 +16,7 @@ import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ProductListPageVO;
 import com.insigma.ordercenter.mapper.ProductComboMapper;
 import com.insigma.ordercenter.mapper.ProductMapper;
+import com.insigma.ordercenter.mapper.TagMapper;
 import com.insigma.ordercenter.service.IProductService;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
 import com.insigma.ordercenter.utils.StringUtil;
@@ -42,6 +45,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Autowired
     private ProductComboMapper productComboMapper;
 
+    @Autowired
+    private TagMapper tagMapper;
+
     @Override
     public IPage<ProductListPageVO> getProductListPage(Page<ProductListPageVO> page, ProductListDTO productListDTO) {
 
@@ -53,7 +59,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         if (productListDTO.getProductSku() != null) {
             productSku = StringUtil.addPercent(productListDTO.getProductSku());
         }
-        List<ProductListPageVO> resultList = baseMapper.getProductListPage(page, productName, productSku);
+        String productNo = null;
+        if (productListDTO.getProductSku() != null) {
+            productNo = StringUtil.addPercent(productListDTO.getProductNo());
+        }
+        List<ProductListPageVO> resultList = baseMapper.getProductListPage(page, productName, productSku,productNo);
 
         //获取商品的总库存数量
         for (ProductListPageVO productListPageVO : resultList) {
@@ -114,7 +124,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         ProductDetailVO result=baseMapper.getProductDetail(productId);
 
         //查询标签
-        //TODO
+        QueryWrapper queryWrapper=new QueryWrapper();
+        queryWrapper.eq("product_id",productId);
+        List<Tag> tagList=tagMapper.selectList(queryWrapper);
+
+        result.setTagList(tagList);
 
         return result;
     }
