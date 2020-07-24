@@ -83,5 +83,5 @@ public class ShippingOrder implements Serializable {
 
     @ApiModelProperty(value = "发货单编号")
     private String shippingOrderNo;
-
+    private String ShippingOrderNo;
 }

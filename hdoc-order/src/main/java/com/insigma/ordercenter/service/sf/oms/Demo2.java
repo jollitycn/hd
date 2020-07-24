@@ -1,6 +1,7 @@
 package com.insigma.ordercenter.service.sf.oms;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import com.insigma.ordercenter.logistics.sf.oms.AESCipher;
@@ -28,12 +29,58 @@ public class Demo2 {
 
 	public static final int TIMEOUT = 30000;
 	public static final String CHARSET = "UTF-8";
-	public static final String AES256_KEY = "alcTaVtXvKtuOfc9ZyC8rEc8j6Hzogmg";// key
-	public static final String MACSHA_512 = "W0b4XVyNzMaO9u0QZ3KwilcVbeAv6sN6";// 盐
-
+	public static final String AES256_KEY = "9A94Nt5372630G6o1pF6H2786f446F61";// key
+	public static final String MACSHA_512 = "v2NlU9A59N4uI75cc6F5mDZ242S5xM72";// 盐
 	//public static final String REQUES_URL = "http://scs-oms2-bspwms.sit.sf-express.com/index.do?appId=111111&method=inbound&source=jialefuapptoken&appToken=jialefuapptoken&v=1.0&timestamp=123456789&signMethod=md5&sign=223&deviceToken=444&userToken=jialefu&format=json";
-	public static final String REQUES_URL = "https://scs-oms2-bspwms.sit.sf-express.com:45316/index.do?appId=111111&method=transport&source=yunnanxianhua&appToken=yunnanxianhuaapptoken&v=1.0&timestamp=123456789&userToken=yunnanxianhuatoken";
+	public static final String REQUES_URL = "https://scs-oms2-bspwms.sit.sf-express.com:45316/index.do";
 	//public static final String REQUES_URL = "http://localhost:8080/index.do?appId=111111&method=inbound&source=jialefuapptoken&appToken=jialefuapptoken&v=1.0&timestamp=123456789&signMethod=md5&sign=223&deviceToken=444&userToken=jialefu&format=json";
+
+
+
+		private static void demo(OMSServiceCode method) throws UnsupportedEncodingException {
+		String	source = CallExpressServiceTools.packageMsgData(method);
+
+		// STEP.1 业务报文urlencode
+		String urlSource = URLEncoder.encode(source, "UTF-8");
+
+		// STEP.2 业务报文加密 [注:AESCipher非线程安全]
+		AESCipher aesciphe = new AESCipher(AES256_KEY.getBytes(CHARSET));
+		String encrySource = aesciphe.getEncryptedMessage(urlSource);
+
+		System.out.println("加密报文:"+encrySource);
+
+		// STEP.3 生成摘要
+		String sourceDiges = HmacSha512CoderFactory.getHmacSha512Coder(MACSHA_512, encrySource);
+
+		// STEP.4 报文及摘要再次转码
+		String encrySourceEncode = URLEncoder.encode(encrySource, CHARSET);
+		String sourceDigesEncode = URLEncoder.encode(sourceDiges, CHARSET);
+
+		// STEP.5 准备参数报文
+		RequestBean request = new RequestBean(new RequestBean.Request(encrySourceEncode, sourceDigesEncode));
+			RequestBean request1 = new RequestBean(new RequestBean.Request(encrySourceEncode, sourceDigesEncode));
+request.setAppId("111111");
+request.setMethod(method.getCode());
+request.setSource("YNXH_NEW");
+request.setTimestamp(System.currentTimeMillis());
+request.setAppToken("YNXH_NEWAPPTOKEN");
+			request.setUserToken("YNXH_NEWTOKEN");
+request.setV("1.0");
+		String json = new Gson().toJson(request1);
+
+		// STEP.5 HTTP调用顺丰接口 [注:响应为明文]
+			String url  = REQUES_URL +"?source=" + request.getSource()
+					//+ "&appId=" +request.getAppId()
+					+ "&method=" + request.getMethod()
+					+ "&timestamp=" + request.getTimestamp()
+					+ "&appToken=" + request.getAppToken()
+					+ "&userToken=" + request.getUserToken()
+			+ "&v="+request.getV();
+			String response = post(    url , json);
+
+		System.out.println("远程接口响应:"+response);
+	}
+
 	/**
 	 * 示例
 	 * 
@@ -64,7 +111,7 @@ public class Demo2 {
 		String json = new Gson().toJson(request);
 
 		// STEP.5 HTTP调用顺丰接口 [注:响应为明文]
-		String response = post(REQUES_URL, json);
+		String response = post(REQUES_URL  , json);
 
 		System.out.println("远程接口响应:"+response);
 	}
@@ -177,25 +224,21 @@ public class Demo2 {
 				"	]\r\n" +
 				"}";
 
-		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.TRANSPORT);
-		Demo2.demo(source);
-		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_TRANSPORT);
-		Demo2.demo(source);
-		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.ROUTE_QUERY);
-		Demo2.demo(source);
-		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.QUERY_WAYBILL);
-		Demo2.demo(source);
-		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.INBOUND);
-		Demo2.demo(source);
-		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.OUTBOUND);
-		Demo2.demo(source);
-		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_INBOUND);
-		Demo2.demo(source);
-		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_OUTBOUND);
-		Demo2.demo(source);
-		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.COMMODITY_INFO);
-		Demo2.demo(source);
+		//		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.TRANSPORT);
+	//source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_TRANSPORT);
+//		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.ROUTE_QUERY);
+//		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.QUERY_WAYBILL);
+//		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.INBOUND);
+//		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_INBOUND);
+//		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_OUTBOUND);
+//		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.COMMODITY_INFO);
+		//Demo2.demo(OMSServiceCode.OUTBOUND);
+
+		//Demo2.demo(OMSServiceCode.ROUTE_QUERY);
+		 Demo2.demo(OMSServiceCode.OUTBOUND);
+		//Demo2.demo(OMSServiceCode.OUTBOUND_CONFIRM);
 
 	}
+
 }
 

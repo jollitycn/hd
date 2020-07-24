@@ -12,7 +12,7 @@ public class RequestBean extends BaseVO {
     private String appId;
     private String v;
     private String appToken;
-    private String timestamp;
+    private Long timestamp;
     private String userToken;
     private String source;
     private Request param_json;

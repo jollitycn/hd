@@ -9,11 +9,14 @@ public enum OMSServiceCode {
     TRANSPORT("transport", "冷运运输订单接收"),
     INBOUND("inbound", "入库单接收"),
     OUTBOUND("outbound", "出库单接收"),
+    OUTBOUND_CONFIRM("outboundconfirm", "出库单确认"),
+    OUTBOUND_DETAIL_QUERY("outbounddetailquery", "出库单明细查询"),
+
     CANCEL_TRANSPORT("cancel_transport", "冷运运输订单取消"),
-    ROUTE_QUERY("route_query", "路由查询"),
+    ROUTE_QUERY("routequery", "路由查询"),
     QUERY_WAYBILL("query_waybill", "冷运运输信息查询"),
     CANCEL_INBOUND("cancel_inbound", "取消入库单"),
-    CANCEL_OUTBOUND("cancel_outbound","取消出库单"),
+    CANCEL_OUTBOUND("outboundcancel","取消出库单"),
     COMMODITY_INFO("commodity_info","商品信息");
 
 
