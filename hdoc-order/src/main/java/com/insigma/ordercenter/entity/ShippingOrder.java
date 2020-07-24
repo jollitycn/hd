@@ -2,11 +2,6 @@ package com.insigma.ordercenter.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-
-import java.io.Serializable;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.insigma.ordercenter.constant.Constant;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -83,5 +78,10 @@ public class ShippingOrder implements Serializable {
     @ApiModelProperty(value = "是否为拆合单（0：否，1：拆单，2：合单）")
     private Integer isCombined;
 
+    @ApiModelProperty(value = "是否拒收（0：否，1：是）")
+    private Integer isRefuse;
+
+    @ApiModelProperty(value = "发货单编号")
+    private String shippingOrderNo;
 
 }
