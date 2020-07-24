@@ -11,7 +11,12 @@
             discount_price,
             product_specs,
             put_on_time,
-            sub_title
+            sub_title,
+            brand,
+            product_no,
+            is_put_on,
+            is_combo,
+            product_nc
         FROM
             t_product
         WHERE
@@ -21,6 +26,9 @@
         </if>
         <if test="productSku != null and productSku != ''">
             AND product_sku like #{productSku}
+        </if>
+        <if test="productSku != null and productSku != ''">
+            AND product_no like #{productNo}
         </if>
     </select>
 
@@ -53,5 +61,6 @@
             t_product a
         LEFT JOIN t_order_source b ON a.order_source_id=b.order_source_id
         LEFT JOIN sys_dictionary c ON a.brand=c.data_code
+        WHERE a.product_id=#{productId}
     </select>
 </mapper>
