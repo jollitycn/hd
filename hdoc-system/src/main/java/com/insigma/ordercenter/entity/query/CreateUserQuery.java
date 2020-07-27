@@ -42,4 +42,6 @@ public class CreateUserQuery extends BaseQuery {
     @NotNull(message = "角色不能为空")
     @Size(min = 1, message = "选择角色出错")
     private List<Long> roleIds;
+
+    private Long userId;
 }

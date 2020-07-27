@@ -1,7 +1,6 @@
 package com.insigma.ordercenter.controller;
 
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,23 +8,30 @@ import com.insigma.ordercenter.base.BaseRequest;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.constant.Constant;
-import com.insigma.ordercenter.utils.PasswordUtil;
 import com.insigma.ordercenter.entity.SysRole;
 import com.insigma.ordercenter.entity.SysUser;
-import com.insigma.ordercenter.entity.UserRoleRelation;
 import com.insigma.ordercenter.entity.query.CreateUserQuery;
 import com.insigma.ordercenter.entity.query.UpdateUserQuery;
+import com.insigma.ordercenter.entity.query.UpdateUserRoleQuery;
+import com.insigma.ordercenter.entity.query.UpdateUserShopQuery;
+import com.insigma.ordercenter.entity.vo.ShopInfoVO;
 import com.insigma.ordercenter.entity.vo.sysuservo.SysUserDetailVO;
 import com.insigma.ordercenter.entity.vo.sysuservo.SysUserListVO;
 import com.insigma.ordercenter.service.ISysRoleService;
 import com.insigma.ordercenter.service.ISysUserService;
 import com.insigma.ordercenter.service.IUserRoleRelationService;
+import com.insigma.ordercenter.service.IUserShopRelationService;
+import com.insigma.ordercenter.utils.PasswordUtil;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -50,6 +56,9 @@ public class SysUserController extends BaseController {
 
     @Resource
     private IUserRoleRelationService userRoleRelationService;
+
+    @Resource
+    private IUserShopRelationService userShopRelationService;
 
     @GetMapping("/list")
     @ApiOperation(value = "系统用户列表")
@@ -172,6 +181,38 @@ public class SysUserController extends BaseController {
 
         List<SysRole> sysRoleList = sysRoleService.list();
         return Result.success(sysRoleList);
+    }
+
+    @GetMapping("/listEnabledShop")
+    @ApiOperation("获取使用中的店铺列表")
+    public Result<List<ShopInfoVO>> listEnabledShop() {
+        List<ShopInfoVO> shopInfoList = userShopRelationService.listEnabledShop();
+        return Result.success(shopInfoList);
+    }
+
+    @GetMapping("/listShopByUserId/{userId}")
+    @ApiImplicitParam(name = "userId", value = "用户id", required = true)
+    @ApiOperation("获取该用户关联的店铺")
+    public Result<List<ShopInfoVO>> listShopByUserId(@PathVariable("userId") @Valid
+                                                     @NotNull(message = "用户id不能为空")
+                                                     @Min(value = 1L, message = "用户id不合法")
+                                                     @Max(value = Long.MAX_VALUE, message = "用户id不合法") Long userId) {
+        List<ShopInfoVO> shopInfoList = userShopRelationService.listShopByUserId(userId);
+        return Result.success(shopInfoList);
+    }
+
+    @PutMapping("/updateUserShop")
+    @ApiOperation("修改该用户关联的店铺")
+    public Result listShopByUserId(@Valid @RequestBody UpdateUserShopQuery param) {
+        userShopRelationService.updateUserShop(param);
+        return Result.success();
+    }
+
+    @PutMapping("/updateUserRole")
+    @ApiOperation("修改该用户关联的角色")
+    public Result updateUserRole(@Valid @RequestBody UpdateUserRoleQuery param) {
+        sysUserService.updateUserRole(param);
+        return Result.success();
     }
 
     @PostMapping("/test")

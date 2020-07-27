@@ -1,6 +1,5 @@
 package com.insigma.ordercenter.entity.vo.sysuservo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -24,7 +23,7 @@ import java.util.List;
 public class SysUserListVO extends BaseVO {
 
     @ApiModelProperty(value = "用户ID")
-    @JsonSerialize(using= ToStringSerializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     @ApiModelProperty(value = "用户帐号")
@@ -40,14 +39,14 @@ public class SysUserListVO extends BaseVO {
     private Integer isStopped;
 
     @ApiModelProperty(value = "创建人id")
-    @JsonSerialize(using= ToStringSerializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long createId;
 
     @ApiModelProperty(value = "创建人姓名")
     private String createName;
 
     @ApiModelProperty(value = "创建时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "角色类型")

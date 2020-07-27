@@ -38,6 +38,7 @@ public class SysRole implements Serializable {
     private String roleName;
 
     @ApiModelProperty(value = "创建时间")
+    @JsonSerialize(using= ToStringSerializer.class)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "角色描述")

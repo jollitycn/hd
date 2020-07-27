@@ -44,7 +44,6 @@ public interface ISysUserService extends IService<SysUser> {
     boolean addSysUser(CreateUserQuery user, LoginUser loginUser);
 
 
-
     boolean updateUserInfo(LoginUser loginUser, UpdateUserQuery userInfo);
 
     SysUserDetailVO getSysUserDetail(Long userId);
@@ -53,6 +52,13 @@ public interface ISysUserService extends IService<SysUser> {
 
     Result<?> msgVerify(VerifyMsgQuery verifyMsgQuery);
 
-
+    /**
+     * 修改用户角色
+     *
+     * @param param 修改的用户角色信息
+     * @author Pan Juncai
+     * @date 2020/7/24 17:59
+     */
+    void updateUserRole(UpdateUserRoleQuery param);
 
 }
