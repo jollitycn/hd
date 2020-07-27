@@ -96,6 +96,8 @@ public class WarehouseProductPage implements Serializable {
     private String lengthWidthHeight;
 
 
+    @ApiModelProperty("预警值")
+    private int warningCount;
 
     @ApiModelProperty(value = "库存表ID")
     @TableId(value = "warehouse_product_relation_id", type = IdType.AUTO)
