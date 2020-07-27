@@ -50,6 +50,9 @@ public class WarehouseProductPage implements Serializable {
     @ApiModelProperty(value = "商品类型")
     private String productType;
 
+    @ApiModelProperty(value = "商品类型Name")
+    private String productTypeName;
+
     @ApiModelProperty(value = "上架时间")
     private String putOnTime;
 

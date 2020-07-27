@@ -35,10 +35,12 @@
     </select>
 
     <select id="list" resultType="com.insigma.ordercenter.entity.dto.WarehouseProductPage">
-       SELECT  wpr.* , p.* FROM t_warehouse w
+       SELECT  wpr.* , p.*,vpc.data_value productTypeName FROM t_warehouse w
 left join `t_warehouse_product_relation` wpr
 on w.warehouse_id = wpr.warehouse_id
-left join t_product p on p.product_id = wpr.product_id where w.warehouse_id =  #{request.warehouseId}
+left join t_product p on p.product_id = wpr.product_id
+        left join v_product_category vpc on p.product_type = vpc.dictionary_id
+        where w.warehouse_id =  #{request.warehouseId}
         <if test=" request.name != null and request.name != ''">
             AND p.product_name = #{request.name}
         </if>
