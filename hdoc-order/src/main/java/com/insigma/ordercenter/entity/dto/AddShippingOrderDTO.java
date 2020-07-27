@@ -1,34 +1,23 @@
-package com.insigma.ordercenter.entity;
+package com.insigma.ordercenter.entity.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * <p>
- * 发货单表
- * </p>
- *
- * @author Jason
- * @since 2020-07-08
- */
-@Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-@TableName("t_shipping_order")
-@ApiModel(value = "ShippingOrder对象", description = "发货单表")
-public class ShippingOrder implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+/**
+ * @program: hdoc-parent
+ * @description: 订单审单分派发仓库生成发货单时参数封装类
+ * @author: AH
+ * @create: 2020-07-21 17:10
+ **/
+@Data
+@ApiModel(value = "订单审单分派发仓库生成发货单")
+public class AddShippingOrderDTO {
 
     @ApiModelProperty(value = "发货单ID")
     @TableId(value = "shipping_order_id", type = IdType.ID_WORKER)
@@ -40,20 +29,14 @@ public class ShippingOrder implements Serializable {
     @ApiModelProperty(value = "物流公司ID")
     private Long expressCompanyId;
 
-    @ApiModelProperty(value = "物流单号")
-    private String expressNo;
+    @ApiModelProperty(value = "订单明细ID")
+    private Long orderDetailId;
 
     @ApiModelProperty(value = "创建人id")
     private Long createId;
 
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
-
-    @ApiModelProperty(value = "修改人id")
-    private Long modifyId;
-
-    @ApiModelProperty(value = "修改时间")
-    private LocalDateTime modifyTime;
 
     @ApiModelProperty(value = "是否删除（0：未删除，1：已删除）")
     private Integer isDeleted;
@@ -85,10 +68,5 @@ public class ShippingOrder implements Serializable {
     @ApiModelProperty(value = "发货单编号")
     private String shippingOrderNo;
 
-    @ApiModelProperty(value = "发货时间")
-    private String sendTime;
-
-    @ApiModelProperty(value = "运费")
-    private BigDecimal expressFee;
 
 }
