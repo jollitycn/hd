@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * 系统用户 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-09
  */
 public interface ISysUserService extends IService<SysUser> {

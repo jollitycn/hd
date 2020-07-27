@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * @author liuhao
+ * @author Jason
  * @description：商品库存信息返回对象
  * @date Create in 2020/7/9
  */

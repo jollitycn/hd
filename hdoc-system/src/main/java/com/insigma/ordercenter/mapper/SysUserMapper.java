@@ -12,7 +12,7 @@ import java.util.List;
  * 系统用户 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-09
  */
 public interface SysUserMapper extends BaseMapper<SysUser> {

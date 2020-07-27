@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
  * 订单来源定义表
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-16
  */
 @Data

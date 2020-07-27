@@ -9,7 +9,7 @@ import com.insigma.ordercenter.entity.SysDictionary;
  * 系统数字字典 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-09
  */
 public interface SysDictionaryMapper extends BaseMapper<SysDictionary> {

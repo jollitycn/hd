@@ -27,7 +27,7 @@ import java.util.List;
  * 店铺表 服务实现类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-22
  */
 @Service

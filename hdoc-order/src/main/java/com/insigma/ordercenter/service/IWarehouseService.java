@@ -7,18 +7,17 @@ import com.insigma.ordercenter.entity.*;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.entity.dto.WarehouseDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
+import com.insigma.ordercenter.entity.dto.WarehouseProductPageQuery;
 import com.insigma.ordercenter.entity.vo.WarehouseVo;
-import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * <p>
  * 仓库表 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 public interface IWarehouseService extends IService<Warehouse> {
@@ -33,9 +32,18 @@ public interface IWarehouseService extends IService<Warehouse> {
 
     Result<?> deleteWarehouse(Serializable warehouseId);
 
-    Result<?> page(IPage<WarehouseVo> page, WarehouseDTO dto);
+    IPage listProducts(WarehouseProductPageQuery req);
 
-    Page listProducts(WarehouseProductDTO req);
-//
-//    Result<?> listProducts(WarehouseProductDTO req);
+   Result<?> page(IPage<WarehouseVo> page, WarehouseDTO dto);
+
+    void removeProduct(String warehouseId, String productId);
+
+     void updateWarningCount(String warehouseId, String productId,String warningCount) ;
+
+     int getWarningCount(String warehouseId, String productId) ;
+    void removeProduct(Integer warehouseId, Integer productId);
+
+    void updateWarningCount(Integer warehouseId, Integer productId,Integer warningCount) ;
+
+    int getWarningCount(Integer warehouseId, Integer productId) ;
 }

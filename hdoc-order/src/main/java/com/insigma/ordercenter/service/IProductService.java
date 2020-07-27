@@ -16,7 +16,7 @@ import com.insigma.ordercenter.entity.vo.ProductListPageVO;
  * 商品表 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 public interface IProductService extends IService<Product> {

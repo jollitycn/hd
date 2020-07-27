@@ -9,7 +9,7 @@ import com.insigma.ordercenter.entity.query.AddMenuQuery;
  * 角色菜单关联 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-10
  */
 public interface IRoleMenuRelationService extends IService<RoleMenuRelation> {

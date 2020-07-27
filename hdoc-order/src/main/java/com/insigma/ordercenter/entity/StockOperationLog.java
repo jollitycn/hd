@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
  * 库存记录操作日志表
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 @Data

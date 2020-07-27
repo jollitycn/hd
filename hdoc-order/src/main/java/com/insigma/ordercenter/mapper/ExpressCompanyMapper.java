@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
  * 物流公司 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-17
  */
 public interface ExpressCompanyMapper extends BaseMapper<ExpressCompany> {

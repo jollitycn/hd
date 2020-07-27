@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * 库存记录操作日志表 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 public interface IStockOperationLogService extends IService<StockOperationLog> {

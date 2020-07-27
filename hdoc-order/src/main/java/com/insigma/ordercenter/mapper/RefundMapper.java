@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * 退换货记录表 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-22
  */
 public interface RefundMapper extends BaseMapper<Refund> {

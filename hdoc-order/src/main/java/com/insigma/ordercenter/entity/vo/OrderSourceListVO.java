@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 
 /**
- * @author liuhao
+ * @author Jason
  * @program hdoc-parent
  * @description：货主信息列表
  * @date Create in 2020/7/16

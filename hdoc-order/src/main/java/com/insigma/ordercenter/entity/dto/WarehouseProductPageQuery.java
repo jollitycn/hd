@@ -1,6 +1,5 @@
 package com.insigma.ordercenter.entity.dto;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -8,15 +7,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-/**
- * @author Jason
- * @program hdoc-parent
- * @description：货主列表dto
- * @date Create in 2020/7/16
- */
 @Data
-@ApiModel(value = "货主列表dto")
-public class OrderSourceDTO {
+public class WarehouseProductPageQuery {
 
     /**
      * 当前页
@@ -36,12 +28,12 @@ public class OrderSourceDTO {
     @Max(value = 100L, message = "查询数量超出限制")
     protected Integer pageSize;
 
-    @ApiModelProperty(value = "货主编号")
-    private String sourceNo;
+    @ApiModelProperty(value = "商品名称")
+    private String name;
 
-    @ApiModelProperty(value = "货主名称")
-    private String sourceName;
+    @ApiModelProperty(value = "商品编码")
+    private String no;
+    @ApiModelProperty(value = "仓库编码")
+    private String warehouseId;
 
-    @ApiModelProperty("是否禁用")
-    private Integer isStop;
 }

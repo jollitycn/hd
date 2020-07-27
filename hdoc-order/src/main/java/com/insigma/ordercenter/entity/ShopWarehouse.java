@@ -15,7 +15,7 @@ package com.insigma.ordercenter.entity;
     * 
     * </p>
 *
-* @author LiuHao
+* @author Jason
 * @since 2020-07-23
 */
     @Data

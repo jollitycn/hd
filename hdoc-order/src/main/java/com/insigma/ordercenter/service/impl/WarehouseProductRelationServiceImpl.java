@@ -1,10 +1,16 @@
 package com.insigma.ordercenter.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.entity.WarehouseProductRelation;
+import com.insigma.ordercenter.entity.dto.WarehouseProductPageQuery;
+import com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse;
 import com.insigma.ordercenter.entity.vo.ProductStockInfoVO;
 import com.insigma.ordercenter.mapper.WarehouseProductRelationMapper;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
+import com.insigma.ordercenter.utils.StringUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +22,7 @@ import java.util.List;
  * 仓库商品关联表 服务实现类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 @Service
@@ -36,7 +42,7 @@ public class WarehouseProductRelationServiceImpl extends ServiceImpl<WarehousePr
 
 
 
-public static void main(String[] args) {
+    public static void main(String[] args) {
         String randomStr = "2d4s";
         String clientFlag = "test";
         String strData1 = " {\n" +

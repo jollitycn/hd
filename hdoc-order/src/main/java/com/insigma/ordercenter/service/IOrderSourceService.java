@@ -15,7 +15,7 @@ import com.insigma.ordercenter.entity.vo.OrderSourceListVO;
  * 订单来源定义表 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-16
  */
 public interface IOrderSourceService extends IService<OrderSource> {

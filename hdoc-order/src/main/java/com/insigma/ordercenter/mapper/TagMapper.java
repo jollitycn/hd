@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * 商品标签表 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-24
  */
 public interface TagMapper extends BaseMapper<Tag> {

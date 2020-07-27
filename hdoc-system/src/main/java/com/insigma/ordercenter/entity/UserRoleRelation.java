@@ -16,7 +16,7 @@ import java.io.Serializable;
  * 用户角色关联
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-10
  */
 @Data

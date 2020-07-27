@@ -21,7 +21,7 @@ package com.insigma.ordercenter.entity;
     * 店铺表
     * </p>
 *
-* @author LiuHao
+* @author Jason
 * @since 2020-07-22
 */
     @Data

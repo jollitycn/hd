@@ -17,7 +17,7 @@ import java.util.List;
  * 店铺表 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-22
  */
 public interface ShopMapper extends BaseMapper<Shop> {

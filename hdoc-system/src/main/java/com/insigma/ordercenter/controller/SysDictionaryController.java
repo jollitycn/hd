@@ -23,7 +23,7 @@ import java.util.List;
  * 系统数字字典 前端控制器
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-09
  */
 @Api(tags = {"系统数据字典管理"})

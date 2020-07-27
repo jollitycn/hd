@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  * 仓库负责区域表
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 @Data

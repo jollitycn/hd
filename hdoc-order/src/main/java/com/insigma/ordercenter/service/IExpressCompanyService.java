@@ -15,7 +15,7 @@ import com.insigma.ordercenter.entity.vo.ExpressCompanyListVO;
  * 物流公司 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-17
  */
 public interface IExpressCompanyService extends IService<ExpressCompany> {

@@ -15,7 +15,7 @@ package com.insigma.ordercenter.entity;
     * 组合信息表
     * </p>
 *
-* @author LiuHao
+* @author Jason
 * @since 2020-07-22
 */
     @Data

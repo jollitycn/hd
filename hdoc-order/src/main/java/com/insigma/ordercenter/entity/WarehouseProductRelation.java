@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
  * 仓库商品关联表
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 @Data
@@ -48,5 +48,14 @@ public class WarehouseProductRelation implements Serializable {
     @ApiModelProperty(value = "商品sku")
     private String productSku;
 
+    @ApiModelProperty("预警值")
+    private int warningCount;
+
+    public static final String WAREHOUSE_PRODUCT_RELATION_ID = "warehouse_product_relation_id";
+    public static final String WAREHOUSE_ID = "warehouse_id";
+    public static final String PRODUCT_ID = "product_id";
+    public static final String QUANTITY = "quantity";
+    public static final String PRIORITY = "priority";
+    public static final String PRODUCT_SKU = "product_sku";
 
 }

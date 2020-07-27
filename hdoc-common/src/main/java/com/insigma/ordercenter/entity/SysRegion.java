@@ -17,7 +17,7 @@ import java.io.Serializable;
  * 系统地区表
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-09
  */
 @Data

@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
  * 仓库表
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 @Data
@@ -94,6 +94,7 @@ public class Warehouse implements Serializable {
 
     @ApiModelProperty("承运商编号")
     private Integer expressCompanyId;
+
 
     public static final String WAREHOUSE_NO = "warehouse_no";
 

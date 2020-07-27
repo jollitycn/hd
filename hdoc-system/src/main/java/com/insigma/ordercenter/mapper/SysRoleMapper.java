@@ -15,7 +15,7 @@ import java.util.List;
  * 系统角色 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-09
  */
 public interface SysRoleMapper extends BaseMapper<SysRole> {

@@ -3,7 +3,7 @@ package com.insigma.ordercenter.utils;
 import java.util.UUID;
 
 /**
- * @author ：liuhao
+ * @author ：Jason
  * @date ：Created in 2020/1/14
  */
 public class UUIDUtil {

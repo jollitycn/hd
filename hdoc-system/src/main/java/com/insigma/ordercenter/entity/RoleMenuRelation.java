@@ -16,7 +16,7 @@ import java.io.Serializable;
  * 角色菜单关联
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-10
  */
 @Data

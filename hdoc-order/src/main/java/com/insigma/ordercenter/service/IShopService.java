@@ -16,7 +16,7 @@ import com.insigma.ordercenter.entity.dto.shop.ShopSetting;
  * 店铺表 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-22
  */
 public interface IShopService extends IService<Shop> {

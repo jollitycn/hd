@@ -9,7 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * @author liuhao
+ * @author Jason
  * @description：商品列表获取DTO
  * @date Create in 2020/7/8
  */

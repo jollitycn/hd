@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
  * 角色菜单关联 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-10
  */
 public interface RoleMenuRelationMapper extends BaseMapper<RoleMenuRelation> {

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * 库存记录操作日志表 服务实现类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 @Service

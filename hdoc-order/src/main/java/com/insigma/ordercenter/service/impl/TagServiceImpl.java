@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * 商品标签表 服务实现类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-24
  */
 @Service

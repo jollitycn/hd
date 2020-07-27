@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
  * 物流公司
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-17
  */
 @Data

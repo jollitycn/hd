@@ -7,7 +7,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 /**
- * @author liuhao
+ * @author Jason
  * @description：商品编辑
  * @date Create in 2020/7/10
  */

@@ -9,6 +9,8 @@ import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.entity.dto.WarehouseDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
+import com.insigma.ordercenter.entity.dto.WarehouseProductPage;
+import com.insigma.ordercenter.entity.dto.WarehouseProductPageQuery;
 import com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse;
 import com.insigma.ordercenter.entity.vo.WarehouseVo;
 import com.insigma.ordercenter.mapper.WarehouseMapper;
@@ -174,23 +176,42 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     }
 
     @Override
-    public Page listProducts(WarehouseProductDTO request) {
-      //  Page page = new Page<>(request.getPageNum(), request.getPageSize());
-//        List<ShopQueryResponse> list = baseMapper.list(page, request);
-//        for (ShopQueryResponse response:
-//                list) {
-//            response.setWarehouses(shopWarehouseService.listByShopId(response.getShopId()));
-//        }
-//        page.setRecords(list);
-       // return page;
-        return null;
+    public void removeProduct(String warehouseId, String productId) {
+        this.baseMapper.removeProduct(warehouseId, productId);
     }
 
-//    @Override
-//    public Result<?> listProducts(WarehouseProductDTO req) {
-//        List<WarehouseVo> page1 = this.baseMapper.page(page, map);
-//        page.setRecords(page1);
-//        return Result.success(page);
-//    }
+    @Override
+    public void updateWarningCount(String warehouseId, String productId, String warningCount) {
+        this.baseMapper.updateWarningCount(warehouseId,productId,warningCount);
+    }
+
+    @Override
+    public int getWarningCount(String warehouseId, String productId) {
+        return this.baseMapper.getWarningCount(warehouseId,productId );
+    }
+
+    @Override
+    public void removeProduct(Integer warehouseId, Integer productId) {
+        this.baseMapper.removeProduct(warehouseId, productId);
+    }
+
+
+    @Override
+    public void updateWarningCount(Integer warehouseId, Integer productId,Integer warningCount) {
+        this.baseMapper.updateWarningCount(warehouseId,productId,warningCount);
+    }
+
+    @Override
+    public int getWarningCount(Integer warehouseId, Integer productId) {
+       return this.baseMapper.getWarningCount(warehouseId,productId );
+    }
+
+    @Override
+    public Page listProducts(WarehouseProductPageQuery request) {
+        Page page = new Page<>(request.getPageNum(), request.getPageSize());
+        List<WarehouseProductPage> list = baseMapper.list(page, request);
+        page.setRecords(list);
+        return page;
+    }
 
 }

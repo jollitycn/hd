@@ -17,7 +17,7 @@ import java.io.Serializable;
     *  发货单操作日志表
     * </p>
 *
-* @author LiuHao
+* @author Jason
 * @since 2020-07-23
 */
     @Data

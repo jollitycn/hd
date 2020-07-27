@@ -13,7 +13,7 @@ import com.insigma.ordercenter.entity.vo.SysRoleVO;
  * 系统角色 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-09
  */
 public interface ISysRoleService extends IService<SysRole> {

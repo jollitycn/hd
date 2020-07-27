@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  *  发货单操作日志表 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-23
  */
 public interface IShippingOrderOperationService extends IService<ShippingOrderOperation> {

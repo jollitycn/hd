@@ -11,7 +11,7 @@ import java.util.List;
  *  Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-23
  */
 public interface ShopWarehouseMapper extends BaseMapper<ShopWarehouse> {

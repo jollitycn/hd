@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * 订单来源定义表 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-16
  */
 public interface OrderSourceMapper extends BaseMapper<OrderSource> {

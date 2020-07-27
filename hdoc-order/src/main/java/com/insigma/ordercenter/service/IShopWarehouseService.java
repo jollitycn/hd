@@ -11,7 +11,7 @@ import java.util.List;
  *  服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-23
  */
 public interface IShopWarehouseService extends IService<ShopWarehouse> {

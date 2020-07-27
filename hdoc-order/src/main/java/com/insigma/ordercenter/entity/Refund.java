@@ -20,7 +20,7 @@ package com.insigma.ordercenter.entity;
     * 退换货记录表
     * </p>
 *
-* @author LiuHao
+* @author Jason
 * @since 2020-07-22
 */
     @Data

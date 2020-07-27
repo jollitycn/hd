@@ -1,7 +1,7 @@
 package com.insigma.ordercenter.constant;
 
 /**
- * @author ：liuhao
+ * @author ：Jason
  * @date ：Created in 2020/1/10
  */
 public interface Constant {

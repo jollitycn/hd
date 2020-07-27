@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * @author liuhao
+ * @author Jason
  * @description：商品添加
  * @date Create in 2020/7/10
  */

@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import javax.validation.constraints.NotBlank;
 
 /**
- * @author ：liuhao
+ * @author ：Jason
  * @date ：Created in 2020/2/18
  */
 @Data

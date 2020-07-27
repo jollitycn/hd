@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * 发货单表
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 @Data

@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * 商品标签表 服务类
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-24
  */
 public interface ITagService extends IService<Tag> {

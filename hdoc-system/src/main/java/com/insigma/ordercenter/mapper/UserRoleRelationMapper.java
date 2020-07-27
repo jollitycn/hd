@@ -9,7 +9,7 @@ import com.insigma.ordercenter.entity.UserRoleRelation;
  * 用户角色关联 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-10
  */
 public interface UserRoleRelationMapper extends BaseMapper<UserRoleRelation> {

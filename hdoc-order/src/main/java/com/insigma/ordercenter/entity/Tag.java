@@ -15,7 +15,7 @@ package com.insigma.ordercenter.entity;
     * 商品标签表
     * </p>
 *
-* @author LiuHao
+* @author Jason
 * @since 2020-07-24
 */
     @Data

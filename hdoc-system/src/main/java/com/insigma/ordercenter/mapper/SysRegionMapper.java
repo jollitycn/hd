@@ -8,7 +8,7 @@ import com.insigma.ordercenter.entity.SysRegion;
  * 系统地区表 Mapper 接口
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-17
  */
 public interface SysRegionMapper extends BaseMapper<SysRegion> {

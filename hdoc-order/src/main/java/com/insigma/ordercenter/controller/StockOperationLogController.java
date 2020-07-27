@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 库存记录操作日志表 前端控制器
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-07-08
  */
 @RestController

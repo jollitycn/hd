@@ -33,4 +33,29 @@
         LEFT JOIN t_express_company ec
         on wh.express_company_id = ec.express_company_id
     </select>
+
+    <select id="list" resultType="com.insigma.ordercenter.entity.dto.WarehouseProductPage">
+       SELECT  wpr.* , p.* FROM t_warehouse w
+left join `t_warehouse_product_relation` wpr
+on w.warehouse_id = wpr.warehouse_id
+left join t_product p on p.product_id = wpr.product_id where w.warehouse_id =  #{request.warehouseId}
+        <if test=" request.name != null and request.name != ''">
+            AND p.product_name = #{request.name}
+        </if>
+        <if test=" request.no != null and request.no != ''">
+            AND p.product_no = #{request.no}
+        </if>
+    </select>
+    <delete id="removeProduct">
+        delete from t_warehouse_product_relation where warehouse_id = #{warehouseId} and product_id =#{productId}
+    </delete>
+
+    <select id="updateWarningCount" >
+update  t_warehouse_product_relation set warning_count=#{warningCount}  where warehouse_id= #{warehouseId} and product_id =#{productId}
+    </select>
+
+    <select id="getWarningCount" resultType="int">
+select warning_count from t_warehouse_product_relation where warehouse_id= #{warehouseId} and product_id =#{productId}
+    </select>
+
 </mapper>

@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * @author liuhao
+ * @author Jason
  * @description：商品列表返回对象
  * @date Create in 2020/7/8
  */

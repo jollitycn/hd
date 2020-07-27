@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  * 系统数字字典
  * </p>
  *
- * @author LiuHao
+ * @author Jason
  * @since 2020-01-09
  */
 @Data

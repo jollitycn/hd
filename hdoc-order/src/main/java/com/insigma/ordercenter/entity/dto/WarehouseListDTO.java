@@ -11,12 +11,12 @@ import javax.validation.constraints.NotNull;
 /**
  * @author Jason
  * @program hdoc-parent
- * @description：货主列表dto
- * @date Create in 2020/7/16
+ * @description：承运商列表DTO
+ * @date Create in 2020/7/17
  */
 @Data
-@ApiModel(value = "货主列表dto")
-public class OrderSourceDTO {
+@ApiModel(value = "仓库列表DTO")
+public class WarehouseListDTO {
 
     /**
      * 当前页
@@ -36,12 +36,9 @@ public class OrderSourceDTO {
     @Max(value = 100L, message = "查询数量超出限制")
     protected Integer pageSize;
 
-    @ApiModelProperty(value = "货主编号")
-    private String sourceNo;
+    @ApiModelProperty(value = "承运商名称")
+    private String companyName;
 
-    @ApiModelProperty(value = "货主名称")
-    private String sourceName;
-
-    @ApiModelProperty("是否禁用")
-    private Integer isStop;
+    @ApiModelProperty(value = "承运商编码")
+    private String companyNo;
 }

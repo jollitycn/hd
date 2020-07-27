@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 
 /**
- * @author liuhao
+ * @author Jason
  * @program hdoc-parent
  * @description：承运商信息列表vo
  * @date Create in 2020/7/17
