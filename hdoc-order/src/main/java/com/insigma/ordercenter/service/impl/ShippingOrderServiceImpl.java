@@ -59,7 +59,7 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
         shippingOrder.setWarehouseId(editShippingOrderDTO.getWarehouseId());
         shippingOrder.setExpressCompanyId(editShippingOrderDTO.getExpressCompanyId());
         //生成发货单id ObjectId是MongoDB数据库的一种唯一ID生成策略，是UUID version1的变种
-        shippingOrder.setShippingOrderNo(IdUtil.objectId());
+        shippingOrder.setShippingOrderNo("FH"+IdUtil.objectId());
         shippingOrder.setCreateTime(LocalDateTime.now());
 
         this.createLog(null,1L,1L,"张三新增了补货单:"+shippingOrder.getShippingOrderNo());

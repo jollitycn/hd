@@ -1,6 +1,7 @@
 package com.insigma.ordercenter.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -14,6 +15,7 @@ import com.insigma.ordercenter.entity.dto.ProductListDTO;
 import com.insigma.ordercenter.entity.dto.ProductUpdateDTO;
 import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ProductListPageVO;
+import com.insigma.ordercenter.entity.vo.TagVO;
 import com.insigma.ordercenter.mapper.ProductComboMapper;
 import com.insigma.ordercenter.mapper.ProductMapper;
 import com.insigma.ordercenter.mapper.TagMapper;
@@ -81,8 +83,24 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
         Product product = new Product();
         BeanUtils.copyProperties(productAddDTO, product);
+        product.setProductNo("SP"+ IdUtil.objectId());
+        product.setIsPutOn(Constant.SYS_ONE);
         product.setCreateTime(LocalDateTime.now());
-        return save(product);
+
+        this.save(product);
+
+        //写入商品标签
+        List<String> tagCodeList=productAddDTO.getTagList();
+        if(CollUtil.isNotEmpty(tagCodeList)){
+            for (String tagCode:tagCodeList) {
+                Tag tag=new Tag();
+                tag.setTag(tagCode);
+                tag.setProductId(product.getProductId());
+                tagMapper.insert(tag);
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -124,11 +142,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         ProductDetailVO result=baseMapper.getProductDetail(productId);
 
         //查询标签
-        QueryWrapper queryWrapper=new QueryWrapper();
-        queryWrapper.eq("product_id",productId);
-        List<Tag> tagList=tagMapper.selectList(queryWrapper);
+        List<TagVO> tagList=tagMapper.getTagList(productId);
 
-        result.setTagList(tagList);
+        //非空判断
+        if(CollUtil.isNotEmpty(tagList)){
+            result.setTagList(tagList);
+        }
 
         return result;
     }
@@ -152,5 +171,29 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             productComboMapper.insert(productCombo);
         }
         return true;
+    }
+
+    /**
+     * 禁用/启用商品组合
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public boolean disable(Long productId) {
+        Product product = getById(productId);
+
+        if (product != null) {
+            Integer isPutOn=product.getIsPutOn();
+            if(Constant.SYS_ZERO==isPutOn.intValue()){
+                product.setPutOnTime(LocalDateTime.now());
+                product.setIsPutOn(Constant.SYS_ONE);
+            }else{
+                product.setIsPutOn(Constant.SYS_ZERO);
+            }
+            return updateById(product);
+        } else {
+            return false;
+        }
     }
 }
