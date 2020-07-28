@@ -114,9 +114,9 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     @Override
     public Result<?> addProduct(WarehouseProductDTO req,Long userId) {
         //遍历商品编号 ，新增仓库商品记录
-        List< WarehouseProductRelation> whps = new ArrayList< WarehouseProductRelation>();
+        List<WarehouseProductRelation> whps = new ArrayList<WarehouseProductRelation>();
 
-        List< StockOperationLog> sols = new ArrayList< StockOperationLog>();
+        List<StockOperationLog> sols = new ArrayList<StockOperationLog>();
         for (Long productId : req.getProductIds()) {
             WarehouseProductRelation whp = new WarehouseProductRelation();
             whp.setWarehouseId(req.getWarehouseId());
@@ -132,7 +132,8 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         }
 
         productRelationService.saveBatch(whps);
-        updateLog(userId,(WarehouseProductRelation[])whps.toArray());
+        WarehouseProductRelation[] whpArr = new WarehouseProductRelation[whps.size()];
+        updateLog(userId, whps.toArray(whpArr));
         stockLogService.saveBatch(sols);
         return Result.success();
     }
