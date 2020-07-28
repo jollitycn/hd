@@ -17,4 +17,6 @@ import java.util.List;
 public interface ShopProductMapper extends BaseMapper<ShopProduct> {
 
     List<ShopProductVO> getProductRatio(Long productId);
+
+    List<ShopProduct> selectList(Long productId);
 }
