@@ -160,4 +160,15 @@ public class ProductController extends BaseController {
         return Result.error(CodeMsg.DATA_INSERT_ERROR);
     }
 
+    @PutMapping("/disable/{productId}")
+    @ApiOperation(value = "禁用/启用商品")
+    public Result addCombo(@PathVariable("productId") Long productId) {
+
+        boolean status = productService.disable(productId);
+
+        if (status) {
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
 }

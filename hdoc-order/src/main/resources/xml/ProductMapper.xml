@@ -56,7 +56,9 @@
             a.is_discount,
             a.unit_quantity,
             a.weight,
-            a.qr_code
+            a.qr_code,
+            a.length_width_height,
+			a.product_picture_url
         FROM
             t_product a
         LEFT JOIN t_order_source b ON a.order_source_id=b.order_source_id

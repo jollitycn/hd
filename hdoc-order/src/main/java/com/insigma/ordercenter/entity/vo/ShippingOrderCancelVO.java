@@ -1,37 +1,21 @@
-package com.insigma.ordercenter.entity;
+package com.insigma.ordercenter.entity.vo;
+
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * <p>
- * 发货单表
- * </p>
- *
- * @author Jason
- * @since 2020-07-08
- */
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Accessors(chain = true)
-@TableName("t_shipping_order")
-@ApiModel(value = "ShippingOrder对象", description = "发货单表")
-public class ShippingOrder implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@ApiModel(value = "取消订单时，查询发货单信息列表")
+@EqualsAndHashCode(callSuper = true)
+public class ShippingOrderCancelVO extends BaseVO{
 
     @ApiModelProperty(value = "发货单ID")
-    @TableId(value = "shipping_order_id", type = IdType.ID_WORKER)
     private Long shippingOrderId;
 
     @ApiModelProperty(value = "仓库ID ")
@@ -87,8 +71,5 @@ public class ShippingOrder implements Serializable {
 
     @ApiModelProperty(value = "发货时间")
     private String sendTime;
-
-    @ApiModelProperty(value = "运费")
-    private BigDecimal expressFee;
 
 }

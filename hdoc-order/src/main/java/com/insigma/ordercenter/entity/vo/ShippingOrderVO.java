@@ -2,8 +2,11 @@ package com.insigma.ordercenter.entity.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.insigma.ordercenter.entity.OrderDetail;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @program: hdoc-parent
@@ -47,4 +50,7 @@ public class ShippingOrderVO {
 
     @ApiModelProperty(value = "运费")
     private String freight;
+
+    @ApiModelProperty(value = "订单明细列表")
+    private List<OrderDetailVO> orderDetailVOS;
 }

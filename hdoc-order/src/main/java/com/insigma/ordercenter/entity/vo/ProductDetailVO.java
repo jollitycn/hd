@@ -2,7 +2,6 @@ package com.insigma.ordercenter.entity.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.insigma.ordercenter.entity.Tag;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -84,5 +83,11 @@ public class ProductDetailVO extends BaseVO {
     private String qrCode;
 
     @ApiModelProperty(value = "商品标签")
-    private List<Tag> tagList;
+    private List<TagVO> tagList;
+
+    @ApiModelProperty(value = "长宽高")
+    private String lengthWidthHeight;
+
+    @ApiModelProperty(value = "商品图片url")
+    private String productPictureUrl;
 }

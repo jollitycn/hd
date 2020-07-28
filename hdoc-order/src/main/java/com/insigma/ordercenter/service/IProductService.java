@@ -42,4 +42,11 @@ public interface IProductService extends IService<Product> {
      * @return
      */
     boolean addCombo(AddComboDTO addComboDTO);
+
+    /**
+     * 禁用/启用商品组合
+     * @param productId
+     * @return
+     */
+    boolean disable(Long productId);
 }

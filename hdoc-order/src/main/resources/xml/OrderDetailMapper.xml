@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.OrderDetailMapper">
+
+    <select id="getOrderDetail" resultType="com.insigma.ordercenter.entity.vo.OrderDetailVO">
+        SELECT
+            od.order_detail_id,
+            od.order_id,
+            od.product_id,
+            od.product_sku,
+            od.product_name,
+            od.product_price,
+            od.product_specs,
+            od.unit,
+            od.amount,
+            od.total_price,
+            od.is_gift,
+            pr.quantity
+        FROM
+            t_order_detail od
+            LEFT JOIN t_product p ON od.product_id = p.product_id
+            LEFT JOIN t_warehouse_product_relation pr ON pr.product_id = p.product_id
+        WHERE
+            od.order_id = {orderId}
+    </select>
+
+</mapper>

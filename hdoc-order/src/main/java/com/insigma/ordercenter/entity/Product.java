@@ -82,6 +82,9 @@ public class Product implements Serializable {
     @ApiModelProperty(value = "物流重量")
     private Double shipWeight;
 
+    @ApiModelProperty(value = "物流分类")
+    private String shipType;
+
     @ApiModelProperty(value = "商品编码")
     private String productNo;
 
@@ -105,6 +108,9 @@ public class Product implements Serializable {
 
     @ApiModelProperty(value = "长宽高")
     private String lengthWidthHeight;
+
+    @ApiModelProperty(value = "商品图片url")
+    private String productPictureUrl;
 
 
         public static final String PRODUCT_ID = "product_id";

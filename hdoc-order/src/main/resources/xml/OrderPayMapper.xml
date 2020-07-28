@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.OrderPayMapper">
+
+    <select id="queryOrderPayInfo" resultType="com.insigma.ordercenter.entity.vo.OrderpayVO">
+        SELECT
+            op.order_pay_id,
+            op.pay_type,
+            op.pay_money,
+            op.pay_datetime,
+            op.pay_card_no,
+            op.pay_back
+        FROM
+            t_order_pay_relation pr
+            LEFT JOIN t_order_pay op ON pr.order_pay_id = op.order_pay_id
+        WHERE
+            pr.order_id = #{orderId}
+    </select>
+
+</mapper>
