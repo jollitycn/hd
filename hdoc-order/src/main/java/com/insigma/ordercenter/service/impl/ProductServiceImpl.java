@@ -60,7 +60,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             productSku = StringUtil.addPercent(productListDTO.getProductSku());
         }
         String productNo = null;
-        if (productListDTO.getProductSku() != null) {
+        if (productListDTO.getProductNo() != null) {
             productNo = StringUtil.addPercent(productListDTO.getProductNo());
         }
         List<ProductListPageVO> resultList = baseMapper.getProductListPage(page, productName, productSku,productNo);
