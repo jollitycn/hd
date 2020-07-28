@@ -158,4 +158,6 @@ public class WarehouseController extends BaseController {
     public Result<?> getWarningCount(@PathVariable String warehouseId,@PathVariable String productId) {
         return Result.success(warehouseService.getWarningCount(warehouseId,productId));
     }
+
+
 }

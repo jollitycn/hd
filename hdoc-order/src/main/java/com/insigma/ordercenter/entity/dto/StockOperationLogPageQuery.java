@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.entity.dto;
 
+import com.insigma.ordercenter.entity.vo.BaseVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class WarehouseProductPageQuery {
+public class StockOperationLogPageQuery extends BaseVO {
 
     /**
      * 当前页
@@ -28,13 +29,20 @@ public class WarehouseProductPageQuery {
     @Max(value = 100L, message = "查询数量超出限制")
     protected Integer pageSize;
 
-    @ApiModelProperty(value = "商品名称")
-    private String name;
-
-    @ApiModelProperty(value = "商品编码")
-    private String no;
-
     @ApiModelProperty(value = "仓库编码")
     private String warehouseId;
+
+    @ApiModelProperty(value = "类型")
+    private String type;
+    @ApiModelProperty(value = "开始区间")
+    private String startValue;
+    @ApiModelProperty(value = "结束区间")
+    private String endValue;
+    @ApiModelProperty(value = "开始时间")
+    private String startTime;
+    @ApiModelProperty(value = "结束时间")
+    private String endTime;
+    @ApiModelProperty(value = "商品")
+    private String productId;
 
 }

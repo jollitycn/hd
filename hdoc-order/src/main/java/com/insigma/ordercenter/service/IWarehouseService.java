@@ -46,4 +46,5 @@ public interface IWarehouseService extends IService<Warehouse> {
     void updateWarningCount(Integer warehouseId, Integer productId,Integer warningCount) ;
 
     int getWarningCount(Integer warehouseId, Integer productId) ;
+
 }

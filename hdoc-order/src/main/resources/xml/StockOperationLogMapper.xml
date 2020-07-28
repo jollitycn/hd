@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.StockOperationLogMapper">
-
+<select id="page" resultType="com.insigma.ordercenter.entity.dto.StockOperationLogPage">
+    select u.user_name,sol.* from t_stock_operation_log  sol
+    left join sys_user u on sol.create_id = u.user_id
+    left join t_warehouse_product_relation wpr on sol.warehouse_product_relation_id= wpr.warehouse_product_relation_id
+where 1=1
+    <if test="request.type != null and request.type > 0 ">
+        AND sol.operation_type &gt;= #{request.type}
+    </if>
+    <if test=" request.warehouseId != null and request.warehouseId != ''">
+        AND wpr.warehouse_id = #{request.warehouseId}
+    </if>
+    <if test=" request.productId != null and request.productId != ''">
+        AND wpr.product_id = #{request.productId}
+    </if>
+    <if test="request.startTime != null and request.startTime != ''">
+        AND sol.create_time &gt;= #{request.startTime}
+    </if>
+    <if test="request.endTime != null and request.endTime != ''">
+        and sol.create_time &lt;= #{request.endTime}
+    </if> order by  sol.create_time desc
+</select>
 </mapper>

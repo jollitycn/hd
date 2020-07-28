@@ -132,9 +132,9 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         }
 
         productRelationService.saveBatch(whps);
-        WarehouseProductRelation[] whpArr = new WarehouseProductRelation[whps.size()];
-        updateLog(userId, whps.toArray(whpArr));
-        stockLogService.saveBatch(sols);
+//        WarehouseProductRelation[] whpArr = new WarehouseProductRelation[whps.size()];
+//        updateLog(userId, whps.toArray(whpArr));
+//        stockLogService.saveBatch(sols);
         return Result.success();
     }
 
@@ -235,6 +235,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     public int getWarningCount(Integer warehouseId, Integer productId ) {
        return this.baseMapper.getWarningCount(warehouseId,productId  );
     }
+
 
     @Override
     public Page listProducts(WarehouseProductPageQuery request) {
