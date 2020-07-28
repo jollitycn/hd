@@ -124,7 +124,7 @@ public class WarehouseController extends BaseController {
     @PostMapping("/product")
     @ApiOperation("仓库添加商品库存")
     public Result<?> addProduct(@RequestBody WarehouseProductDTO req) {
-        return warehouseService.addProduct(req);
+        return warehouseService.addProduct(req,redisUser().getUserId());
     }
 
     @PostMapping("/stock")
@@ -136,7 +136,7 @@ public class WarehouseController extends BaseController {
     @PostMapping("/rp/{warehouseId}/{productId}")
     @ApiOperation("移除")
     public Result<?> removeProduct(@PathVariable String warehouseId,@PathVariable String productId) {
-        warehouseService.removeProduct(warehouseId,productId);
+        warehouseService.removeProduct(warehouseId,productId,redisUser().getUserId());
         return Result.success();
     }
 

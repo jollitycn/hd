@@ -15,6 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/stock-operation-log")
-public class StockOperationLogController {
+public class StockOperationLogController  extends BaseController {
 
 }

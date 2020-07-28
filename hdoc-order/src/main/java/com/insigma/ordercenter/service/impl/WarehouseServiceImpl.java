@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -111,8 +112,11 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     }
 
     @Override
-    public Result<?> addProduct(WarehouseProductDTO req) {
+    public Result<?> addProduct(WarehouseProductDTO req,Long userId) {
         //遍历商品编号 ，新增仓库商品记录
+        List< WarehouseProductRelation> whps = new ArrayList< WarehouseProductRelation>();
+
+        List< StockOperationLog> sols = new ArrayList< StockOperationLog>();
         for (Long productId : req.getProductIds()) {
             WarehouseProductRelation whp = new WarehouseProductRelation();
             whp.setWarehouseId(req.getWarehouseId());
@@ -123,8 +127,13 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
             }
             whp.setQuantity(0);
             whp.setProductSku(product.getProductSku());
-            productRelationService.save(whp);
+            whps.add(whp);
+
         }
+
+        productRelationService.saveBatch(whps);
+        updateLog(userId,(WarehouseProductRelation[])whps.toArray());
+        stockLogService.saveBatch(sols);
         return Result.success();
     }
 
@@ -176,8 +185,27 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     }
 
     @Override
-    public void removeProduct(String warehouseId, String productId) {
+    public void removeProduct(String warehouseId, String productId,Long userId) {
+        WarehouseProductRelation wpr =    productRelationService.getWarehouseProductRelation(warehouseId,productId);
         this.baseMapper.removeProduct(warehouseId, productId);
+        updateLog(userId,wpr);
+    }
+
+    private void updateLog( Long userId, WarehouseProductRelation... whps) {
+        List<StockOperationLog> sols  =new ArrayList<>();
+        for (WarehouseProductRelation whp:
+                whps) {
+            StockOperationLog sol = new StockOperationLog();
+            sol.setCreateId(userId);
+            sol.setCreateTime(LocalDateTime.now());
+            sol.setOriginQuantity(0);
+            sol.setChangeQuantity(0);
+            sol.setDestinationQuantity(0);
+            sol.setWarehouseProductRelationId(whp.getWarehouseProductRelationId());
+            sols.add(sol);
+        }
+
+        stockLogService.saveBatch(sols);
     }
 
     @Override
@@ -191,9 +219,10 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     }
 
     @Override
-    public void removeProduct(Integer warehouseId, Integer productId) {
+    public void removeProduct(Integer warehouseId, Integer productId, Long userId) {
         this.baseMapper.removeProduct(warehouseId, productId);
     }
+
 
 
     @Override
@@ -202,8 +231,8 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     }
 
     @Override
-    public int getWarningCount(Integer warehouseId, Integer productId) {
-       return this.baseMapper.getWarningCount(warehouseId,productId );
+    public int getWarningCount(Integer warehouseId, Integer productId ) {
+       return this.baseMapper.getWarningCount(warehouseId,productId  );
     }
 
     @Override

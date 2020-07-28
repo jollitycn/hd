@@ -26,7 +26,7 @@ public interface IWarehouseService extends IService<Warehouse> {
 
     Result<?> updateWarehouse(WarehouseDTO warehouseDTO, LoginUser loginUser);
 
-    Result<?> addProduct(WarehouseProductDTO req);
+    Result<?> addProduct(WarehouseProductDTO req,Long userId);
 
     Result<?> modifyStock(WarehouseProductRelation whp, LoginUser redisUser);
 
@@ -36,12 +36,12 @@ public interface IWarehouseService extends IService<Warehouse> {
 
    Result<?> page(IPage<WarehouseVo> page, WarehouseDTO dto);
 
-    void removeProduct(String warehouseId, String productId);
+    void removeProduct(String warehouseId, String productId,Long userId);
 
      void updateWarningCount(String warehouseId, String productId,String warningCount) ;
 
      int getWarningCount(String warehouseId, String productId) ;
-    void removeProduct(Integer warehouseId, Integer productId);
+    void removeProduct(Integer warehouseId, Integer productId,Long userId);
 
     void updateWarningCount(Integer warehouseId, Integer productId,Integer warningCount) ;
 

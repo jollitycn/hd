@@ -21,4 +21,5 @@ public interface IWarehouseProductRelationService extends IService<WarehouseProd
 
     List<ProductStockInfoVO> getProductStockInfo(Long productId);
 
+    WarehouseProductRelation getWarehouseProductRelation(String warehouseId, String productId);
 }

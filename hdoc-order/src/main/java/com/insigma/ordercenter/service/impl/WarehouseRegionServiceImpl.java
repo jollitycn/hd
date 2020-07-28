@@ -1,5 +1,8 @@
 package com.insigma.ordercenter.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.insigma.ordercenter.entity.WarehouseProductRelation;
 import com.insigma.ordercenter.entity.WarehouseRegion;
 import com.insigma.ordercenter.mapper.WarehouseRegionMapper;
 import com.insigma.ordercenter.service.IWarehouseRegionService;

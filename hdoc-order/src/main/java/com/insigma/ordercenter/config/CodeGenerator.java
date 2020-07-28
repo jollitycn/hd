@@ -17,7 +17,7 @@ import java.util.Scanner;
 /**
  * @program: wsparent
  * @description: 代码生成工具类
- * @author: LiuHao
+ * @author: Jason
  * @create: 2020-01-07 11:41
  **/
 class CodeGenerator {
@@ -50,7 +50,7 @@ class CodeGenerator {
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
         gc.setOutputDir(projectPath + "/hdoc-order/src/main/java");
-        gc.setAuthor("LiuHao");
+        gc.setAuthor("Jason");
         gc.setIdType(IdType.ID_WORKER);
         gc.setOpen(false);
         gc.setSwagger2(true);

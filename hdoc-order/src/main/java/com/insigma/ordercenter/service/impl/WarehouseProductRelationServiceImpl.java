@@ -40,7 +40,13 @@ public class WarehouseProductRelationServiceImpl extends ServiceImpl<WarehousePr
         return baseMapper.getProductStockInfo(productId);
     }
 
-
+    @Override
+    public WarehouseProductRelation getWarehouseProductRelation(String warehouseId, String productId) {
+        QueryWrapper<WarehouseProductRelation> wrapper = new QueryWrapper<WarehouseProductRelation>();
+        wrapper.eq(WarehouseProductRelation.WAREHOUSE_ID,warehouseId);
+        wrapper.eq(WarehouseProductRelation.PRODUCT_ID,productId);
+        return baseMapper.selectOne(wrapper);
+    }
 
     public static void main(String[] args) {
         String randomStr = "2d4s";

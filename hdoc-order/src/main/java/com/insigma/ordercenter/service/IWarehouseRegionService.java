@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.service;
 
+import com.insigma.ordercenter.entity.WarehouseProductRelation;
 import com.insigma.ordercenter.entity.WarehouseRegion;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IWarehouseRegionService extends IService<WarehouseRegion> {
 
+//    WarehouseProductRelation getWarehouseProductRelation(String warehouseId, String productId);
 }
