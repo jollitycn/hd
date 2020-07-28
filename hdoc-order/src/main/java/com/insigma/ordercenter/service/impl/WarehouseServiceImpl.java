@@ -38,6 +38,8 @@ import java.util.List;
 public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse> implements IWarehouseService {
 
     @Autowired
+    private IShopProductService shopProductService;
+    @Autowired
     private IWarehouseTypeService typeService;
 
     @Autowired
@@ -108,6 +110,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
             region.setRegionId(regionId);
             warehouseRegionService.save(region);
         }
+
         return Result.success(CodeMsg.SUCCESS);
     }
 
@@ -128,9 +131,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
             whp.setQuantity(0);
             whp.setProductSku(product.getProductSku());
             whps.add(whp);
-
         }
-
         productRelationService.saveBatch(whps);
 //        WarehouseProductRelation[] whpArr = new WarehouseProductRelation[whps.size()];
 //        updateLog(userId, whps.toArray(whpArr));
@@ -149,18 +150,48 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         }
         log.setOriginQuantity(productStock.getQuantity());
         //改变量等于 新库存减旧库存
-        Integer changeQuantity = whp.getQuantity() - productStock.getQuantity() ;
+        productStock.setQuantity(productStock.getQuantity()+ whp.getQuantity() );
         //更新库存
-        boolean b = productRelationService.updateById(whp);
+        boolean b = productRelationService.updateById(productStock);
         //新增库存变更记录
-        log.setChangeQuantity(changeQuantity);
+        log.setChangeQuantity(whp.getQuantity());
         log.setCreateId(redisUser.getUserId());
         log.setCreateTime(LocalDateTime.now());
-        log.setDestinationQuantity(whp.getQuantity());
+        log.setDestinationQuantity(productStock.getQuantity());
         log.setOperationType(StockOperationLog.OperationTypeEnum.MANUAL.getStatus());
         log.setWarehouseProductRelationId(whp.getWarehouseProductRelationId());
         stockLogService.save(log);
+        updateShopProduct(whp, productStock);
+        //   List<ShopProduct> shopProducts= baseMapper.getRatio(productStock.getProductId());
         return Result.success(CodeMsg.SUCCESS);
+    }
+
+    private void updateShopProduct(WarehouseProductRelation whp, WarehouseProductRelation productStock) {
+        //更新所有仓库的库存信息
+        List<ShopProduct> shopProducts = shopProductService.getByProductId(productStock.getProductId());
+        int totalRatio = 0;
+        for (ShopProduct shopProduct :
+                shopProducts) {
+            totalRatio += shopProduct.getRatio();
+        }
+        if (totalRatio <= 0) {
+            return;
+        }
+        int totalQuantity = 0;
+        for (ShopProduct shopProduct :
+                shopProducts) {
+            double ratio = 0.0 * totalRatio / shopProduct.getRatio();
+            long newQuantity = Math.round(whp.getQuantity() * ratio);
+            Long newNumber = shopProduct.getNumber() + newQuantity;
+            shopProduct.setNumber(newNumber.intValue());
+            totalQuantity += newQuantity;
+        }
+        int remainNumber = whp.getQuantity() - totalQuantity;
+        if (remainNumber > 0) {
+            ShopProduct sp = shopProducts.get(shopProducts.size() - 1);
+            sp.setNumber(sp.getNumber() + remainNumber);
+        }
+        shopProductService.saveOrUpdateBatch(shopProducts);
     }
 
     @Override
@@ -188,13 +219,13 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     public void removeProduct(String warehouseId, String productId,Long userId) {
-        WarehouseProductRelation wpr =    productRelationService.getWarehouseProductRelation(warehouseId,productId);
+        WarehouseProductRelation wpr = productRelationService.getWarehouseProductRelation(warehouseId,productId);
         this.baseMapper.removeProduct(warehouseId, productId);
         updateLog(userId,wpr);
     }
 
     private void updateLog( Long userId, WarehouseProductRelation... whps) {
-        List<StockOperationLog> sols  =new ArrayList<>();
+        List<StockOperationLog> sols = new ArrayList<>();
         for (WarehouseProductRelation whp:
                 whps) {
             StockOperationLog sol = new StockOperationLog();
@@ -225,8 +256,6 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         this.baseMapper.removeProduct(warehouseId, productId);
     }
 
-
-
     @Override
     public void updateWarningCount(Integer warehouseId, Integer productId,Integer warningCount) {
         this.baseMapper.updateWarningCount(warehouseId,productId,warningCount);
@@ -237,7 +266,6 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
        return this.baseMapper.getWarningCount(warehouseId,productId  );
     }
 
-
     @Override
     public Page listProducts(WarehouseProductPageQuery request) {
         Page page = new Page<>(request.getPageNum(), request.getPageSize());
@@ -245,5 +273,4 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         page.setRecords(list);
         return page;
     }
-
 }

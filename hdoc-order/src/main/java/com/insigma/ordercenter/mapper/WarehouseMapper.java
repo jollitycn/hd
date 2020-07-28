@@ -39,4 +39,5 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
     void updateWarningCount(String warehouseId, String productId, String warningCount);
 
     void removeProduct(String warehouseId, String productId);
+
 }
