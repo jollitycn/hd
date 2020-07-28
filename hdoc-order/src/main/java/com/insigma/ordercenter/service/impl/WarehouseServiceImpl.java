@@ -157,6 +157,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         log.setCreateId(redisUser.getUserId());
         log.setCreateTime(LocalDateTime.now());
         log.setDestinationQuantity(whp.getQuantity());
+        log.setOperationType(StockOperationLog.OperationTypeEnum.MANUAL.getStatus());
         log.setWarehouseProductRelationId(whp.getWarehouseProductRelationId());
         stockLogService.save(log);
         return Result.success(CodeMsg.SUCCESS);

@@ -115,9 +115,7 @@ public class ShippingOrderController extends BaseController{
     @PutMapping("/frozen/{shippingOrderId}")
     @ApiOperation("冻结发货单")
     public Result frozen(@PathVariable Long shippingOrderId) {
-
         Boolean result = shippingOrderService.frozen(shippingOrderId);
-
         if(result){
             return Result.success();
         }
@@ -128,7 +126,6 @@ public class ShippingOrderController extends BaseController{
     @PutMapping("/add")
     @ApiOperation("新建发货单")
     public Result add(EditShippingOrderDTO editShippingOrderDTO) {
-
         return Result.success();
     }
 }

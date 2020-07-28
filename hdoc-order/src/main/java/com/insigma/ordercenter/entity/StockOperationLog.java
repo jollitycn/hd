@@ -77,4 +77,54 @@ package com.insigma.ordercenter.entity;
 
         public static final String CHANGE_QUANTITY = "change_quantity";
 
+
+        public enum OperationTypeEnum{
+//  case 2:
+//            operationTypeName = "库存调拨";
+//                break;
+//            case 3:
+//            operationTypeName = "退货";
+//                break;
+//            case 4:
+//            operationTypeName = "手工调整";
+//                break;
+//                case 1:    default:
+//            operationTypeName = "订单发货";
+                DELIVER(1, "订单发货"),
+            RESTORE(2, "库存调拨"),
+            REFUND(3, "退货"),
+            MANUAL(4, "手工调整");
+
+                /**
+                 * 用户状态
+                 */
+                private Integer status;
+                /**
+                 * 说明
+                 */
+                private String desc;
+
+            OperationTypeEnum(Integer status, String desc) {
+                    this.status = status;
+                    this.desc = desc;
+                }
+
+                public Integer getStatus() {
+                    return status;
+                }
+
+                public void setStatus(Integer status) {
+                    this.status = status;
+                }
+
+                public String getDesc() {
+                    return desc;
+                }
+
+                public void setDesc(String desc) {
+                    this.desc = desc;
+                }
+
+            }
+
 }
