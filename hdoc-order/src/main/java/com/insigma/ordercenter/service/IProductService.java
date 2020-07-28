@@ -2,14 +2,17 @@ package com.insigma.ordercenter.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.insigma.ordercenter.entity.Product;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.Product;
 import com.insigma.ordercenter.entity.dto.AddComboDTO;
 import com.insigma.ordercenter.entity.dto.ProductAddDTO;
 import com.insigma.ordercenter.entity.dto.ProductListDTO;
-import com.insigma.ordercenter.entity.dto.ProductUpdateDTO;
+import com.insigma.ordercenter.entity.dto.ShopRatioDTO;
 import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ProductListPageVO;
+import com.insigma.ordercenter.entity.vo.ShopProductVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -25,7 +28,6 @@ public interface IProductService extends IService<Product> {
 
     boolean add(ProductAddDTO productAddDTO);
 
-    boolean edit(ProductUpdateDTO productUpdateDTO);
 
     boolean delete(Long productId);
 
@@ -49,4 +51,20 @@ public interface IProductService extends IService<Product> {
      * @return
      */
     boolean disable(Long productId);
+
+    /**
+     * 获取商品电商发货比例列表
+     * @param productId
+     * @return
+     */
+    List<ShopProductVO> getProductRatio(Long productId);
+
+
+    /**
+     * 编辑电商发货比例
+     * @param productId
+     * @param shopRatioDTOList
+     * @return
+     */
+    boolean editRatio(Long productId, List<ShopRatioDTO> shopRatioDTOList);
 }

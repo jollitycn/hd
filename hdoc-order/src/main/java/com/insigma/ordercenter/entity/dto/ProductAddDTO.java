@@ -16,6 +16,9 @@ import java.util.List;
 @ApiModel(value = "商品添加DTO")
 public class ProductAddDTO {
 
+    @ApiModelProperty(value = "商品ID")
+    private Long productId;
+
     @ApiModelProperty(value = "商品sku")
     private String productSku;
 
@@ -79,4 +82,18 @@ public class ProductAddDTO {
     @ApiModelProperty(value = "商品图片url")
     private String productPictureUrl;
 
+    @ApiModelProperty(value = "是否预约发货 1是 0否")
+    private Integer isReserve;
+
+    @ApiModelProperty(value = "预约周期 1按月 2按季 3按年 4指定日期")
+    private Integer cycle;
+
+    @ApiModelProperty(value = "预约发货指定时间-yyyy-MM-DD")
+    private String reserveTime;
+
+    @ApiModelProperty(value = "预约每次发送数量")
+    private Integer sendNumber;
+
+    @ApiModelProperty(value = "预约发送次数")
+    private Integer sendCount;
 }

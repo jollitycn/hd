@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.ShopProductMapper">
+
+    <select id="getProductRatio" resultType="com.insigma.ordercenter.entity.vo.ShopProductVO">
+    SELECT
+        IFNULL(b.spid,0),
+        a.shop_id,
+        a.shop_name,
+        IFNULL(b.ratio,0),
+    IFNULL(b.number,0),
+    IFNULL(b.warning_value,0)
+    FROM
+        t_shop a
+    LEFT JOIN t_shop_product b ON a.shop_id=b.shop_id AND b.product_id=#{productId}
+    WHERE
+        a.is_stop = 0
+    AND a.is_deleted = 0
+    </select>
+</mapper>

@@ -17,6 +17,7 @@ public class CodeMsg {
     public static CodeMsg SUCCESS = new CodeMsg(0, "操作成功");
     public static CodeMsg SERVER_EXCEPTION = new CodeMsg(500100, "服务端异常");
     public static CodeMsg PARAMETER_ISNULL = new CodeMsg(500101, "输入参数为空");
+    public static CodeMsg PARAMETER_ERROR = new CodeMsg(500102, "输入参数异常");
     public static CodeMsg PERMISSION_ERROR = new CodeMsg(500001, "您的账号已被停用，请重新申请");
     public static CodeMsg SYS_USER_NOT_LOGIN = new CodeMsg(500000, "后台账号未登录");
 

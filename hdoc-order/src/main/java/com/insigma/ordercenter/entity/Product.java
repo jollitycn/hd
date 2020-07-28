@@ -112,6 +112,20 @@ public class Product implements Serializable {
     @ApiModelProperty(value = "商品图片url")
     private String productPictureUrl;
 
+    @ApiModelProperty(value = "是否预约发货 1是 0否")
+    private Integer isReserve;
+
+    @ApiModelProperty(value = "预约周期 1按月 2按季 3按年 4指定日期")
+    private Integer cycle;
+
+    @ApiModelProperty(value = "预约发货指定时间")
+    private LocalDateTime reserveTime;
+
+    @ApiModelProperty(value = "预约每次发送数量")
+    private Integer sendNumber;
+
+    @ApiModelProperty(value = "预约发送次数")
+    private Integer sendCount;
 
         public static final String PRODUCT_ID = "product_id";
 

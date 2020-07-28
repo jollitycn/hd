@@ -5,19 +5,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
-import com.insigma.ordercenter.entity.dto.AddComboDTO;
-import com.insigma.ordercenter.entity.dto.ProductAddDTO;
-import com.insigma.ordercenter.entity.dto.ProductListDTO;
-import com.insigma.ordercenter.entity.dto.ProductUpdateDTO;
+import com.insigma.ordercenter.constant.Constant;
+import com.insigma.ordercenter.entity.dto.*;
 import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ProductListPageVO;
 import com.insigma.ordercenter.entity.vo.ProductStockInfoVO;
-import com.insigma.ordercenter.service.IExpressWarehouseRelationService;
+import com.insigma.ordercenter.entity.vo.ShopProductVO;
 import com.insigma.ordercenter.service.IProductService;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -42,8 +39,8 @@ public class ProductController extends BaseController {
     @Resource
     private IWarehouseProductRelationService warehouseProductRelationService;
 
-    @Autowired
-    private IExpressWarehouseRelationService expressWarehouseRelationService;
+
+
 
     @GetMapping("/list")
     @ApiOperation(value = "获取商品列表", response = ProductListPageVO.class)
@@ -83,9 +80,23 @@ public class ProductController extends BaseController {
         return Result.success(result);
     }
 
+    @DeleteMapping("/delProductStock/{warehouseProductRelationId}")
+    @ApiOperation(value = "删除商品库存")
+    public Result delProductStock(@PathVariable Long warehouseProductRelationId) {
+
+        boolean result = warehouseProductRelationService.delProductStock(warehouseProductRelationId);
+
+        if (result) {
+            return Result.success();
+        } else {
+            return Result.error(CodeMsg.DATA_DELETE_ERROR);
+        }
+
+    }
+
     @PostMapping("/add")
-    @ApiOperation(value = "新增商品")
-    public Result add(ProductAddDTO productAddDTO) {
+    @ApiOperation(value = "新增/编辑商品")
+    public Result add(@RequestBody  ProductAddDTO productAddDTO) {
 
         boolean status = productService.add(productAddDTO);
 
@@ -97,19 +108,6 @@ public class ProductController extends BaseController {
 
     }
 
-    @PutMapping("/edit")
-    @ApiOperation(value = "编辑商品")
-    public Result edit(ProductUpdateDTO productUpdateDTO) {
-
-        boolean status = productService.edit(productUpdateDTO);
-
-        if (status) {
-            return Result.success();
-        } else {
-            return Result.error(CodeMsg.DATA_UPDATE_ERROR);
-        }
-
-    }
 
     @DeleteMapping("/delete/{productId}")
     @ApiOperation(value = "删除商品")
@@ -126,9 +124,9 @@ public class ProductController extends BaseController {
 
     @PostMapping("/designatedWarehouse")
     @ApiOperation(value = "指定仓库")
-    public Result designatedWarehouse(Long expressCompanyId,Long warehouseId) {
+    public Result designatedWarehouse(@RequestBody DesignatedWarehouseDTO designatedWarehouseDTO) {
 
-        boolean status = expressWarehouseRelationService.designatedWarehouse(expressCompanyId,warehouseId);
+        boolean status =warehouseProductRelationService.designatedWarehouse(designatedWarehouseDTO);
 
         if (status) {
             return Result.success();
@@ -138,9 +136,9 @@ public class ProductController extends BaseController {
 
     @PutMapping("/changePriority")
     @ApiOperation(value = "更改优先级")
-    public Result changePriority(Long expressWarehouseRelationId,Integer value) {
+    public Result changePriority(Long warehouseProductRelationId,Integer value) {
 
-        boolean status = expressWarehouseRelationService.changePriority(expressWarehouseRelationId,value);
+        boolean status = warehouseProductRelationService.changePriority(warehouseProductRelationId,value);
 
         if (status) {
             return Result.success();
@@ -167,6 +165,45 @@ public class ProductController extends BaseController {
         boolean status = productService.disable(productId);
 
         if (status) {
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @GetMapping("/calculation")
+    @ApiOperation(value = "计算预约发送次数")
+    public Result calculation(Double unitQuantity,Double sendNumber) {
+
+        //除数0判断
+        if(Constant.SYS_ZERO==sendNumber.intValue()){
+            return Result.error(CodeMsg.PARAMETER_ERROR);
+        }
+
+        //向上取整返回
+        Double result=unitQuantity/sendNumber;
+
+        return Result.success(Math.ceil(result));
+
+    }
+
+
+    @GetMapping("/getProductRatio/{productId}")
+    @ApiOperation(value = "获取商品电商发货比例列表")
+    public Result getProductRatio(@PathVariable Long productId) {
+
+        List<ShopProductVO> result =productService.getProductRatio(productId);
+
+        return Result.success(result);
+    }
+
+    @GetMapping("/editRatio/{productId}")
+    @ApiOperation(value = "编辑电商发货比例")
+    public Result editRatio(@PathVariable Long productId,
+                                  @RequestBody  List<ShopRatioDTO> shopRatioDTOList) {
+
+        boolean  result =productService.editRatio(productId,shopRatioDTOList);
+
+        if (result) {
             return Result.success();
         }
         return Result.error(CodeMsg.DATA_UPDATE_ERROR);

@@ -12,15 +12,20 @@
     </select>
     <select id="getProductStockInfo" resultType="com.insigma.ordercenter.entity.vo.ProductStockInfoVO">
         SELECT
+            wpr.warehouse_product_relation_id,
             wpr.warehouse_id,
             w.warehouse_name,
             wpr.product_id,
             p.product_name,
-            wpr.quantity
+            wpr.quantity,
+            wpr.priority,
+			w.express_company_id,
+			e.company_name
         FROM
             t_warehouse_product_relation wpr
         LEFT JOIN t_warehouse w ON wpr.warehouse_id = w.warehouse_id
         LEFT JOIN t_product p ON wpr.product_id = p.product_id
+        LEFT JOIN t_express_company e ON w.express_company_id=e.express_company_id
         WHERE
             wpr.product_id = #{productId}
     </select>

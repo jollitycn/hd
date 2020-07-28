@@ -15,7 +15,12 @@ import lombok.EqualsAndHashCode;
 @Data
 @ApiModel(value = "商品库存信息返回对象")
 @EqualsAndHashCode(callSuper = true)
-public class ProductStockInfoVO extends BaseVO {
+public class
+ProductStockInfoVO extends BaseVO {
+
+    @ApiModelProperty(value = "仓库库存ID ")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long warehouseProductRelationId;
 
     @ApiModelProperty(value = "仓库ID ")
     @JsonSerialize(using = ToStringSerializer.class)
@@ -33,4 +38,14 @@ public class ProductStockInfoVO extends BaseVO {
 
     @ApiModelProperty(value = "库存数量")
     private Integer quantity;
+
+    @ApiModelProperty(value = "优先级")
+    private Integer priority;
+
+    @ApiModelProperty(value = "承运商id")
+    private Integer expressCompanyId;
+
+    @ApiModelProperty(value = "承运商名称")
+    private String companyName;
+
 }

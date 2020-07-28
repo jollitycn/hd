@@ -1,16 +1,12 @@
 package com.insigma.ordercenter.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.entity.WarehouseProductRelation;
-import com.insigma.ordercenter.entity.dto.WarehouseProductPageQuery;
-import com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse;
+import com.insigma.ordercenter.entity.dto.DesignatedWarehouseDTO;
 import com.insigma.ordercenter.entity.vo.ProductStockInfoVO;
 import com.insigma.ordercenter.mapper.WarehouseProductRelationMapper;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
-import com.insigma.ordercenter.utils.StringUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +36,48 @@ public class WarehouseProductRelationServiceImpl extends ServiceImpl<WarehousePr
         return baseMapper.getProductStockInfo(productId);
     }
 
+    /**
+     * 删除商品库存
+     *
+     * @param warehouseProductRelationId
+     * @return
+     */
+    @Override
+    public boolean delProductStock(Long warehouseProductRelationId) {
+        return this.removeById(warehouseProductRelationId);
+    }
+
+    /**
+     * 商品指定仓库
+     *
+     * @param designatedWarehouseDTO
+     * @return
+     */
+    @Override
+    public boolean designatedWarehouse(DesignatedWarehouseDTO designatedWarehouseDTO) {
+
+        WarehouseProductRelation warehouseProductRelation=new WarehouseProductRelation();
+        BeanUtil.copyProperties(designatedWarehouseDTO,warehouseProductRelation);
+        return this.save(warehouseProductRelation);
+    }
+
+    /**
+     * 改变优先级
+     *
+     * @param warehouseProductRelationId
+     * @param value
+     * @return
+     */
+    @Override
+    public boolean changePriority(Long warehouseProductRelationId, Integer value) {
+
+
+        WarehouseProductRelation warehouseProductRelation=this.getById(warehouseProductRelationId);
+        warehouseProductRelation.setPriority(value);
+
+        return this.updateById(warehouseProductRelation);
+    }
+
     @Override
     public WarehouseProductRelation getWarehouseProductRelation(String warehouseId, String productId) {
         QueryWrapper<WarehouseProductRelation> wrapper = new QueryWrapper<WarehouseProductRelation>();
@@ -48,7 +86,7 @@ public class WarehouseProductRelationServiceImpl extends ServiceImpl<WarehousePr
         return baseMapper.selectOne(wrapper);
     }
 
-    public static void main(String[] args) {
+public static void main(String[] args) {
         String randomStr = "2d4s";
         String clientFlag = "test";
         String strData1 = " {\n" +

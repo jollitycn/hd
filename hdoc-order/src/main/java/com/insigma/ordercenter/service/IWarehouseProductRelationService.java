@@ -22,4 +22,26 @@ public interface IWarehouseProductRelationService extends IService<WarehouseProd
     List<ProductStockInfoVO> getProductStockInfo(Long productId);
 
     WarehouseProductRelation getWarehouseProductRelation(String warehouseId, String productId);
+    /**
+     * 删除商品库存
+     * @param warehouseProductRelationId
+     * @return
+     */
+    boolean delProductStock(Long warehouseProductRelationId);
+
+
+    /**
+     * 商品指定仓库
+     * @param designatedWarehouseDTO
+     * @return
+     */
+    boolean designatedWarehouse(DesignatedWarehouseDTO designatedWarehouseDTO);
+
+    /**
+     * 改变优先级
+     * @param warehouseProductRelationId
+     * @param value
+     * @return
+     */
+    boolean changePriority(Long warehouseProductRelationId, Integer value);
 }

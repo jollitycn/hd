@@ -2,22 +2,26 @@ package com.insigma.ordercenter.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.Product;
 import com.insigma.ordercenter.entity.ProductCombo;
+import com.insigma.ordercenter.entity.ShopProduct;
 import com.insigma.ordercenter.entity.Tag;
 import com.insigma.ordercenter.entity.dto.AddComboDTO;
 import com.insigma.ordercenter.entity.dto.ProductAddDTO;
 import com.insigma.ordercenter.entity.dto.ProductListDTO;
-import com.insigma.ordercenter.entity.dto.ProductUpdateDTO;
+import com.insigma.ordercenter.entity.dto.ShopRatioDTO;
 import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ProductListPageVO;
+import com.insigma.ordercenter.entity.vo.ShopProductVO;
 import com.insigma.ordercenter.entity.vo.TagVO;
 import com.insigma.ordercenter.mapper.ProductComboMapper;
 import com.insigma.ordercenter.mapper.ProductMapper;
+import com.insigma.ordercenter.mapper.ShopProductMapper;
 import com.insigma.ordercenter.mapper.TagMapper;
 import com.insigma.ordercenter.service.IProductService;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
@@ -28,6 +32,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -49,6 +54,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Autowired
     private TagMapper tagMapper;
+
+    @Autowired
+    private ShopProductMapper shopProductMapper;
 
     @Override
     public IPage<ProductListPageVO> getProductListPage(Page<ProductListPageVO> page, ProductListDTO productListDTO) {
@@ -81,40 +89,73 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public boolean add(ProductAddDTO productAddDTO) {
 
-        Product product = new Product();
-        BeanUtils.copyProperties(productAddDTO, product);
-        product.setProductNo("SP"+ IdUtil.objectId());
-        product.setIsPutOn(Constant.SYS_ONE);
-        product.setCreateTime(LocalDateTime.now());
+        Long productId=productAddDTO.getProductId();
 
-        this.save(product);
+        //新增商品
+        if(null==productId){
 
-        //写入商品标签
-        List<String> tagCodeList=productAddDTO.getTagList();
-        if(CollUtil.isNotEmpty(tagCodeList)){
-            for (String tagCode:tagCodeList) {
-                Tag tag=new Tag();
-                tag.setTag(tagCode);
-                tag.setProductId(product.getProductId());
-                tagMapper.insert(tag);
+            Product product = new Product();
+            BeanUtils.copyProperties(productAddDTO, product);
+            product.setProductNo("SP"+ IdUtil.objectId());
+            product.setIsPutOn(Constant.SYS_ONE);
+            product.setCreateTime(LocalDateTime.now());
+
+            //处理预约发货参数
+            Integer isReserve=productAddDTO.getIsReserve();
+            Integer cycle=productAddDTO.getCycle();
+            if(Constant.SYS_ONE==isReserve.intValue()&&Constant.SYS_FOUR==cycle.intValue()){
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                product.setReserveTime(LocalDateTime.parse(productAddDTO.getReserveTime(),formatter));
             }
+
+            //写入商品标签
+            List<String> tagCodeList=productAddDTO.getTagList();
+            if(CollUtil.isNotEmpty(tagCodeList)){
+                for (String tagCode:tagCodeList) {
+                    Tag tag=new Tag();
+                    tag.setTag(tagCode);
+                    tag.setProductId(product.getProductId());
+                    tagMapper.insert(tag);
+                }
+            }
+
+            return this.save(product);
+        }else{
+            //编辑商品
+            Product product = getById(productId);
+            BeanUtils.copyProperties(productAddDTO, product);
+
+            //处理预约发货参数
+            Integer isReserve=productAddDTO.getIsReserve();
+            Integer cycle=productAddDTO.getCycle();
+            if(Constant.SYS_ONE==isReserve.intValue()&&Constant.SYS_FOUR==cycle.intValue()){
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                product.setReserveTime(LocalDateTime.parse(productAddDTO.getReserveTime(),formatter));
+            }
+
+            //删除旧的商品标签
+            QueryWrapper queryWrapper=new QueryWrapper();
+            queryWrapper.eq(Tag.PRODUCT_ID,productId);
+            tagMapper.delete(queryWrapper);
+
+            //写入商品标签
+            List<String> tagCodeList=productAddDTO.getTagList();
+            if(CollUtil.isNotEmpty(tagCodeList)){
+                for (String tagCode:tagCodeList) {
+                    Tag tag=new Tag();
+                    tag.setTag(tagCode);
+                    tag.setProductId(product.getProductId());
+                    tagMapper.insert(tag);
+                }
+            }
+
+            return this.updateById(product);
         }
 
-        return true;
+
     }
 
-    @Override
-    public boolean edit(ProductUpdateDTO productUpdateDTO) {
 
-        Product product = getById(productUpdateDTO.getProductId());
-
-        if (product != null) {
-            BeanUtils.copyProperties(productUpdateDTO, product);
-            return updateById(product);
-        } else {
-            return false;
-        }
-    }
 
     @Override
     public boolean delete(Long productId) {
@@ -195,5 +236,35 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<ShopProductVO> getProductRatio(Long productId) {
+        return shopProductMapper.getProductRatio(productId);
+    }
+
+    @Override
+    public boolean editRatio(Long productId, List<ShopRatioDTO> shopRatioDTOList) {
+
+        //判断比例总数不超过10
+//        Integer count=0;
+//        for (ShopRatioDTO shopRatioD:shopRatioDTOList) {
+//            count+=shopRatioD.getRatio();
+//        }
+//        if()
+
+        QueryWrapper queryWrapper=new QueryWrapper();
+        queryWrapper.eq(ShopProduct.PRODUCT_ID,productId);
+        shopProductMapper.delete(queryWrapper);
+
+        for (ShopRatioDTO shopRatioD:shopRatioDTOList) {
+            ShopProduct shopProduct=new ShopProduct();
+            shopProduct.setProductId(productId);
+            shopProduct.setShopId(shopRatioD.getShopId());
+            shopProduct.setRatio(shopRatioD.getRatio());
+            shopProductMapper.insert(shopProduct);
+        }
+
+        return true;
     }
 }
