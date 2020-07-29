@@ -2,4 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.ExpressFeeMapper">
 
+    <select id="page"  resultType="com.insigma.ordercenter.entity.vo.ExpressFeePageVO">
+        select * from t_express_fee s where 1=1
+        <if test=" request.expressCompanyId != null and request.expressCompanyId >0">
+            AND s.express_company_id = #{request.expressCompanyId}
+        </if>
+         <if test=" request.warehouseName != null and request.warehouseName != ''">
+        AND s.warehouse_name like'%'+#{request.warehouseName}+'%'
+        </if>
+        <if test=" request.warehouseId != null and request.warehouseId>0">
+        AND s.warehouse_id  = #{request.warehouseId}
+        </if>
+        <if test=" request.province != null and request.province != ''">
+        AND s.province = #{request.province}
+        </if>
+    </select>
 </mapper>

@@ -29,34 +29,34 @@ import java.util.List;
 @Service
 public class ExpressFeeServiceImpl extends ServiceImpl<ExpressFeeMapper, ExpressFee> implements IExpressFeeService {
 
-@Override
-public  ExpressFeeDetailVO detail(Long id) {
- ExpressFeeDetailVO vo = new  ExpressFeeDetailVO();
- ExpressFee bean = baseMapper.selectById(id);
-BeanUtil.copyProperties(bean,vo);
-return vo;
-}
+ @Override
+ public ExpressFeeDetailVO detail(Long id) {
+  ExpressFeeDetailVO vo = new ExpressFeeDetailVO();
+  ExpressFee bean = baseMapper.selectById(id);
+  BeanUtil.copyProperties(bean, vo);
+  return vo;
+ }
 
-@Override
-public boolean delete(Serializable id) {
-return baseMapper.deleteById(id)>0;
-}
+ @Override
+ public boolean delete(Serializable id) {
+  return baseMapper.deleteById(id) > 0;
+ }
 
-@Override
-public boolean add( ExpressFeeAddDTO bean) {
-return baseMapper.insert(bean)>0;
-}
+ @Override
+ public boolean add(ExpressFeeAddDTO bean) {
+  return baseMapper.insert(bean) > 0;
+ }
 
-@Override
-public IPage< ExpressFeePageVO> page( ExpressFeePageDTO request) {
- Page< ExpressFeePageVO> page = new Page< ExpressFeePageVO>(request.getPageNum(), request.getPageSize());
-   List< ExpressFeePageVO> result = baseMapper.page(page, request);
-    page.setRecords(result);
-    return page;
-    }
+ @Override
+ public IPage<ExpressFeePageVO> page(ExpressFeePageDTO request) {
+  Page<ExpressFeePageVO> page = new Page<ExpressFeePageVO>(request.getPageNum(), request.getPageSize());
+  List<ExpressFeePageVO> result = baseMapper.page(page, request);
+  page.setRecords(result);
+  return page;
+ }
 
-    @Override
-    public boolean edit( ExpressFeeEditDTO bean) {
-    return    baseMapper.updateById(bean)>0;
-    }
+ @Override
+ public boolean edit(ExpressFeeEditDTO bean) {
+  return baseMapper.updateById(bean) > 0;
+ }
 }

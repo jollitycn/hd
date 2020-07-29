@@ -11,6 +11,7 @@ import com.insigma.ordercenter.entity.dto.ExpressFeeEditDTO;
 import com.insigma.ordercenter.entity.dto.ExpressFeePageDTO;
 import com.insigma.ordercenter.entity.vo.ExpressFeeDetailVO;
 import com.insigma.ordercenter.entity.vo.ExpressFeePageVO;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -32,6 +33,7 @@ import com.insigma.ordercenter.controller.BaseController;
  */
 @RestController
 @RequestMapping("/express-fee")
+@Api(tags = {"物流报价表"})
 public class ExpressFeeController extends BaseController {
  @Resource
  private IExpressFeeService iExpressFeeService;
