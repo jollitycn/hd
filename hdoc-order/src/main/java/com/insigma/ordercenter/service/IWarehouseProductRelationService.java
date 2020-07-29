@@ -2,6 +2,7 @@ package com.insigma.ordercenter.service;
 
 import com.insigma.ordercenter.entity.WarehouseProductRelation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.dto.DesignatedWarehouseDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductPageQuery;
 import com.insigma.ordercenter.entity.vo.ProductStockInfoVO;
 
