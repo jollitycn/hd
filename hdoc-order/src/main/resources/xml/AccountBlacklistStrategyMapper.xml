@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.AccountBlacklistStrategyMapper">
+
+    <select id="listAccountBlackPage" resultType="com.insigma.ordercenter.entity.vo.AccountBlackVO">
+        SELECT
+            ab.account_blacklist_strategy_id,
+            ab.account,
+            ab.reason,
+            s.shop_name
+        FROM
+            t_account_blacklist_strategy ab
+        LEFT JOIN t_shop s ON s.shop_id = ab.shop_id
+        WHERE
+            ab.is_deleted = 0
+        AND pb.strategy_id = #{param.strategyId}
+        <if test="null != param.searchKey and param.searchKey != ''">
+            AND ab.account LIKE CONCAT('%', #{param.searchKey}, '%')
+        </if>
+        <if test="null != param.shopId">
+            AND ab.shop_id = #{param.shopId}
+        </if>
+    </select>
+
+</mapper>

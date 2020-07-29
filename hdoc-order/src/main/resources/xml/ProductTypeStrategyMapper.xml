@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.ProductTypeStrategyMapper">
+
+    <!-- 查询策略关联的商品分类 -->
+    <select id="listProductTypeStrategy" resultType="com.insigma.ordercenter.entity.vo.ProductTypeStrategyVO">
+        SELECT
+            sd.dictionary_id AS productTypeId,
+            sd.data_value AS productTypeName,
+            IF (
+                (
+                    SELECT
+                        COUNT(1)
+                    FROM
+                        t_product_type_strategy
+                    WHERE
+                        product_type_id = sd.dictionary_id
+                    AND strategy_id = #{strategyId}
+                ) > 0,
+                1,
+                0
+            ) relationStatus
+        FROM
+            sys_dictionary sd
+        WHERE
+            sd.is_deleted = 0
+        AND sd.parent_id = 1
+    </select>
+
+</mapper>

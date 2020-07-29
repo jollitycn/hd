@@ -10,6 +10,9 @@ import com.insigma.ordercenter.entity.dto.shop.ShopEdit;
 import com.insigma.ordercenter.entity.dto.shop.ShopQueryRequest;
 import com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse;
 import com.insigma.ordercenter.entity.dto.shop.ShopSetting;
+import com.insigma.ordercenter.entity.vo.ShopStrategyVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -36,4 +39,13 @@ public interface IShopService extends IService<Shop> {
     boolean setting(ShopSetting data);
 
     Page page(ShopQueryRequest request);
+
+    /**
+     * 查询策略id为1的店铺配置信息
+     *
+     * @return java.util.List&lt;com.insigma.ordercenter.entity.vo.ShopStrategyVO&gt;
+     * @author Pan Juncai
+     * @date 2020/7/28 19:12
+     */
+    List<ShopStrategyVO> listTransformStrategyByStrategyId();
 }

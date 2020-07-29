@@ -8,6 +8,7 @@ import com.insigma.ordercenter.entity.dto.shop.ShopEdit;
 import com.insigma.ordercenter.entity.dto.shop.ShopQueryRequest;
 import com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse;
 import com.insigma.ordercenter.entity.dto.shop.ShopSetting;
+import com.insigma.ordercenter.entity.vo.ShopStrategyVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -33,4 +34,13 @@ public interface ShopMapper extends BaseMapper<Shop> {
     boolean enable(Long id);
 
     boolean setting(ShopSetting data);
+
+    /**
+     * 查询策略id为1的店铺配置信息
+     *
+     * @return java.util.List&lt;com.insigma.ordercenter.entity.vo.ShopStrategyVO&gt;
+     * @author Pan Juncai
+     * @date 2020/7/28 19:12
+     */
+    List<ShopStrategyVO> listTransformStrategyByStrategyId();
 }
