@@ -77,6 +77,10 @@ package com.insigma.ordercenter.entity;
     private int isDeleted;
 
 
+    @ApiModelProperty(value = "店铺过滤策略是否启用（0-未启用，1-已启用）")
+    private int strategyStatus;
+
+
     public static final String SHOP_ID = "shop_id";
 
     public static final String PLATFORM_NAME = "platform_name";

@@ -36,54 +36,54 @@ public class ExpressFeeController extends BaseController {
  @Resource
  private IExpressFeeService iExpressFeeService;
 
-@GetMapping("/list")
-@ApiOperation(value = "获取列表", response = ExpressFeePageVO.class)
-public Result<?> list(ExpressFeePageDTO expressFeePageDTO) {
- IPage<ExpressFeePageVO> result = iExpressFeeService.page( expressFeePageDTO);
+ @PostMapping("/page")
+ @ApiOperation(value = "获取列表", response = ExpressFeePageVO.class)
+ public Result<?> page(@Valid @RequestBody ExpressFeePageDTO expressFeePageDTO) {
+  IPage<ExpressFeePageVO> result = iExpressFeeService.page(expressFeePageDTO);
   return Result.success(result);
-  }
+ }
 
-  @PostMapping("/add")
-  @ApiOperation(value = "新增")
-  public Result<?> add(ExpressFeeAddDTO expressFeeAddDTO) {
+ @PostMapping("/add")
+ @ApiOperation(value = "新增")
+ public Result<?> add(@Valid @RequestBody ExpressFeeAddDTO expressFeeAddDTO) {
   boolean status = iExpressFeeService.add(expressFeeAddDTO);
 
   if (status) {
-  return Result.success();
+   return Result.success();
   } else {
-  return Result.error(CodeMsg.DATA_INSERT_ERROR);
+   return Result.error(CodeMsg.DATA_INSERT_ERROR);
   }
-  }
+ }
 
-  @PutMapping("/edit")
-  @ApiOperation(value = "编辑")
-  public Result<?> edit(ExpressFeeEditDTO expressFeeEditDTO) {
-   boolean status = iExpressFeeService.edit(expressFeeEditDTO);
-   if (status) {
-    return Result.success();
-   } else {
-    return Result.error(CodeMsg.DATA_UPDATE_ERROR);
-   }
+ @PutMapping("/edit")
+ @ApiOperation(value = "编辑")
+ public Result<?> edit(@Valid @RequestBody ExpressFeeEditDTO expressFeeEditDTO) {
+  boolean status = iExpressFeeService.edit(expressFeeEditDTO);
+  if (status) {
+   return Result.success();
+  } else {
+   return Result.error(CodeMsg.DATA_UPDATE_ERROR);
   }
+ }
 
-  @DeleteMapping("/delete/{id}")
-  @ApiOperation(value = "删除")
-  public Result<?> delete(@PathVariable Long id) {
+ @DeleteMapping("/delete/{id}")
+ @ApiOperation(value = "删除")
+ public Result<?> delete(@PathVariable Long id) {
 
   boolean status = iExpressFeeService.delete(id);
 
   if (status) {
-  return Result.success();
+   return Result.success();
   } else {
-  return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+   return Result.error(CodeMsg.DATA_UPDATE_ERROR);
   }
-  }
+ }
 
 
  @DeleteMapping("/detail/{id}")
  @ApiOperation(value = "详情")
  public Result<?> detail(@Valid @PathVariable Long id) {
- ExpressFeeDetailVO result = iExpressFeeService.detail(id);
+  ExpressFeeDetailVO result = iExpressFeeService.detail(id);
   return Result.success(result);
-  }
+ }
 }
