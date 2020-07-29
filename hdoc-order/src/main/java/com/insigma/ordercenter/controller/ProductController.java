@@ -136,9 +136,9 @@ public class ProductController extends BaseController {
 
     @PutMapping("/changePriority")
     @ApiOperation(value = "更改优先级")
-    public Result changePriority(Long warehouseProductRelationId,Integer value) {
+    public Result changePriority(Long warehouseProductRelationId,Integer priority) {
 
-        boolean status = warehouseProductRelationService.changePriority(warehouseProductRelationId,value);
+        boolean status = warehouseProductRelationService.changePriority(warehouseProductRelationId,priority);
 
         if (status) {
             return Result.success();
@@ -188,7 +188,7 @@ public class ProductController extends BaseController {
 
 
     @GetMapping("/getProductRatio/{productId}")
-    @ApiOperation(value = "获取商品电商发货比例列表")
+    @ApiOperation(value = "获取商品电商发货比例列表", response = ShopProductVO.class)
     public Result getProductRatio(@PathVariable Long productId) {
 
         List<ShopProductVO> result =productService.getProductRatio(productId);
@@ -202,6 +202,18 @@ public class ProductController extends BaseController {
                                   @RequestBody  List<ShopRatioDTO> shopRatioDTOList) {
 
         boolean  result =productService.editRatio(productId,shopRatioDTOList);
+
+        if (result) {
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @GetMapping("/editWarningValue/{spid}")
+    @ApiOperation(value = "编辑电商发货预警值")
+    public Result editWarningValue(@PathVariable Long spid,Integer warningValue) {
+
+        boolean  result =productService.editWarningValue(spid,warningValue);
 
         if (result) {
             return Result.success();

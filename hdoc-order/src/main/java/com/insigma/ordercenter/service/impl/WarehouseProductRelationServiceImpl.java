@@ -12,6 +12,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,24 +58,30 @@ public class WarehouseProductRelationServiceImpl extends ServiceImpl<WarehousePr
     @Override
     public boolean designatedWarehouse(DesignatedWarehouseDTO designatedWarehouseDTO) {
 
-        WarehouseProductRelation warehouseProductRelation=new WarehouseProductRelation();
-        BeanUtil.copyProperties(designatedWarehouseDTO,warehouseProductRelation);
-        return this.save(warehouseProductRelation);
+        List<Integer> warehouseIds=designatedWarehouseDTO.getWarehouseIds();
+        List<WarehouseProductRelation> insertList=new ArrayList<>();
+        for (Integer warehouseId:warehouseIds) {
+            WarehouseProductRelation warehouseProductRelation=new WarehouseProductRelation();
+            BeanUtil.copyProperties(designatedWarehouseDTO,warehouseProductRelation);
+            warehouseProductRelation.setWarehouseId(warehouseId);
+            insertList.add(warehouseProductRelation);
+        }
+        return this.saveBatch(insertList);
     }
 
     /**
      * 改变优先级
      *
      * @param warehouseProductRelationId
-     * @param value
+     * @param priority
      * @return
      */
     @Override
-    public boolean changePriority(Long warehouseProductRelationId, Integer value) {
+    public boolean changePriority(Long warehouseProductRelationId, Integer priority) {
 
 
         WarehouseProductRelation warehouseProductRelation=this.getById(warehouseProductRelationId);
-        warehouseProductRelation.setPriority(value);
+        warehouseProductRelation.setPriority(priority);
 
         return this.updateById(warehouseProductRelation);
     }

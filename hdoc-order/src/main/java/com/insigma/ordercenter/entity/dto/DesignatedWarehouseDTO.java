@@ -15,7 +15,7 @@ import java.util.List;
 public class DesignatedWarehouseDTO {
 
     @ApiModelProperty(value = "仓库id")
-    private List<Long> warehouseIds;
+    private List<Integer> warehouseIds;
 
     @ApiModelProperty(value = "商品id")
     private Long productId;

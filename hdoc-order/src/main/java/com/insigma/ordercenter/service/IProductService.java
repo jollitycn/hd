@@ -67,4 +67,12 @@ public interface IProductService extends IService<Product> {
      * @return
      */
     boolean editRatio(Long productId, List<ShopRatioDTO> shopRatioDTOList);
+
+    /**
+     * 编辑电商发货预警值
+     * @param spid
+     * @param warningValue
+     * @return
+     */
+    boolean editWarningValue(Long spid, Integer warningValue);
 }
