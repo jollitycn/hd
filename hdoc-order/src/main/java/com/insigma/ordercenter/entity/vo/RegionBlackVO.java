@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 public class RegionBlackVO extends BaseVO {
     @ApiModelProperty(value = "区域黑名单ID")
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long accountBlacklistStrategyId;
+    private Long regionBlacklistStrategyId;
 
     @ApiModelProperty(value = "店铺名称")
     private String shopName;

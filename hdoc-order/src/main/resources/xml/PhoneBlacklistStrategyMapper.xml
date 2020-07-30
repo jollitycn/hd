@@ -4,8 +4,8 @@
 
     <select id="listPhoneBlackPage" resultType="com.insigma.ordercenter.entity.vo.PhoneBlackVO">
         SELECT
-            pb.account_blacklist_strategy_id,
-            pb.account,
+            pb.phone_blacklist_strategy_id,
+            pb.phone,
             pb.reason,
             s.shop_name
         FROM
