@@ -41,6 +41,9 @@ public class OriginalOrder implements Serializable {
     @ApiModelProperty(value = "订单编号")
     private String orderNo;
 
+    @ApiModelProperty("原始订单号")
+    private String originalOrderNo;
+
     @ApiModelProperty(value = "下单时间")
     private LocalDateTime createTime;
 
@@ -53,6 +56,12 @@ public class OriginalOrder implements Serializable {
     @ApiModelProperty(value = "联系方式")
     private String mobilePhone;
 
+    @ApiModelProperty("原始订单状态 0-未处理，1-已处理")
+    public Integer orderStatus;
+
+    @ApiModelProperty("原始订单创建时间")
+    public String orderTime;
+
     @ApiModelProperty(value = "应收合计")
     private BigDecimal totalPrice;
 
@@ -64,6 +73,9 @@ public class OriginalOrder implements Serializable {
 
     @ApiModelProperty(value = "订单ID ")
     private Long orderId;
+
+    @ApiModelProperty("提货卡号")
+    private String cardNo;
 
 
     public static final String ORIGINAL_ORDER_ID = "original_order_id";

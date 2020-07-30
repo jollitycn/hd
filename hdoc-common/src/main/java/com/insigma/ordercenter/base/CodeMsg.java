@@ -44,7 +44,10 @@ public class CodeMsg {
     public static CodeMsg LACK_OF_PARAM = new CodeMsg(500134, "缺少参数");
     public static CodeMsg LACK_OF_WHID = new CodeMsg(500135,"仓库id不能为空");
     public static CodeMsg PRODUCT_NOT_EXIST = new CodeMsg(500136,"商品不存在");
-    public static CodeMsg STOKE_NOT_EXIST = new CodeMsg(500136,"库存记录不存在");
+    public static CodeMsg STOKE_NOT_EXIST = new CodeMsg(500137,"库存记录不存在");
+    public static CodeMsg STRATEGY_NOT_EXIST = new CodeMsg(500138,"策略不存在");
+    public static CodeMsg SHOP_NOT_EXIST = new CodeMsg(500139,"店铺不存在");
+    public static CodeMsg STRATEGY_PARAM_NOT_EXIST = new CodeMsg(500140,"策略参数不存在");
 
     public CodeMsg(int retCode, String message) {
         this.retCode = retCode;
