@@ -1,9 +1,8 @@
 package com.insigma.ordercenter.service;
 
-import com.insigma.ordercenter.entity.WarehouseProductRelation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.WarehouseProductRelation;
 import com.insigma.ordercenter.entity.dto.DesignatedWarehouseDTO;
-import com.insigma.ordercenter.entity.dto.WarehouseProductPageQuery;
 import com.insigma.ordercenter.entity.vo.ProductStockInfoVO;
 
 import java.util.List;
@@ -41,8 +40,8 @@ public interface IWarehouseProductRelationService extends IService<WarehouseProd
     /**
      * 改变优先级
      * @param warehouseProductRelationId
-     * @param value
+     * @param priority
      * @return
      */
-    boolean changePriority(Long warehouseProductRelationId, Integer value);
+    boolean changePriority(Long warehouseProductRelationId, Integer priority);
 }

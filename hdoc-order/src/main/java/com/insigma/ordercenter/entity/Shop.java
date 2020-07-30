@@ -105,4 +105,5 @@ package com.insigma.ordercenter.entity;
 
     public static final String IS_DELETED = "is_deleted";
 
+    public static final String STRATEGY_STATUS = "strategy_status";
 }

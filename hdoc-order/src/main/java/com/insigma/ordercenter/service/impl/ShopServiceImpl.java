@@ -10,6 +10,7 @@ import com.insigma.ordercenter.entity.dto.shop.ShopEdit;
 import com.insigma.ordercenter.entity.dto.shop.ShopQueryRequest;
 import com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse;
 import com.insigma.ordercenter.entity.dto.shop.ShopSetting;
+import com.insigma.ordercenter.entity.vo.ShopStrategyVO;
 import com.insigma.ordercenter.mapper.ShopMapper;
 import com.insigma.ordercenter.mapper.ShopWarehouseMapper;
 import com.insigma.ordercenter.service.IShopService;
@@ -89,5 +90,10 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         }
         page.setRecords(list);
         return page;
+    }
+
+    @Override
+    public List<ShopStrategyVO> listTransformStrategyByStrategyId() {
+        return baseMapper.listTransformStrategyByStrategyId();
     }
 }

@@ -267,4 +267,16 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
         return true;
     }
+
+    @Override
+    public boolean editWarningValue(Long spid, Integer warningValue) {
+        ShopProduct shopProduct=shopProductMapper.selectById(spid);
+        if(null!=shopProduct){
+            shopProduct.setWarningValue(warningValue);
+            shopProduct.setModifyTime(LocalDateTime.now());
+            shopProductMapper.updateById(shopProduct);
+            return true;
+        }
+        return false;
+    }
 }

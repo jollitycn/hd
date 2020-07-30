@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.RegionBlacklistStrategyMapper">
+
+    <select id="listRegionBlackPage" resultType="com.insigma.ordercenter.entity.vo.RegionBlackVO">
+        SELECT
+            rb.region_blacklist_strategy_id,
+            rb.province,
+            rb.city,
+            rb.reason,
+            s.shop_name
+        FROM
+            t_region_blacklist_strategy rb
+        LEFT JOIN t_shop s ON s.shop_id = rb.shop_id
+        WHERE
+            rb.is_deleted = 0
+        AND rb.strategy_id = #{param.strategyId}
+        <if test="null != param.shopId">
+            AND rb.shop_id = #{param.shopId}
+        </if>
+    </select>
+
+</mapper>

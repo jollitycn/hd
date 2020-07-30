@@ -27,4 +27,12 @@ update t_shop set   url_address = #{urlAddress}, request_time = #{requestTime} ,
         AND s.shop_name = #{request.shopName}
     </if>
     </select>
+
+    <!--  -->
+    <select id="listTransformStrategyByStrategyId" resultType="com.insigma.ordercenter.entity.vo.ShopStrategyVO">
+        SELECT shop_id, shop_name,strategy_status
+        FROM `t_shop` s
+        WHERE s.is_deleted = 0
+        AND s.is_stop = 0
+    </select>
 </mapper>
