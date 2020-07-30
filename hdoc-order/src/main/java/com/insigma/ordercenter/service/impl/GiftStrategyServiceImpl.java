@@ -2,17 +2,18 @@ package com.insigma.ordercenter.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
-import com.insigma.ordercenter.entity.ExchangeStrategy;
 import com.insigma.ordercenter.entity.Gift;
 import com.insigma.ordercenter.entity.GiftStrategy;
+import com.insigma.ordercenter.entity.ParamShop;
 import com.insigma.ordercenter.entity.dto.AddGiftStrategyDTO;
 import com.insigma.ordercenter.entity.dto.StrategyParamDTO;
 import com.insigma.ordercenter.entity.vo.ExchangeOrGiftStrategyVO;
 import com.insigma.ordercenter.mapper.GiftStrategyMapper;
 import com.insigma.ordercenter.service.IGiftService;
 import com.insigma.ordercenter.service.IGiftStrategyService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.insigma.ordercenter.service.IParamShopService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,9 @@ public class GiftStrategyServiceImpl extends ServiceImpl<GiftStrategyMapper, Gif
 
     @Resource
     private IGiftService giftService;
+
+    @Resource
+    private IParamShopService paramShopService;
 
     @Override
     public List<ExchangeOrGiftStrategyVO> listGiftStrategy(StrategyParamDTO req) {
@@ -68,6 +72,19 @@ public class GiftStrategyServiceImpl extends ServiceImpl<GiftStrategyMapper, Gif
         });
         if (!giftList.isEmpty()) {
             giftService.saveBatch(giftList);
+        }
+
+        // 新增参数关联的店铺
+        if (null != req.getShopIdList() && !req.getShopIdList().isEmpty()) {
+            List<ParamShop> paramShopList = Lists.newArrayList();
+            req.getShopIdList().forEach(shopId -> {
+                ParamShop paramShop = new ParamShop();
+                paramShop.setParamId(giftStrategy.getGiftStrategyId());
+                paramShop.setShopId(shopId);
+                paramShop.setParamType(2);
+                paramShopList.add(paramShop);
+            });
+            paramShopService.saveBatch(paramShopList);
         }
     }
 }

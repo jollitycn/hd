@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @date 2020/7/29 16:58
  */
 @Data
-@ApiModel("修改策略数据入参实体")
+@ApiModel("启用or禁用拆单策略参数or赠品策略入参实体")
 public class ExchangeOrGiftStrategyStatusDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 

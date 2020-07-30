@@ -225,8 +225,7 @@ public class StrategyController extends BaseController {
     @PostMapping("/addExchangeStrategy")
     @ApiOperation("新增换货策略参数")
     public Result addExchangeStrategy(@RequestBody @Valid AddExchangeStrategyDTO req) {
-        ExchangeStrategy exchangeStrategy = BeanUtil.toBean(req, ExchangeStrategy.class);
-        exchangeStrategyService.save(exchangeStrategy);
+        exchangeStrategyService.addExchangeStrategy(req);
         return Result.success();
     }
 
