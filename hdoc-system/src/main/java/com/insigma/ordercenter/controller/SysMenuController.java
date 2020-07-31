@@ -4,6 +4,7 @@ import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.SysMenu;
 import com.insigma.ordercenter.entity.query.AddMenuQuery;
+import com.insigma.ordercenter.entity.vo.RoleMenuVO;
 import com.insigma.ordercenter.entity.vo.SysMenuVO;
 import com.insigma.ordercenter.service.IRoleMenuRelationService;
 import com.insigma.ordercenter.service.ISysMenuService;
@@ -67,5 +68,11 @@ public class SysMenuController {
             return Result.success();
         }
        return Result.error(CodeMsg.DATA_INSERT_ERROR);
+    }
+
+    @GetMapping("/listMenuAndButtonByRoleId/{roleId}")
+    @ApiOperation("【新】根据角色获取菜单列表")
+    public Result<RoleMenuVO> listMenuAndButtonByRoleId(@PathVariable Long roleId) {
+        return Result.success(sysMenuService.listMenuAndButtonByRoleId(roleId));
     }
 }
