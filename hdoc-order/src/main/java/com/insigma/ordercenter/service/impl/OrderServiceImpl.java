@@ -2,6 +2,7 @@ package com.insigma.ordercenter.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.constant.Constant;
@@ -12,10 +13,8 @@ import com.insigma.ordercenter.entity.dto.UpdateOrderStatuDTO;
 import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.mapper.OrderMapper;
 import com.insigma.ordercenter.service.*;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.utils.DateUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -77,7 +74,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setShopId(sendReceiveInfoVO.getShopId());
             order.setIsCombined(Constant.SYS_ZERO);
             order.setIsHandOrder(Constant.SYS_ONE);
-            order.setMobilePhoneOrder(sendReceiveInfoVO.getMobilePhone());
+            order.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
             order.setOrderStatus(Constant.SYS_ZERO);
             orderService.save(order);
 

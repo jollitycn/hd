@@ -35,4 +35,8 @@ public class EditShippingOrderDTO {
 
     @ApiModelProperty(value = "物流公司id")
     private Long expressCompanyId;
+
+    @ApiModelProperty(value = "更改原因")
+    private String changeReason;
+
 }

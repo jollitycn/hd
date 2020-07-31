@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.entity.ShippingOrder;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
+import com.insigma.ordercenter.entity.dto.EditShippingOrderProductDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
@@ -43,10 +44,10 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
     /**
      * 更改发货单商品
      * @param shippingOrderId
-     * @param editShippingOrderDTO
+     * @param editParameters
      * @return
      */
-    Boolean changeProduct(Long shippingOrderId, EditShippingOrderDTO editShippingOrderDTO);
+    Boolean changeProduct(Long shippingOrderId, EditShippingOrderProductDTO editParameters);
 
     /**
      * 更改发货单仓库
