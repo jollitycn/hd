@@ -1,4 +1,5 @@
-package com.insigma.ordercenter.entity.vo;
+package com.insigma.ordercenter.entity.dto;
+
 import com.insigma.ordercenter.entity.ExpressFee;
     import java.math.BigDecimal;
     import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,7 +13,7 @@ import com.insigma.ordercenter.entity.ExpressFee;
     import lombok.experimental.Accessors;
 /**
 * <p>
-    * 物流报价表PageVO
+    * 物流报价表DetailDTO
     * </p>
 *
 * @author Jason
@@ -22,8 +23,7 @@ import com.insigma.ordercenter.entity.ExpressFee;
         @EqualsAndHashCode(callSuper = false)
     @Accessors(chain = true)
     @TableName("t_express_fee")
-    @ApiModel(value="ExpressFeePageVO对象", description="物流报价表PageVO")
-public class ExpressFeePageVO extends ExpressFee {
+    @ApiModel(value="ExpressFeeDetailDTO对象", description="物流报价表DetailDTO")
+public class ExpressFeeDetailDTO extends ExpressFee {
     private static final long serialVersionUID = 1L;
-    private String productTypeName;
 }

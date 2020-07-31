@@ -17,7 +17,7 @@ package com.insigma.ordercenter.entity;
     * </p>
 *
 * @author Jason
-* @since 2020-07-28
+* @since 2020-07-30
 */
     @Data
         @EqualsAndHashCode(callSuper = false)
@@ -29,7 +29,7 @@ package com.insigma.ordercenter.entity;
     private static final long serialVersionUID = 1L;
 
             @ApiModelProperty(value = "物流报价ID")
-            @TableId(value = "express_fee_id", type = IdType.ID_WORKER)
+            @TableId(value = "express_fee_id", type = IdType.AUTO)
     private Long expressFeeId;
 
             @ApiModelProperty(value = "物流公司ID")
@@ -45,13 +45,16 @@ package com.insigma.ordercenter.entity;
     private String warehouseName;
 
             @ApiModelProperty(value = "首重重量（KG）")
-    private Double firstWeight;
+    private BigDecimal firstWeight;
 
             @ApiModelProperty(value = "首重价格（元）")
     private BigDecimal firstPrice;
 
             @ApiModelProperty(value = "续重（元/KG）")
     private BigDecimal additionalPrice;
+
+            @ApiModelProperty(value = "商品分类")
+    private Long productType;
 
 
         public static final String EXPRESS_FEE_ID = "express_fee_id";
@@ -69,5 +72,7 @@ package com.insigma.ordercenter.entity;
         public static final String FIRST_PRICE = "first_price";
 
         public static final String ADDITIONAL_PRICE = "additional_price";
+
+        public static final String PRODUCT_TYPE = "product_type";
 
 }
