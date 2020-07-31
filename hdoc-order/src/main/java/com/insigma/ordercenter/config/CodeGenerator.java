@@ -50,8 +50,8 @@ class CodeGenerator {
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
         gc.setOutputDir(projectPath + "/hdoc-order/src/main/java");
-        gc.setAuthor("Youwk");
-//        gc.setIdType(IdType.ID_WORKER);
+        gc.setAuthor("AH");
+        gc.setIdType(IdType.ID_WORKER);
         gc.setOpen(false);
         gc.setSwagger2(true);
         mpg.setGlobalConfig(gc);

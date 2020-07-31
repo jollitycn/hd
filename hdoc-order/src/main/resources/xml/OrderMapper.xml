@@ -22,12 +22,11 @@
         LEFT JOIN t_order_shipping_order_relation os ON o.order_id = os.order_id
         LEFT JOIN t_shipping_order so ON os.shipping_order_id = so.shipping_order_id
         WHERE
-            so.send_time != NULL
-        AND so.`status` = 2
+            1=1
         <if test="orderDTO.orderId != null and orderDTO.orderId != ''">
             AND o.order_id = #{orderDTO.orderId}
         </if>
-        <if test="orderDTO.orderStatus != null">
+        <if test="orderDTO.orderStatus != null and orderDTO.orderStatus != ''">
             AND o.order_status in #{orderDTO.orderStatus}
         </if>
         <if test="orderDTO.orderNo != null and orderDTO.orderNo != ''">
@@ -153,7 +152,7 @@
             so.shipping_order_no,
             so.send_time
         FROM
-            t_detail_shipping_order_relation sor
+            t_order_shipping_order_relation sor
             LEFT JOIN t_shipping_order so ON sor.shipping_order_id = so.shipping_order_id
         WHERE
             sor.order_id = #{orderId}
@@ -184,7 +183,7 @@
     </resultMap>
 
 
-    <resultMap id="shippingResultMap" type="com.insigma.ordercenter.entity.vo.ShippingOrderVO">
+    <resultMap id="shippingResultMap" type="com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO">
         <id column="shipping_order_id" jdbcType="BIGINT" property="shippingOrderId" />
         <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
         <result column="express_company_id" jdbcType="BIGINT" property="expressCompanyId" />
@@ -235,7 +234,6 @@
             o.mobile_phone_order,
             o.total_price,
             o.is_combined,
-            o.origin_order_id,
             o.fee,
             o.is_error,
             o.error_reason,
@@ -272,10 +270,14 @@
             so.shipping_order_no,
             so.send_time,
             so.express_fee,
-            so.order_detail_id
+            ec.company_name,
+            ec.company_no,
+            ec.create_time,
+            ec.remark
         FROM
             t_order_shipping_order_relation sor
             LEFT JOIN t_shipping_order so ON sor.shipping_order_id = so.shipping_order_id
+            left join t_express_company ec on so.express_company_id=so.express_company_id
         WHERE
             sor.order_id = #{orderId}
     </select>
@@ -318,6 +320,46 @@
             t_original_order oo
         WHERE
             oo.order_id = #{orderId}
+    </select>
+
+
+    <!--根据订单ID查询退换货信息-->
+    <select id="queryRefundInfo" resultType="com.insigma.ordercenter.entity.vo.RefundInfoVO">
+        SELECT
+            re.refund_id,
+            re.order_id,
+            re.refund_no,
+            re.refund_type,
+            re.source_type,
+            re.create_time,
+            re.audit_status,
+            re.audit_id,
+            re.reason,
+            re.audit_time,
+            re.`status`,
+            re.refund_money
+        FROM
+            t_refund re
+        WHERE
+            re.order_id = #{orderId}
+    </select>
+
+    <!--根据订单ID查询订单操作日志信息-->
+    <select id="queryOrderOperationLogInfo" resultType="com.insigma.ordercenter.entity.vo.OrderOperationLogVO">
+        SELECT
+            ol.order_operation_log_id,
+            ol.order_id,
+            ol.create_id,
+            ol.create_time,
+            ol.content,
+            su.user_name
+        FROM
+            t_order_operation_log ol
+            LEFT JOIN sys_user su ON ol.create_id = su.user_id
+        WHERE
+            su.is_deleted = 0
+            AND su.is_deleted =0
+            AND ol.order_id = #{orderId}
     </select>
 
 </mapper>

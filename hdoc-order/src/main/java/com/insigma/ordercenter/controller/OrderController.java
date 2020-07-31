@@ -33,9 +33,9 @@ public class OrderController extends BaseController{
     @Resource
     private IOrderService orderService;
 
-    @PostMapping("/list")
-    @ApiOperation(value = "订单列表")
-    public Result<?> list(@Valid @RequestBody OrderDTO orderDTO) {
+    @PostMapping("/orderList")
+    @ApiOperation(value = "订单列表", response = OrderListVO.class)
+    public Result<?> orderList(@RequestBody OrderDTO orderDTO) {
 
         Page<OrderListVO> page = new Page<>(orderDTO.getPageNum(), orderDTO.getPageSize());
 
@@ -58,14 +58,14 @@ public class OrderController extends BaseController{
     }
 
     @GetMapping("/getOrderDetailList/{orderId}")
-    @ApiOperation(value = "审单查询商品，以及仓库列表信息")
+    @ApiOperation(value = "审单查询商品，以及仓库列表信息",response = OrderDetailExamineVO.class)
     public Result<?> getOrderDetailList(@Valid @PathVariable Long orderId) {
         List<OrderDetailExamineVO> orderDetailExamineVOS = orderService.queryOrderDetailList(orderId);
         return Result.success(orderDetailExamineVOS);
     }
 
     @GetMapping("/queryExpressCompanyList/{warehouseId}")
-    @ApiOperation(value = "审单查询商品，以及仓库列表信息")
+    @ApiOperation(value = "审单查询商品，以及仓库列表信息",response = ExpressCompanyVO.class )
     public Result<?> queryExpressCompanyList(@Valid @PathVariable Long warehouseId) {
         List<ExpressCompanyVO> expressCompanyVOS = orderService.queryExpressCompany(warehouseId);
         return Result.success(expressCompanyVOS);
@@ -87,17 +87,31 @@ public class OrderController extends BaseController{
     }
 
     @GetMapping("/queryOrderById/{orderId}")
-    @ApiOperation(value = "点击订单列表查询发货单tab信息")
+    @ApiOperation(value = "点击订单列表查询发货单tab信息",response = OrderListVO.class)
     public Result<?> queryOrderById(@Valid @PathVariable Long orderId) {
         OrderListVO orderListVO = orderService.queryOrderById(orderId);
         return Result.success(orderListVO);
     }
 
     @GetMapping("/queryOriginalOrder/{orderId}")
-    @ApiOperation(value = "点击订单列表查询合单tab信息")
+    @ApiOperation(value = "点击订单列表查询合单tab信息",response = OriginalOrderVO.class)
     public Result<?> queryOriginalOrder(@Valid @PathVariable Long orderId) {
         List<OriginalOrderVO> originalOrderVOS = orderService.queryOriginalOrderList(orderId);
         return Result.success(originalOrderVOS);
+    }
+
+    @GetMapping("/queryRefundInfo/{orderId}")
+    @ApiOperation(value = "点击订单列表查询退换货tab信息",response = RefundInfoVO.class)
+    public Result<?> queryRefundInfo(@Valid @PathVariable Long orderId) {
+        List<RefundInfoVO> refundInfoVOS = orderService.queryRefundInfo(orderId);
+        return Result.success(refundInfoVOS);
+    }
+
+    @GetMapping("/queryOrderOperationLogInfo/{orderId}")
+    @ApiOperation(value = "点击订单列表查询操作日志tab信息", response = OrderOperationLogVO.class)
+    public Result<?> queryOrderOperationLogInfo(@Valid @PathVariable Long orderId) {
+        List<OrderOperationLogVO> orderOperationLogVOS = orderService.queryOrderOperationLogInfo(orderId);
+        return Result.success(orderOperationLogVOS);
     }
 
 }

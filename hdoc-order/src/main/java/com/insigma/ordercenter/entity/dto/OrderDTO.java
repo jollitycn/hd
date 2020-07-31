@@ -42,7 +42,7 @@ public class OrderDTO {
     private Long orderId;
 
     @ApiModelProperty(value = "订单状态（0：待审核，1：待出库，2：打单出库，3：已完成，4：冻结）")
-    private Integer orderStatus;
+    private String orderStatus;
 
     @ApiModelProperty(value = "订单编号")
     private String orderNo;
@@ -74,11 +74,11 @@ public class OrderDTO {
     @ApiModelProperty(value = "联系方式")
     private String mobilePhone;
 
-    @ApiModelProperty(value = "拆单")
+    @ApiModelProperty(value = "合单")
     private Integer isCombined;
 
-    @ApiModelProperty(value = "合单")
-    private Integer combinedOrder;
+    @ApiModelProperty(value = "拆单")
+    private Integer splitOrder;
 
 
 }

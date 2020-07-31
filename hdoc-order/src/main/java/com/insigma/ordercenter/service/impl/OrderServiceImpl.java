@@ -49,13 +49,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private IOrderDetailService orderDetailService;
 
     @Resource
-    private ISendReceiveInfoService sendReceiveInfoService;
-
-    @Resource
     private IShippingOrderService shippingOrderService;
 
     @Resource
     private IDetailShippingOrderRelationService detailShippingOrderRelationService;
+
+    @Resource
+    private IOrderSendReceiveService orderSendReceiveService;
 
     @Autowired
     private IShopService shopService;
@@ -77,12 +77,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setShopId(sendReceiveInfoVO.getShopId());
             order.setIsCombined(Constant.SYS_ZERO);
             order.setIsHandOrder(Constant.SYS_ONE);
-            order.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
+            order.setMobilePhoneOrder(sendReceiveInfoVO.getMobilePhone());
             order.setOrderStatus(Constant.SYS_ZERO);
             orderService.save(order);
 
             //新增订单收发件人信息
-            SendReceiveInfo sendReceiveInfo = new SendReceiveInfo();
+            OrderSendReceive sendReceiveInfo = new OrderSendReceive();
             sendReceiveInfo.setOrderId(order.getOrderId());
             sendReceiveInfo.setSendName(sendReceiveInfoVO.getSendName());
             sendReceiveInfo.setSendRemark(sendReceiveInfoVO.getSendRemark());
@@ -93,10 +93,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             sendReceiveInfo.setOrderReason(sendReceiveInfoVO.getOrderReason());
             sendReceiveInfo.setLocationCity(sendReceiveInfoVO.getLocationCity());
             sendReceiveInfo.setProvince(sendReceiveInfoVO.getProvince());
-            sendReceiveInfoService.save(sendReceiveInfo);
+            sendReceiveInfo.setLoginName(sendReceiveInfoVO.getLoginName());
+            orderSendReceiveService.save(sendReceiveInfo);
 
             //新增订单明细信息
-            orderDetailService.saveBatch(sendReceiveInfoVO.getOrderDetails());
+            if(null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size()>0){
+                sendReceiveInfoVO.getOrderDetails().forEach(OrderDetail -> {
+                    OrderDetail.setOrderId(order.getOrderId());
+                    orderDetailService.save(OrderDetail);
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error(CodeMsg.DATA_INSERT_ERROR);
@@ -113,12 +119,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public List<OrderDetailExamineVO> queryOrderDetailList(Long orderId) {
-        return orderMapper.queryOrderDetailList(orderId);
+        return baseMapper.queryOrderDetailList(orderId);
     }
 
     @Override
     public List<ExpressCompanyVO> queryExpressCompany(Long warehouseId) {
-        return orderMapper.queryExpressCompany(warehouseId);
+        return baseMapper.queryExpressCompany(warehouseId);
     }
 
     @Override
@@ -179,12 +185,23 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public OrderListVO queryOrderById(Long orderId) {
-        return orderService.queryOrderById(orderId);
+        return baseMapper.queryOrderById(orderId);
     }
 
     @Override
     public List<OriginalOrderVO> queryOriginalOrderList(Long orderId) {
-        return orderService.queryOriginalOrderList(orderId);
+        return baseMapper.queryOriginalOrderList(orderId);
+    }
+
+    @Override
+    public List<RefundInfoVO> queryRefundInfo(Long orderId) {
+        return baseMapper.queryRefundInfo(orderId);
+    }
+
+
+    @Override
+    public List<OrderOperationLogVO> queryOrderOperationLogInfo(Long orderId) {
+        return baseMapper.queryOrderOperationLogInfo(orderId);
     }
 
     @Override

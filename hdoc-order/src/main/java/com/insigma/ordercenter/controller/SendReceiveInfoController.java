@@ -29,25 +29,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/send-receive-info")
-@Api(tags = {"收发人信息"})
 public class SendReceiveInfoController extends BaseController {
 
-    @Resource
-    private ISendReceiveInfoService sendReceiveInfoService;
 
-    @GetMapping("/getSendReceiveInfo/{orderId}")
-    @ApiOperation(value = "根据订单查询收发人信息以及店铺信息")
-    public Result<?> getSendReceiveInfo(@Valid @PathVariable Long orderId) {
-        //新增订单时，传选择的订单id；编辑时，传订单表中的原订单号即可
-        SendReceiveInfoVO sendReceiveInfo = sendReceiveInfoService.getSendReceiveInfo(orderId);
-        return Result.success(sendReceiveInfo);
-    }
-
-    @PutMapping("/updateSendReceiveInfo/{orderId}")
-    @ApiOperation(value = "根据订单修改收发件人信息")
-    public Result<?> updateSendReceiveInfo(@Valid UpdateSendReceiveInfoVO updateSendReceiveInfoVO) {
-        Boolean aBoolean = sendReceiveInfoService.updateSendReceiveInfo(updateSendReceiveInfoVO);
-        return Result.success(aBoolean);
-    }
 
 }

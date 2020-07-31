@@ -54,7 +54,7 @@ public class Order implements Serializable {
     private String consumerName;
 
     @ApiModelProperty(value = "联系方式")
-    private String mobilePhone;
+    private String mobilePhoneOrder;
 
     @ApiModelProperty(value = "应收合计")
     private BigDecimal totalPrice;

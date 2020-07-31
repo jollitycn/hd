@@ -51,6 +51,5 @@ public class ShippingOrderVO {
     @ApiModelProperty(value = "运费")
     private String freight;
 
-    @ApiModelProperty(value = "订单明细列表")
-    private List<OrderDetailVO> orderDetailVOS;
+
 }
