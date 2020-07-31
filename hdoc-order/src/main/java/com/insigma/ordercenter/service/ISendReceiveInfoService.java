@@ -16,7 +16,5 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface ISendReceiveInfoService extends IService<SendReceiveInfo> {
 
-    SendReceiveInfoVO getSendReceiveInfo(@Param("orderId") Long orderId);
 
-    Boolean updateSendReceiveInfo(UpdateSendReceiveInfoVO updateSendReceiveInfoVO);
 }

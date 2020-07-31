@@ -1,12 +1,20 @@
 package com.insigma.ordercenter.entity.vo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.insigma.ordercenter.constant.Constant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,12 +43,21 @@ public class OrderListVO extends BaseVO {
     private String platformName;
 
     @ApiModelProperty(value = "下单时间")
+    @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "审核时间")
+    @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime reviewTime;
 
     @ApiModelProperty(value = "最早发货时间")
+    @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime sendTime;
 
     @ApiModelProperty(value = "收件人姓名")
@@ -58,7 +75,35 @@ public class OrderListVO extends BaseVO {
     @ApiModelProperty(value = "合单")
     private Integer isCombined;
 
+    @ApiModelProperty(value = "店铺ID")
+    private Long shopId;
+
+    @ApiModelProperty(value = "联系方式")
+    private String mobilePhoneOrder;
+
+    @ApiModelProperty(value = "应收合计")
+    private BigDecimal totalPrice;
+
+    @ApiModelProperty(value = "拆单")
+    private Integer splitOrder;
+
+    @ApiModelProperty(value = "原单号")
+    private String originOrderId;
+
+    @ApiModelProperty(value = "运费")
+    private BigDecimal fee;
+
+    @ApiModelProperty(value = "是否异常（0：否，1：是）")
+    private Integer isError;
+
+    @ApiModelProperty(value = "是否是预约订单（0：否，1：是）")
+    private Integer isPeriod;
+
+    @ApiModelProperty(value = "预约订单ID")
+    private Long periodOrderId;
+
     @ApiModelProperty(value = "发货单列表")
     private List<ShippingOrderVO> shippingOrderVOS;
+
 
 }

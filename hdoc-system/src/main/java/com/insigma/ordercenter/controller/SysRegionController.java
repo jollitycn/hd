@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -65,7 +66,7 @@ public class SysRegionController extends BaseController {
 
     @GetMapping("/{regionId}")
     @ApiOperation("地区编号详情")
-    public SysRegion detail(@PathVariable Integer regionId) {
+    public SysRegion detail(@PathVariable Serializable regionId) {
         SysRegion region = this.sysRegionService.getById(regionId);
         return region;
     }

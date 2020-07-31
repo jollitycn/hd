@@ -42,4 +42,9 @@ public interface IOrderService extends IService<Order> {
 
     List<OriginalOrderVO> queryOriginalOrderList(Long orderId);
 
+    String generateOrderNo(Long shopId);
+    List<RefundInfoVO>  queryRefundInfo(Long orderId);
+
+    List<OrderOperationLogVO> queryOrderOperationLogInfo(Long orderId);
+
 }

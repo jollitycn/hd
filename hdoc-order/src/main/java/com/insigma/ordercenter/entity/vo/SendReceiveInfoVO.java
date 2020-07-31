@@ -2,8 +2,11 @@ package com.insigma.ordercenter.entity.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.OrderDetail;
 import io.swagger.annotations.ApiModel;
@@ -31,6 +34,8 @@ public class SendReceiveInfoVO extends BaseVO{
 
     @ApiModelProperty(value = "下单时间")
     @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "收件人姓名")
@@ -65,6 +70,8 @@ public class SendReceiveInfoVO extends BaseVO{
 
     @ApiModelProperty(value = "审核时间")
     @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime reviewTime;
 
     @ApiModelProperty(value = "是否是手动单（0：否，1：是）")
@@ -92,6 +99,8 @@ public class SendReceiveInfoVO extends BaseVO{
 
     @ApiModelProperty(value = "下单时间")
     @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime orderTime;
 
     @ApiModelProperty(value = "收货人姓名")
@@ -123,6 +132,9 @@ public class SendReceiveInfoVO extends BaseVO{
 
     @ApiModelProperty(value = "店铺名称")
     private String shopName;
+
+    @ApiModelProperty(value = "登录名")
+    private String loginName;
 
     @ApiModelProperty(value = "订单商品列表")
     private List<OrderDetail> orderDetails;

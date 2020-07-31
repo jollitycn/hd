@@ -21,7 +21,7 @@
             LEFT JOIN t_product p ON od.product_id = p.product_id
             LEFT JOIN t_warehouse_product_relation pr ON pr.product_id = p.product_id
         WHERE
-            od.order_id = {orderId}
+            od.order_id = #{orderId}
     </select>
 
 </mapper>

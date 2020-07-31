@@ -33,7 +33,7 @@ public class OrderDetailController extends BaseController {
     private IOrderDetailService orderDetailService;
 
     @GetMapping("/orderDerailList/{orderId}")
-    @ApiOperation(value = "订单详情列表")
+    @ApiOperation(value = "订单详情列表",response = OrderDetail.class)
     public Result<?> orderDerailList(@Valid @PathVariable Long orderId) {
         QueryWrapper<OrderDetail> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("order_id",orderId);
@@ -66,16 +66,16 @@ public class OrderDetailController extends BaseController {
         return Result.error(CodeMsg.DATA_DELETE_ERROR);
     }
 
-    @DeleteMapping("/getOrderDerail/{orderId}")
-    @ApiOperation(value = "查询赠品中的订单详情列表信息")
+    @GetMapping("/getOrderDerail/{orderId}")
+    @ApiOperation(value = "查询赠品中的订单详情列表信息",response = OrderDetail.class)
     public Result<?> getOrderDerail(@Valid @PathVariable Long orderId) {
         List<OrderDetail> orderDetail = orderDetailService.getOrderDetail(orderId);
         return Result.success(orderDetail);
     }
 
     @PostMapping("/addOrderDerail")
-    @ApiOperation(value = "查询赠品中的订单详情列表信息")
-    public Result<?> addOrderDerail(@Valid AddOrderDetailVO addOrderDetailVO) {
+    @ApiOperation(value = "保存赠品信息")
+    public Result<?> addOrderDerail(@Valid @RequestBody AddOrderDetailVO addOrderDetailVO) {
         Boolean aBoolean = orderDetailService.addOrderDerail(addOrderDetailVO);
         return Result.success(aBoolean);
     }

@@ -15,6 +15,6 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface SendReceiveInfoMapper extends BaseMapper<SendReceiveInfo> {
 
-    SendReceiveInfoVO getSendReceiveInfo(@Param("orderId") Long orderId);
+
 
 }

@@ -35,7 +35,7 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
 
     @Override
     public Boolean addOrderDerail(AddOrderDetailVO addOrderDetailVO) {
-        if (addOrderDetailVO.getOrderDetails().size()>0){
+        if (null!=addOrderDetailVO.getOrderDetails() && addOrderDetailVO.getOrderDetails().size()>0){
             orderDetailService.saveOrUpdateBatch(addOrderDetailVO.getOrderDetails());
             return true;
         }
