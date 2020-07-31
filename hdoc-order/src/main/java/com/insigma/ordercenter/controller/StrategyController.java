@@ -113,7 +113,7 @@ public class StrategyController extends BaseController {
         }
         Shop shop = new Shop();
         shop.setShopId(shopId);
-        shop.setIsStop((select.getStrategyStatus() + 1) % 2);
+        shop.setStrategyStatus((select.getStrategyStatus() + 1) % 2);
         shopService.updateById(shop);
         return Result.success();
     }
