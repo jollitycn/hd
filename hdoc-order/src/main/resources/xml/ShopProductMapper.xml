@@ -4,12 +4,12 @@
 
     <select id="getProductRatio" resultType="com.insigma.ordercenter.entity.vo.ShopProductVO">
     SELECT
-        IFNULL(b.spid,0),
+        IFNULL(b.spid,0) AS spid,
         a.shop_id,
         a.shop_name,
-        IFNULL(b.ratio,0),
-    IFNULL(b.number,0),
-    IFNULL(b.warning_value,0)
+        IFNULL(b.ratio,0) AS ratio,
+        IFNULL(b.number,0) AS number,
+        IFNULL(b.warning_value,0) AS warningValue
     FROM
         t_shop a
     LEFT JOIN t_shop_product b ON a.shop_id=b.shop_id AND b.product_id=#{productId}

@@ -2,11 +2,8 @@ package com.insigma.ordercenter.entity.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.insigma.ordercenter.entity.OrderDetail;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * @program: hdoc-parent
@@ -27,7 +24,7 @@ public class ShippingOrderVO {
     @ApiModelProperty(value = "仓库名称")
     private String warehouseName;
 
-    @ApiModelProperty(value = "发货单状态（0：待出库，1：待取货，2：已发货，3：冻结，4：冻结）")
+    @ApiModelProperty(value = "发货单状态（0：待出库，1：待取货，2：已发货，3：冻结，4：取消）")
     private Integer status;
 
     @ApiModelProperty(value = "物流公司(承运商)")

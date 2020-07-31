@@ -1,5 +1,7 @@
 package com.insigma.ordercenter.entity.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -13,9 +15,11 @@ import lombok.Data;
 public class ShopProductVO {
 
     @ApiModelProperty(value = "电商发货比例表主键id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long spid;
 
     @ApiModelProperty(value = "店铺id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long shopId;
 
     @ApiModelProperty(value = "店铺名称")

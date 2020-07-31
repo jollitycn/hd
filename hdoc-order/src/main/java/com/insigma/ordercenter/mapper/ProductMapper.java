@@ -1,10 +1,11 @@
 package com.insigma.ordercenter.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.entity.Product;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ProductListPageVO;
+import com.insigma.ordercenter.entity.vo.ShippingProductVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface ProductMapper extends BaseMapper<Product> {
                                                @Param("productNo")String productNo);
 
     ProductDetailVO getProductDetail(@Param("productId")Long productId);
+
+    List<ShippingProductVO> getShippingOrderProductList(@Param("orderId")Long orderId);
 }

@@ -47,7 +47,18 @@ public class ShippingOrderDTO {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long warehouseId;
 
-    @ApiModelProperty(value = "状态（0：待出库，1：待取货，2：已发货，3：冻结，4：冻结）")
-    private Integer status;
+    @ApiModelProperty(value = "状态（0：待出库，1：待取货，2：已发货，3：冻结，4：冻结）-多选逗号隔开")
+    private String status;
 
+    @ApiModelProperty(value = "发货日期开始")
+    private String startTime;
+
+    @ApiModelProperty(value = "发货日期结束")
+    private String endTime;
+
+    @ApiModelProperty(value = "商品名称")
+    private String productName;
+
+    @ApiModelProperty(value = "商品编码")
+    private String productNo;
 }

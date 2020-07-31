@@ -5,11 +5,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.constant.Constant;
+import com.insigma.ordercenter.entity.Refund;
 import com.insigma.ordercenter.entity.ShippingOrder;
 import com.insigma.ordercenter.entity.ShippingOrderOperation;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
+import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
+import com.insigma.ordercenter.mapper.ProductMapper;
+import com.insigma.ordercenter.mapper.RefundMapper;
 import com.insigma.ordercenter.mapper.ShippingOrderMapper;
 import com.insigma.ordercenter.mapper.ShippingOrderOperationMapper;
 import com.insigma.ordercenter.service.IShippingOrderService;
@@ -31,6 +35,12 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
 
     @Resource
     private ShippingOrderOperationMapper shippingOrderOperationMapper;
+
+    @Resource
+    private ProductMapper productMapper;
+
+    @Resource
+    private RefundMapper refundMapper;
 
 
     @Override
@@ -184,8 +194,53 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
         return this.updateById(shippingOrder);
     }
 
+    /**
+     * 获取发货单明细
+     *
+     * @param shippingOrderId
+     * @return
+     */
+    @Override
+    public ShippingOrderDetailVO getShippingDetail(Long shippingOrderId) {
+
+        ShippingOrderDetailVO result=baseMapper.getShippingDetail(shippingOrderId);
+
+        //查询发货单商品信息
+        result.setProductList(productMapper.getShippingOrderProductList(result.getOrderId()));
+
+        return result;
+    }
 
     /**
+     * 发货单拒收
+     *
+     * @param shippingOrderId
+     * @param sourceType
+     * @param reason
+     * @return
+     */
+    @Override
+    public Boolean rejection(Long shippingOrderId, Integer sourceType, String reason) {
+
+        //更新发货单状态
+        ShippingOrder shippingOrder=this.getById(shippingOrderId);
+        shippingOrder.setStatus(Constant.SYS_FIVE);
+
+        //新建退货单
+        Refund refund=new Refund();
+        refund.setCreateTime(LocalDateTime.now());
+        refund.setOrderId(shippingOrder.getShippingOrderId());
+        refund.setRefundNo("TH"+IdUtil.objectId());
+        refund.setSourceType(sourceType);
+        refund.setStatus(Constant.SYS_ZERO);
+        refund.setReason(reason);
+
+        refundMapper.insert(refund);
+        return  this.updateById(shippingOrder);
+    }
+
+
+/**
      * 建立发货单操作日志
      * @param shippingOrderId
      * @param orderId

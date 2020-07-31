@@ -1,17 +1,14 @@
 package com.insigma.ordercenter.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.Product;
-import com.insigma.ordercenter.entity.ProductCombo;
 import com.insigma.ordercenter.entity.ShopProduct;
 import com.insigma.ordercenter.entity.Tag;
-import com.insigma.ordercenter.entity.dto.AddComboDTO;
 import com.insigma.ordercenter.entity.dto.ProductAddDTO;
 import com.insigma.ordercenter.entity.dto.ProductListDTO;
 import com.insigma.ordercenter.entity.dto.ShopRatioDTO;
@@ -19,7 +16,6 @@ import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ProductListPageVO;
 import com.insigma.ordercenter.entity.vo.ShopProductVO;
 import com.insigma.ordercenter.entity.vo.TagVO;
-import com.insigma.ordercenter.mapper.ProductComboMapper;
 import com.insigma.ordercenter.mapper.ProductMapper;
 import com.insigma.ordercenter.mapper.ShopProductMapper;
 import com.insigma.ordercenter.mapper.TagMapper;
@@ -27,7 +23,6 @@ import com.insigma.ordercenter.service.IProductService;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
 import com.insigma.ordercenter.utils.StringUtil;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,13 +44,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Resource
     private IWarehouseProductRelationService warehouseProductRelationService;
 
-    @Autowired
-    private ProductComboMapper productComboMapper;
-
-    @Autowired
+    @Resource
     private TagMapper tagMapper;
 
-    @Autowired
+    @Resource
     private ShopProductMapper shopProductMapper;
 
     @Override
@@ -96,7 +88,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
             Product product = new Product();
             BeanUtils.copyProperties(productAddDTO, product);
-            product.setProductNo("SP"+ IdUtil.objectId());
             product.setIsPutOn(Constant.SYS_ONE);
             product.setCreateTime(LocalDateTime.now());
 
@@ -193,26 +184,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return result;
     }
 
-    /**
-     * 添加商品组合
-     *
-     * @param addComboDTO
-     * @return
-     */
-    @Override
-    public boolean addCombo(AddComboDTO addComboDTO) {
 
-        String[] productIds=addComboDTO.getProductIds().split(",");
-        Long parentProductId=addComboDTO.getProductId();
-        for (String productId:productIds) {
-            ProductCombo productCombo=new ProductCombo();
-            productCombo.setParentProductId(parentProductId);
-            productCombo.setChildProductId(Long.valueOf(productId));
-            productCombo.setQuantity(addComboDTO.getQuantity());
-            productComboMapper.insert(productCombo);
-        }
-        return true;
-    }
 
     /**
      * 禁用/启用商品组合
@@ -246,22 +218,18 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public boolean editRatio(Long productId, List<ShopRatioDTO> shopRatioDTOList) {
 
-        //判断比例总数不超过10
-//        Integer count=0;
-//        for (ShopRatioDTO shopRatioD:shopRatioDTOList) {
-//            count+=shopRatioD.getRatio();
-//        }
-//        if()
 
         QueryWrapper queryWrapper=new QueryWrapper();
         queryWrapper.eq(ShopProduct.PRODUCT_ID,productId);
         shopProductMapper.delete(queryWrapper);
+
 
         for (ShopRatioDTO shopRatioD:shopRatioDTOList) {
             ShopProduct shopProduct=new ShopProduct();
             shopProduct.setProductId(productId);
             shopProduct.setShopId(shopRatioD.getShopId());
             shopProduct.setRatio(shopRatioD.getRatio());
+            shopProduct.setCreateTime(LocalDateTime.now());
             shopProductMapper.insert(shopProduct);
         }
 
@@ -279,4 +247,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
         return false;
     }
+
+
 }

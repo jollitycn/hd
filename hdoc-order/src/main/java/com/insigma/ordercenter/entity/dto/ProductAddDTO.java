@@ -19,6 +19,9 @@ public class ProductAddDTO {
     @ApiModelProperty(value = "商品ID")
     private Long productId;
 
+    @ApiModelProperty(value = "商品编号")
+    private String productNo;
+
     @ApiModelProperty(value = "商品sku")
     private String productSku;
 
