@@ -13,13 +13,19 @@ import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.mapper.OrderMapper;
 import com.insigma.ordercenter.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.insigma.ordercenter.utils.DateUtils;
+import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -50,6 +56,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Resource
     private IDetailShippingOrderRelationService detailShippingOrderRelationService;
+
+    @Autowired
+    private IShopService shopService;
 
     @Override
     public IPage<OrderListVO> queryOrderListPage(Page<OrderListVO> page, OrderDTO orderDTO) {
@@ -176,5 +185,30 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public List<OriginalOrderVO> queryOriginalOrderList(Long orderId) {
         return orderService.queryOriginalOrderList(orderId);
+    }
+
+    @Override
+    public String generateOrderNo(Long shopId) {
+        Shop shop = shopService.getById(shopId);
+        String platformNo = "NULL";
+        if (null != shop) {
+            platformNo = shop.getPlatformNo();
+        }
+        String timestamp = DateUtils.formatLocalDateTimeToString(LocalDateTime.now(),DateUtils.TIME_PATTERN_MILLISECOND);
+        String randomNum = String.valueOf(RandomUtils.nextInt(999));
+        if (randomNum.length() == 1) {
+            randomNum = "00" +randomNum;
+        } else if (randomNum.length() == 2) {
+            randomNum = "0" +randomNum;
+        }
+        String orderNo = platformNo + "00" + timestamp +randomNum;
+        return orderNo;
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i < 100; i++) {
+            Integer s = RandomUtils.nextInt(999);
+            System.out.println(s);
+        }
     }
 }

@@ -42,4 +42,5 @@ public interface IOrderService extends IService<Order> {
 
     List<OriginalOrderVO> queryOriginalOrderList(Long orderId);
 
+    String generateOrderNo(Long shopId);
 }

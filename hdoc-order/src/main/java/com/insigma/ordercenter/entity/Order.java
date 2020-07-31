@@ -65,9 +65,6 @@ public class Order implements Serializable {
     @ApiModelProperty(value = "拆单")
     private Integer splitOrder;
 
-    @ApiModelProperty(value = "原单号")
-    private String originOrderId;
-
     @ApiModelProperty(value = "运费")
     private BigDecimal fee;
 
@@ -85,6 +82,9 @@ public class Order implements Serializable {
 
     @ApiModelProperty(value = "审核时间")
     private LocalDateTime reviewTime;
+
+    @ApiModelProperty("原始订单创建时间")
+    public String orderTime;
 
     @ApiModelProperty(value = "是否是手动单（0：否，1：是）")
     private Integer isHandOrder;
@@ -107,8 +107,6 @@ public class Order implements Serializable {
     public static final String TOTAL_PRICE = "total_price";
 
     public static final String IS_COMBINED = "is_combined";
-
-    public static final String ORIGIN_ORDER_ID = "origin_order_id";
 
     public static final String FEE = "fee";
 
