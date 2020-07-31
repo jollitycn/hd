@@ -16,6 +16,7 @@ import com.insigma.ordercenter.entity.vo.sysuservo.SysRoleListVO;
 import com.insigma.ordercenter.entity.vo.sysuservo.SysUserDetailVO;
 import com.insigma.ordercenter.entity.vo.sysuservo.SysUserListVO;
 import com.insigma.ordercenter.enums.RedisKeyEnum;
+import com.insigma.ordercenter.mapper.RoleButtonMapper;
 import com.insigma.ordercenter.mapper.SysMenuMapper;
 import com.insigma.ordercenter.mapper.SysUserMapper;
 import com.insigma.ordercenter.mapper.UserRoleRelationMapper;
@@ -64,6 +65,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Resource
+    private RoleButtonMapper roleButtonMapper;
 
     @Override
     public IPage<SysUserListVO> getSysUserList(Page<SysUserListVO> page, BaseRequest request) {
@@ -153,9 +157,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             loginUser.setRolesId(rolesId);
             // 获取其所有角色的一级菜单信息（去重）
             List<SysLoginUserMenu> sysLoginUserMenus = sysMenuMapper.listLevelOneMenuByRoleIds(rolesId);
-            sysLoginUserMenus.forEach(levelOneMenu ->
-                    levelOneMenu.setSubs(listChildrenMenu(rolesId, levelOneMenu.getMenuId() + ""))
-            );
+            sysLoginUserMenus.forEach(levelOneMenu -> {
+                List<SysLoginUserMenu> subList = listChildrenMenu(rolesId, levelOneMenu.getMenuId() + "");
+                levelOneMenu.setSubs(subList);
+                subList.forEach(levelTwoMenu -> {
+                    // 查询按钮
+                    List<SysButtonVO> buttons = roleButtonMapper.listButtonByRoles(rolesId, levelTwoMenu.getMenuId());
+                    levelTwoMenu.setButtonList(buttons);
+                });
+            });
             loginUser.setMenus(sysLoginUserMenus);
         }
         String redisUserKey = UUID.randomUUID().toString().replaceAll("-", "");
