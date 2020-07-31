@@ -13,7 +13,7 @@
         LEFT JOIN t_shop s ON s.shop_id = ab.shop_id
         WHERE
             ab.is_deleted = 0
-        AND pb.strategy_id = #{param.strategyId}
+        AND ab.strategy_id = #{param.strategyId}
         <if test="null != param.searchKey and param.searchKey != ''">
             AND ab.account LIKE CONCAT('%', #{param.searchKey}, '%')
         </if>

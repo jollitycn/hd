@@ -2,6 +2,7 @@ package com.insigma.ordercenter.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.insigma.ordercenter.entity.RoleMenuRelation;
 import com.insigma.ordercenter.entity.SysMenu;
 import com.insigma.ordercenter.entity.UserRoleRelation;
@@ -58,7 +59,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
                     }
                 }
         );
-        List<SysMenu> result = baseMapper.selectBatchIds(menuIds);
+        List<SysMenu> result = Lists.newArrayList();
+        if (!menuIds.isEmpty()) {
+            return baseMapper.selectBatchIds(menuIds);
+        }
         return result;
     }
 

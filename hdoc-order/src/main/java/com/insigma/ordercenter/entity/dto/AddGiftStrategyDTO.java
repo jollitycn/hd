@@ -1,5 +1,8 @@
 package com.insigma.ordercenter.entity.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,13 +29,15 @@ public class AddGiftStrategyDTO implements Serializable {
     private String giftTheme;
 
     @ApiModelProperty(value = "开始日期", required = true)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate startDate;
 
     @ApiModelProperty(value = "结束日期", required = true)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate endDate;
 
-    @ApiModelProperty(value = "关联的店铺（使用英文逗号分隔）")
-    private String shopIds;
+    @ApiModelProperty(value = "关联的店铺集合")
+    private List<Long> shopIdList;
 
     @Valid
     @ApiModelProperty(value = "赠品信息集合", required = true)

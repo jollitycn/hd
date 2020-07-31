@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @date 2020/7/29 16:58
  */
 @Data
-@ApiModel("修改策略数据入参实体")
+@ApiModel("修改黑名单数据的删除状态入参实体")
 public class UpdateBlackDeleteDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 

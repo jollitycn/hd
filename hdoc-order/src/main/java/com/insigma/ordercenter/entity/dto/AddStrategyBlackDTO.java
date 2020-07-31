@@ -14,7 +14,7 @@ import java.util.List;
  * @date 2020/7/29 17:24
  */
  @Data
- @ApiModel("保存按商品分类拆分策略的参数配置入参实体")
+ @ApiModel("根据类型新增黑名单")
 public class AddStrategyBlackDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
