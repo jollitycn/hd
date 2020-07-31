@@ -2,46 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.SendReceiveInfoMapper">
 
-    <select id="getSendReceiveInfo" resultType="com.insigma.ordercenter.entity.vo.SendReceiveInfoVO">
-        SELECT
-            o.order_id,
-            o.order_no,
-            o.order_status,
-            o.create_time,
-            o.shop_id,
-            o.consumer_name,
-            o.mobile_phone,
-            o.total_price,
-            o.is_combined,
-            o.mobile_phone_order,
-            o.origin_order_id,
-            o.fee,
-            o.is_error,
-            o.error_reason,
-            o.is_period,
-            o.period_order_id,
-            o.review_time,
-            o.is_hand_order,
-            s.shop_name,
-            ri.send_receive_info_id,
-            ri.order_id,
-            ri.send_name,
-            ri.pay_type,
-            ri.send_remark,
-            ri.order_time,
-            ri.receive_name,
-            ri.mobile_phone,
-            ri.request_time,
-            ri.address,
-            ri.receive_remark,
-            ri.order_reason,
-            ri.location_city,
-            ri.province
-        FROM
-            t_order o
-            LEFT JOIN t_send_receive_info ri ON o.order_id = ri.order_id
-            LEFT JOIN t_shop s ON s.shop_id = o.shop_id
-            where o.order_id=#{orderId}
-    </select>
+
 
 </mapper>

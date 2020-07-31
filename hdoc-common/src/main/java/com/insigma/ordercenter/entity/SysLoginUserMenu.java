@@ -43,6 +43,12 @@ public class SysLoginUserMenu {
     @ApiModelProperty(value = "菜单等级")
     private Integer menuLevel;
 
+    @ApiModelProperty(value = "勾选状态：1---勾选 0---未勾选")
+    private Integer checkFlag;
+
+    @ApiModelProperty(value = "按钮集合")
+    private List<SysButtonVO> buttonList;
+
     @ApiModelProperty(value = "下级菜单")
     private List<SysLoginUserMenu> subs;
 }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.PeriodOrderMapper">
+
+    <select id="queryPeriodOrderListPage" resultType="com.insigma.ordercenter.entity.vo.PeriodOrderVO">
+        SELECT
+            po.period_order_id,
+            po.period_order_no,
+            po.period_order_type,
+            po.order_status,
+            po.create_time,
+            po.shop_id,
+            po.consumer_name,
+            po.mobile_phone,
+            po.finish_count,
+            po.is_stop,
+            po.is_deleted,
+            po.rule,
+            po.total_count,
+            po.next_send_time,
+            s.shop_name
+        FROM
+            t_period_order po
+            LEFT JOIN t_shop s ON po.shop_id = s.shop_id
+        WHERE
+            1 =1
+        <if test="periodOrderDTO.periodOrderId != null and periodOrderDTO.periodOrderId != ''">
+            AND po.period_order_id = #{periodOrderDTO.periodOrderId}
+        </if>
+        <if test="periodOrderDTO.periodOrderType != null">
+            AND po.period_order_type = #{periodOrderDTO.periodOrderType}
+        </if>
+        <if test="periodOrderDTO.shopId != null and periodOrderDTO.shopId != ''">
+            AND po.shopId = #{periodOrderDTO.shopId}
+        </if>
+    </select>
+
+    <select id="getPeriodPayInfo" resultType="com.insigma.ordercenter.entity.vo.PeriodOrderPayVO">
+        SELECT
+            op.period_order_pay_id,
+            op.period_pay_type,
+            op.period_pay_money,
+            op.period_pay_datetime,
+            op.period_pay_card_no,
+            op.period_pay_back
+        FROM
+            t_period_order_pay_relation pr
+            LEFT JOIN t_period_order_pay op ON pr.period_order_pay_id = op.period_order_pay_id
+        WHERE
+            pr.period_order_id = #{periodOrderId}
+    </select>
+
+    <select id="getPeriodOrderOperationLog" resultType="com.insigma.ordercenter.entity.vo.PeriodOrderOperationLogVO">
+        SELECT
+            ol.content,
+            ol.create_id,
+            ol.create_time,
+            ol.period_order_id,
+            ol.period_order_operation_log_id,
+            su.user_name
+        FROM
+            t_period_order_operation_log ol
+            LEFT JOIN sys_user su ON ol.create_id = su.user_id
+        WHERE
+            su.is_deleted = 0
+            AND su.is_stopped =0
+            AND ol.period_order_id=#{periodOrderId}
+    </select>
+
+    <!--根据预约订单Id,查询发货历史信息-->
+    <resultMap id="PeriodShippingMap" type="com.insigma.ordercenter.entity.vo.PeriodOrderShippingVO" >
+        <id column="order_id" property="orderId" jdbcType="BIGINT" />
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+        <result column="order_status" property="orderStatus" jdbcType="TINYINT" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <collection column="{orderId=order_id}" property="periodShippingListVOS" ofType="com.insigma.ordercenter.entity.vo.PeriodShippingListVO" select="queryPeriodShippingOrderList"/>
+    </resultMap>
+
+
+    <resultMap id="PeriodShippingOrderMap" type="com.insigma.ordercenter.entity.vo.PeriodShippingListVO">
+        <id column="shipping_order_id" jdbcType="BIGINT" property="shippingOrderId" />
+        <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
+        <result column="express_company_id" jdbcType="BIGINT" property="expressCompanyId" />
+        <result column="express_no" jdbcType="VARCHAR" property="expressNo" />
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="shipping_order_no" jdbcType="VARCHAR" property="shippingOrderNo" />
+        <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    </resultMap>
+
+
+    <select id="getPeriodShippingInfo" resultMap="PeriodShippingMap">
+        SELECT
+            o.order_id,
+            o.order_no,
+            o.order_status,
+            o.create_time
+        FROM
+            t_order o
+        WHERE
+            o.period_order_id = #{orderId}
+    </select>
+
+
+    <select id="queryPeriodShippingOrderList" resultMap="PeriodShippingOrderMap">
+        SELECT
+            so.shipping_order_id,
+            so.warehouse_id,
+            so.express_company_id,
+            so.express_no,
+            so.is_deleted,
+            so.`status`,
+            so.shipping_order_no,
+            so.send_time
+        FROM
+            t_order_shipping_order_relation sor
+            LEFT JOIN t_shipping_order so ON sor.shipping_order_id = so.shipping_order_id
+        WHERE
+            sor.order_id = #{orderId}
+    </select>
+
+</mapper>

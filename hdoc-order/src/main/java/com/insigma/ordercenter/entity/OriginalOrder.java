@@ -44,7 +44,10 @@ public class OriginalOrder implements Serializable {
     @ApiModelProperty("原始订单号")
     private String originalOrderNo;
 
-    @ApiModelProperty(value = "下单时间")
+    @ApiModelProperty("买家账号或昵称")
+    private String buyerNickname;
+
+    @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "店铺ID")

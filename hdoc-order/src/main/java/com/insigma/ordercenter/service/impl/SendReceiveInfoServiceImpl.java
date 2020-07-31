@@ -26,31 +26,7 @@ import java.util.List;
 @Service
 public class SendReceiveInfoServiceImpl extends ServiceImpl<SendReceiveInfoMapper, SendReceiveInfo> implements ISendReceiveInfoService {
 
-    @Resource
-    private SendReceiveInfoMapper sendReceiveInfoMapper;
-
-    @Resource
-    private IOrderDetailService orderDetailService;
-
-    @Resource
-    private ISendReceiveInfoService sendReceiveInfoService;
-
-    @Override
-    public SendReceiveInfoVO getSendReceiveInfo(Long orderId) {
-        SendReceiveInfoVO sendReceiveInfo = sendReceiveInfoMapper.getSendReceiveInfo(orderId);
-        QueryWrapper<OrderDetail> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("order_id",orderId);
-        List<OrderDetail> list = orderDetailService.list(queryWrapper);
-        sendReceiveInfo.setOrderDetails(list);
-        return sendReceiveInfo;
-    }
 
 
-    @Override
-    public Boolean updateSendReceiveInfo(UpdateSendReceiveInfoVO updateSendReceiveInfoVO) {
-        SendReceiveInfo sendReceiveInfo=new SendReceiveInfo();
-        BeanUtils.copyProperties(updateSendReceiveInfoVO,sendReceiveInfo);
-        boolean b = sendReceiveInfoService.updateById(sendReceiveInfo);
-        return b;
-    }
+
 }

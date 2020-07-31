@@ -45,6 +45,13 @@ public interface OrderMapper extends BaseMapper<Order> {
 
     OrderListVO queryOrderById(@Param("orderId")Long orderId);
 
+
     List<OriginalOrderVO> queryOriginalOrderList(@Param("orderId")Long orderId);
+
+
+    List<RefundInfoVO>  queryRefundInfo(@Param("orderId")Long orderId);
+
+
+    List<OrderOperationLogVO> queryOrderOperationLogInfo(@Param("orderId")Long orderId);
 
 }

@@ -13,13 +13,19 @@ import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.mapper.OrderMapper;
 import com.insigma.ordercenter.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.insigma.ordercenter.utils.DateUtils;
+import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -43,13 +49,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private IOrderDetailService orderDetailService;
 
     @Resource
-    private ISendReceiveInfoService sendReceiveInfoService;
-
-    @Resource
     private IShippingOrderService shippingOrderService;
 
     @Resource
     private IDetailShippingOrderRelationService detailShippingOrderRelationService;
+
+    @Resource
+    private IOrderSendReceiveService orderSendReceiveService;
+
+    @Autowired
+    private IShopService shopService;
 
     @Override
     public IPage<OrderListVO> queryOrderListPage(Page<OrderListVO> page, OrderDTO orderDTO) {
@@ -68,12 +77,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setShopId(sendReceiveInfoVO.getShopId());
             order.setIsCombined(Constant.SYS_ZERO);
             order.setIsHandOrder(Constant.SYS_ONE);
-            order.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
+            order.setMobilePhoneOrder(sendReceiveInfoVO.getMobilePhone());
             order.setOrderStatus(Constant.SYS_ZERO);
             orderService.save(order);
 
             //新增订单收发件人信息
-            SendReceiveInfo sendReceiveInfo = new SendReceiveInfo();
+            OrderSendReceive sendReceiveInfo = new OrderSendReceive();
             sendReceiveInfo.setOrderId(order.getOrderId());
             sendReceiveInfo.setSendName(sendReceiveInfoVO.getSendName());
             sendReceiveInfo.setSendRemark(sendReceiveInfoVO.getSendRemark());
@@ -84,10 +93,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             sendReceiveInfo.setOrderReason(sendReceiveInfoVO.getOrderReason());
             sendReceiveInfo.setLocationCity(sendReceiveInfoVO.getLocationCity());
             sendReceiveInfo.setProvince(sendReceiveInfoVO.getProvince());
-            sendReceiveInfoService.save(sendReceiveInfo);
+            sendReceiveInfo.setLoginName(sendReceiveInfoVO.getLoginName());
+            orderSendReceiveService.save(sendReceiveInfo);
 
             //新增订单明细信息
-            orderDetailService.saveBatch(sendReceiveInfoVO.getOrderDetails());
+            if(null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size()>0){
+                sendReceiveInfoVO.getOrderDetails().forEach(OrderDetail -> {
+                    OrderDetail.setOrderId(order.getOrderId());
+                    orderDetailService.save(OrderDetail);
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error(CodeMsg.DATA_INSERT_ERROR);
@@ -104,12 +119,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public List<OrderDetailExamineVO> queryOrderDetailList(Long orderId) {
-        return orderMapper.queryOrderDetailList(orderId);
+        return baseMapper.queryOrderDetailList(orderId);
     }
 
     @Override
     public List<ExpressCompanyVO> queryExpressCompany(Long warehouseId) {
-        return orderMapper.queryExpressCompany(warehouseId);
+        return baseMapper.queryExpressCompany(warehouseId);
     }
 
     @Override
@@ -170,11 +185,47 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public OrderListVO queryOrderById(Long orderId) {
-        return orderService.queryOrderById(orderId);
+        return baseMapper.queryOrderById(orderId);
     }
 
     @Override
     public List<OriginalOrderVO> queryOriginalOrderList(Long orderId) {
-        return orderService.queryOriginalOrderList(orderId);
+        return baseMapper.queryOriginalOrderList(orderId);
+    }
+
+    @Override
+    public List<RefundInfoVO> queryRefundInfo(Long orderId) {
+        return baseMapper.queryRefundInfo(orderId);
+    }
+
+
+    @Override
+    public List<OrderOperationLogVO> queryOrderOperationLogInfo(Long orderId) {
+        return baseMapper.queryOrderOperationLogInfo(orderId);
+    }
+
+    @Override
+    public String generateOrderNo(Long shopId) {
+        Shop shop = shopService.getById(shopId);
+        String platformNo = "NULL";
+        if (null != shop) {
+            platformNo = shop.getPlatformNo();
+        }
+        String timestamp = DateUtils.formatLocalDateTimeToString(LocalDateTime.now(),DateUtils.TIME_PATTERN_MILLISECOND);
+        String randomNum = String.valueOf(RandomUtils.nextInt(999));
+        if (randomNum.length() == 1) {
+            randomNum = "00" +randomNum;
+        } else if (randomNum.length() == 2) {
+            randomNum = "0" +randomNum;
+        }
+        String orderNo = platformNo + "00" + timestamp +randomNum;
+        return orderNo;
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i < 100; i++) {
+            Integer s = RandomUtils.nextInt(999);
+            System.out.println(s);
+        }
     }
 }
