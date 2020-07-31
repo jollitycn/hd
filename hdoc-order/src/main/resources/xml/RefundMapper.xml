@@ -2,4 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.RefundMapper">
 
+    <select id="getRefundList" resultType="com.insigma.ordercenter.entity.vo.RefundVO">
+        SELECT
+            a.refund_id,
+            a.order_id,
+            a.refund_no,
+            b.order_no,
+            a.refund_type,
+            a.source_type,
+            a.create_time,
+            a.audit_status,
+            a.audit_id,
+            a.reason,
+            a.audit_time,
+            a.`status` AS refundStatus,
+            b.order_status AS orderStatus,
+            a.refund_money,
+            a.warehouse_id,
+            c.warehouse_name,
+            d.company_name
+        FROM
+            t_refund a
+        LEFT JOIN t_order b ON a.order_id = b.order_id
+        LEFT JOIN t_warehouse c ON a.warehouse_id = c.warehouse_id
+        LEFT JOIN t_express_company d ON c.express_company_id=d.express_company_id
+    </select>
 </mapper>

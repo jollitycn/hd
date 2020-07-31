@@ -12,14 +12,10 @@ import lombok.Data;
 @Data
 public class AddComboDTO {
 
-    @ApiModelProperty(value = "主商品ID")
+    @ApiModelProperty(value = "子商品id")
     private Long productId;
-
-    @ApiModelProperty(value = "子商品id集合（多个id，分隔）")
-    private String productIds;
 
     @ApiModelProperty(value = "数量")
     private Integer quantity;
-
 
 }

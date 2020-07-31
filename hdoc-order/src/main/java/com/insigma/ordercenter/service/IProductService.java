@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.entity.Product;
-import com.insigma.ordercenter.entity.dto.AddComboDTO;
 import com.insigma.ordercenter.entity.dto.ProductAddDTO;
 import com.insigma.ordercenter.entity.dto.ProductListDTO;
 import com.insigma.ordercenter.entity.dto.ShopRatioDTO;
@@ -38,12 +37,6 @@ public interface IProductService extends IService<Product> {
      */
     ProductDetailVO getProductDetail(Long productId);
 
-    /**
-     * 添加商品组合
-     * @param addComboDTO
-     * @return
-     */
-    boolean addCombo(AddComboDTO addComboDTO);
 
     /**
      * 禁用/启用商品组合
@@ -75,4 +68,6 @@ public interface IProductService extends IService<Product> {
      * @return
      */
     boolean editWarningValue(Long spid, Integer warningValue);
+
+
 }

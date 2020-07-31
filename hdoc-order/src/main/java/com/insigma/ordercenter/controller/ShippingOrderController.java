@@ -7,6 +7,7 @@ import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
+import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
 import com.insigma.ordercenter.service.IShippingOrderService;
 import io.swagger.annotations.Api;
@@ -36,6 +37,15 @@ public class ShippingOrderController extends BaseController{
     public Result list(ShippingOrderDTO shippingOrderDTO) {
 
         IPage<ShippingOrderVO> result = shippingOrderService.getShippingOrderList(shippingOrderDTO);
+
+        return Result.success(result);
+    }
+
+    @GetMapping("/detail/{shippingOrderId}")
+    @ApiOperation(value = "发货单明细", response = ShippingOrderVO.class)
+    public Result detail(@PathVariable Long shippingOrderId) {
+
+        ShippingOrderDetailVO result = shippingOrderService.getShippingDetail(shippingOrderId);
 
         return Result.success(result);
     }
@@ -123,9 +133,13 @@ public class ShippingOrderController extends BaseController{
         return Result.error(CodeMsg.DATA_UPDATE_ERROR);
     }
 
-    @PutMapping("/add")
-    @ApiOperation("新建发货单")
-    public Result add(EditShippingOrderDTO editShippingOrderDTO) {
-        return Result.success();
+    @PutMapping("/rejection/{shippingOrderId}")
+    @ApiOperation("拒收发货单")
+    public Result rejection(@PathVariable Long shippingOrderId,Integer sourceType,String reason) {
+        Boolean result = shippingOrderService.rejection(shippingOrderId,sourceType,reason);
+        if(result){
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
     }
 }

@@ -1,10 +1,11 @@
 package com.insigma.ordercenter.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.insigma.ordercenter.entity.ShippingOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.ShippingOrder;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
+import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
 
 /**
@@ -68,4 +69,20 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * @return
      */
     Boolean frozen(Long shippingOrderId);
+
+    /**
+     * 获取发货单明细
+     * @param shippingOrderId
+     * @return
+     */
+    ShippingOrderDetailVO getShippingDetail(Long shippingOrderId);
+
+    /**
+     * 发货单拒收
+     * @param shippingOrderId
+     * @param sourceType
+     * @param reason
+     * @return
+     */
+    Boolean rejection(Long shippingOrderId, Integer sourceType, String reason);
 }

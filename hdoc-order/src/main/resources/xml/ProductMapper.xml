@@ -70,4 +70,20 @@
         LEFT JOIN sys_dictionary c ON a.brand=c.data_code
         WHERE a.product_id=#{productId}
     </select>
+
+    <select id="getShippingOrderProductList" resultType="com.insigma.ordercenter.entity.vo.ShippingProductVO">
+        SELECT
+            a.order_id,
+            a.order_detail_id,
+            a.product_id,
+            a.product_sku,
+            a.product_name,
+            a.product_specs,
+            a.amount,
+            a.unit,
+            a.product_price
+        FROM
+            t_order_detail a
+        WHERE a.order_id=#{orderId}
+    </select>
 </mapper>

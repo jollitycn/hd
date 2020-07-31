@@ -7,14 +7,13 @@ import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.dto.*;
-import com.insigma.ordercenter.entity.vo.ProductDetailVO;
-import com.insigma.ordercenter.entity.vo.ProductListPageVO;
-import com.insigma.ordercenter.entity.vo.ProductStockInfoVO;
-import com.insigma.ordercenter.entity.vo.ShopProductVO;
+import com.insigma.ordercenter.entity.vo.*;
+import com.insigma.ordercenter.service.IProductComboService;
 import com.insigma.ordercenter.service.IProductService;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -30,11 +29,14 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/product")
-@Api(tags = {"商品管理"})
+@Api(tags = {"商品管理-xuchao"})
 public class ProductController extends BaseController {
 
     @Resource
     private IProductService productService;
+
+    @Autowired
+    private IProductComboService productComboService;
 
     @Resource
     private IWarehouseProductRelationService warehouseProductRelationService;
@@ -146,16 +148,50 @@ public class ProductController extends BaseController {
             return Result.error(CodeMsg.DATA_UPDATE_ERROR);
     }
 
-    @PostMapping("/addCombo")
-    @ApiOperation(value = "添加商品组合")
-    public Result addCombo(AddComboDTO addComboDTO) {
+    @GetMapping("/getComboList/{productId}")
+    @ApiOperation(value = "获取商品组合列表")
+    public Result getComboList(@PathVariable Long productId) {
 
-        boolean status = productService.addCombo(addComboDTO);
+        List<ProductComboVO> result = productComboService.getComboList(productId);
+
+        return Result.success(result);
+    }
+
+    @PostMapping("/addCombo/{productId}")
+    @ApiOperation(value = "添加商品组合")
+    public Result addCombo(@PathVariable Long productId,
+                           @RequestBody List<AddComboDTO> addComboDTOList) {
+
+        boolean status = productComboService.addCombo(productId,addComboDTOList);
 
         if (status) {
             return Result.success();
         }
         return Result.error(CodeMsg.DATA_INSERT_ERROR);
+    }
+
+    @PostMapping("/editCombo/{productComboId}")
+    @ApiOperation(value = "编辑商品组合数量")
+    public Result editCombo(@PathVariable Long productComboId,Integer quantity) {
+
+        boolean status = productComboService.editCombo(productComboId,quantity);
+
+        if (status) {
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_INSERT_ERROR);
+    }
+
+    @DeleteMapping("/deleteCombo/{productComboId}")
+    @ApiOperation(value = "删除商品组合")
+    public Result deleteCombo(@PathVariable Long productComboId){
+
+        boolean status = productComboService.deleteCombo(productComboId);
+
+        if (status) {
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_DELETE_ERROR);
     }
 
     @PutMapping("/disable/{productId}")
@@ -196,10 +232,10 @@ public class ProductController extends BaseController {
         return Result.success(result);
     }
 
-    @GetMapping("/editRatio/{productId}")
+    @PostMapping("/editRatio/{productId}")
     @ApiOperation(value = "编辑电商发货比例")
     public Result editRatio(@PathVariable Long productId,
-                                  @RequestBody  List<ShopRatioDTO> shopRatioDTOList) {
+                            @RequestBody  List<ShopRatioDTO> shopRatioDTOList) {
 
         boolean  result =productService.editRatio(productId,shopRatioDTOList);
 

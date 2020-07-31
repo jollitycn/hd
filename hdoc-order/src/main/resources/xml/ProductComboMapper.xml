@@ -2,4 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.ProductComboMapper">
 
+    <select id="getComboList" resultType="com.insigma.ordercenter.entity.vo.ProductComboVO">
+    SELECT
+        a.product_combo_id,
+        b.product_name,
+        b.product_no,
+        b.product_specs,
+        a.quantity
+    FROM t_product_combo a
+    LEFT JOIN t_product b ON a.child_product_id=b.product_id
+    WHERE a.parent_product_id=#{productId}  AND a.is_deleted=0
+    </select>
 </mapper>

@@ -28,5 +28,25 @@
         <if test="shippingOrderDTO.expressNo !=null and shippingOrderDTO.expressNo !=''">
             AND a.express_no=#{shippingOrderDTO.shippingNo}
         </if>
+        <if test="shippingOrderDTO.status !=null and shippingOrderDTO.status !=''">
+            AND a.`status` IN(${shippingOrderDTO.status})
+        </if>
+    </select>
+
+
+    <select id="getShippingDetail" resultType="com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO">
+        SELECT
+            a.shipping_order_id,
+            b.order_id,
+            c.order_no,
+            a.receive_name,
+            a.mobile_phone,
+            a.address,
+            a.`status`
+        FROM
+            t_shipping_order a
+        LEFT JOIN t_order_shipping_order_relation b ON b.shipping_order_id = a.shipping_order_id
+        LEFT JOIN t_order c ON c.order_id = b.order_id
+        WHERE a.shipping_order_id=#{shippingOrderId}
     </select>
 </mapper>
