@@ -9,8 +9,8 @@
             b.button_name,
             b.button_url
         FROM
-            sys_button b
-        LEFT JOIN t_role_button rb ON rb.button_id = b.button_id
+            t_role_button rb
+        LEFT JOIN sys_button b ON b.button_id = rb.button_id
         WHERE rb.role_id IN
         <foreach collection="roles" item="roleId" open="(" separator="," close=")">
             #{roleId}
