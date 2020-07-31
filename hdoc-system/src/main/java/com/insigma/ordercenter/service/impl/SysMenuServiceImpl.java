@@ -5,15 +5,18 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.insigma.ordercenter.entity.*;
+import com.insigma.ordercenter.entity.query.UpdateRoleMenuButtonQuery;
 import com.insigma.ordercenter.entity.vo.RoleMenuVO;
 import com.insigma.ordercenter.entity.vo.SysMenuVO;
 import com.insigma.ordercenter.mapper.RoleMenuRelationMapper;
 import com.insigma.ordercenter.mapper.SysMenuMapper;
 import com.insigma.ordercenter.mapper.UserRoleRelationMapper;
 import com.insigma.ordercenter.service.IRoleButtonService;
+import com.insigma.ordercenter.service.IRoleMenuRelationService;
 import com.insigma.ordercenter.service.ISysButtonService;
 import com.insigma.ordercenter.service.ISysMenuService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -37,6 +40,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Resource
     private ISysButtonService buttonService;
+
+    @Resource
+    private IRoleMenuRelationService roleMenuRelationService;
 
     @Resource
     private IRoleButtonService roleButtonService;
@@ -133,6 +139,40 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         });
         roleMenuVO.setMenuList(list);
         return roleMenuVO;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateRoleMenuAndButton(UpdateRoleMenuButtonQuery req) {
+        // 先删除原有的菜单权限和按钮权限
+        QueryWrapper<RoleMenuRelation> deleteMenuWrapper = new QueryWrapper<>();
+        deleteMenuWrapper.eq("role_id", req.getRoleId());
+        roleMenuRelationMapper.delete(deleteMenuWrapper);
+        QueryWrapper<RoleButton> deleteButtonWrapper = new QueryWrapper<>();
+        deleteButtonWrapper.eq(RoleButton.ROLE_ID, req.getRoleId());
+        roleButtonService.remove(deleteButtonWrapper);
+
+        // 建立新的菜单、按钮关系
+        if (null != req.getMenuIdList() && !req.getMenuIdList().isEmpty()) {
+            List<RoleMenuRelation> menuList = Lists.newArrayList();
+            req.getMenuIdList().forEach(menuId -> {
+                RoleMenuRelation roleMenuRelation = new RoleMenuRelation();
+                roleMenuRelation.setRoleId(req.getRoleId());
+                roleMenuRelation.setMenuId(menuId);
+                menuList.add(roleMenuRelation);
+            });
+            roleMenuRelationService.saveBatch(menuList);
+        }
+        if (null != req.getButtonIdList() && !req.getButtonIdList().isEmpty()) {
+            List<RoleButton> buttonList = Lists.newArrayList();
+            req.getButtonIdList().forEach(buttonId -> {
+                RoleButton roleButton = new RoleButton();
+                roleButton.setRoleId(req.getRoleId());
+                roleButton.setButtonId(buttonId);
+                buttonList.add(roleButton);
+            });
+            roleButtonService.saveBatch(buttonList);
+        }
     }
 
     @Override

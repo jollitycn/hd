@@ -4,6 +4,7 @@ import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.SysMenu;
 import com.insigma.ordercenter.entity.query.AddMenuQuery;
+import com.insigma.ordercenter.entity.query.UpdateRoleMenuButtonQuery;
 import com.insigma.ordercenter.entity.vo.RoleMenuVO;
 import com.insigma.ordercenter.entity.vo.SysMenuVO;
 import com.insigma.ordercenter.service.IRoleMenuRelationService;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -74,5 +76,12 @@ public class SysMenuController {
     @ApiOperation("【新】根据角色获取菜单列表")
     public Result<RoleMenuVO> listMenuAndButtonByRoleId(@PathVariable Long roleId) {
         return Result.success(sysMenuService.listMenuAndButtonByRoleId(roleId));
+    }
+
+    @PostMapping("/updateRoleMenuAndButton")
+    @ApiOperation("【新】修改角色的菜单按钮权限")
+    public Result<RoleMenuVO> updateRoleMenuAndButton(@Valid @RequestBody UpdateRoleMenuButtonQuery req) {
+        sysMenuService.updateRoleMenuAndButton(req);
+        return Result.success();
     }
 }

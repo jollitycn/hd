@@ -2,6 +2,7 @@ package com.insigma.ordercenter.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.entity.SysMenu;
+import com.insigma.ordercenter.entity.query.UpdateRoleMenuButtonQuery;
 import com.insigma.ordercenter.entity.vo.RoleMenuVO;
 import com.insigma.ordercenter.entity.vo.SysMenuVO;
 
@@ -33,4 +34,13 @@ public interface ISysMenuService extends IService<SysMenu> {
      * @date 2020/7/30 19:27
      */
     RoleMenuVO listMenuAndButtonByRoleId(Long roleId);
+
+    /**
+     * 修改角色的菜单、按钮权限
+     *
+     * @param req 新的权限
+     * @author Pan Juncai
+     * @date 2020/7/31 9:25
+     */
+    void updateRoleMenuAndButton(UpdateRoleMenuButtonQuery req);
 }
