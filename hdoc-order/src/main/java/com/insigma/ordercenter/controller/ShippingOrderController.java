@@ -6,6 +6,7 @@ import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
+import com.insigma.ordercenter.entity.dto.EditShippingOrderProductDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
@@ -14,6 +15,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -83,9 +86,9 @@ public class ShippingOrderController extends BaseController{
     @PutMapping("/changeProduct/{shippingOrderId}")
     @ApiOperation(value ="更改商品")
     public Result changeProduct(@PathVariable Long shippingOrderId,
-                                EditShippingOrderDTO editShippingOrderDTO) {
+                                @RequestBody EditShippingOrderProductDTO editParameters) {
 
-        Boolean result = shippingOrderService.changeProduct(shippingOrderId,editShippingOrderDTO);
+        Boolean result = shippingOrderService.changeProduct(shippingOrderId,editParameters);
 
         if(result){
             return Result.success();

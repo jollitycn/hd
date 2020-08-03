@@ -5,17 +5,17 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.constant.Constant;
+import com.insigma.ordercenter.entity.OrderDetail;
 import com.insigma.ordercenter.entity.Refund;
 import com.insigma.ordercenter.entity.ShippingOrder;
 import com.insigma.ordercenter.entity.ShippingOrderOperation;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
+import com.insigma.ordercenter.entity.dto.EditShippingOrderProductDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
+import com.insigma.ordercenter.entity.vo.EditOrderProductDTO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
-import com.insigma.ordercenter.mapper.ProductMapper;
-import com.insigma.ordercenter.mapper.RefundMapper;
-import com.insigma.ordercenter.mapper.ShippingOrderMapper;
-import com.insigma.ordercenter.mapper.ShippingOrderOperationMapper;
+import com.insigma.ordercenter.mapper.*;
 import com.insigma.ordercenter.service.IShippingOrderService;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +42,8 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
     @Resource
     private RefundMapper refundMapper;
 
+    @Resource
+    private OrderDetailMapper orderDetailMapper;
 
     @Override
     public IPage<ShippingOrderVO> getShippingOrderList(ShippingOrderDTO shippingOrderDTO) {
@@ -100,7 +102,7 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
         shippingOrder.setMobilePhone(editShippingOrderDTO.getMobilePhone());
         shippingOrder.setReceiveName(editShippingOrderDTO.getReceiveName());
 
-        this.createLog(shippingOrderId,1L,1L,"张三修改了发货单:"+shippingOrder.getShippingOrderNo()+"的收货人信息");
+        this.createLog(shippingOrderId,1L,1L,"张三修改了发货单:"+shippingOrder.getShippingOrderNo()+"的收货人信息。更改原因："+editShippingOrderDTO.getChangeReason());
 
         return this.updateById(shippingOrder);
     }
@@ -109,24 +111,28 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
      * 更改发货单商品
      *
      * @param shippingOrderId
-     * @param editShippingOrderDTO
+     * @param editParameters
      * @return
      */
     @Override
-    public Boolean changeProduct(Long shippingOrderId, EditShippingOrderDTO editShippingOrderDTO) {
+    public Boolean changeProduct(Long shippingOrderId, EditShippingOrderProductDTO editParameters) {
 
         //获取发货单对象
         ShippingOrder shippingOrder=this.getById(shippingOrderId);
 
         //状态判断
-        //TODO
         Integer status=shippingOrder.getStatus();
 
-       //获取发货单关联的商品信息
+        for (EditOrderProductDTO editOrderProductDTO:editParameters.getEditOrderProductDTOList()) {
+            OrderDetail orderDetail=orderDetailMapper.selectById(editOrderProductDTO.getOrderDetailId());
+            orderDetail.setAmount(editOrderProductDTO.getAmount());
+            orderDetail.setProductSpecs(editOrderProductDTO.getProductSpecs());
+            orderDetailMapper.updateById(orderDetail);
+        }
 
-        this.createLog(shippingOrderId,1L,1L,"张三修改了发货单:"+shippingOrder.getShippingOrderNo()+"的商品");
+        this.createLog(shippingOrderId,1L,1L,"张三修改了发货单:"+shippingOrder.getShippingOrderNo()+"的商品,原因:"+editParameters.getChangeReason());
 
-        return null;
+        return true;
     }
 
     /**
