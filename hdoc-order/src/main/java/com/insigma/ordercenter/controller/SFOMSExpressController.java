@@ -43,7 +43,7 @@ public class SFOMSExpressController extends BaseController {
 //    private TestCallExpressNewAPIService testCallExpressNewAPIService;
     @PostMapping("/cb")
     @ApiOperation("cb")
-    public Result cb(HttpServletRequest request) throws Exception {
+    public Result cb(@Valid @RequestBody  HttpServletRequest request) throws Exception {
 
         //  APIResponse response = QiaoAPIService.query(EspServiceCode.EXP_RECE_CREATE_ORDER, order);
         //  if (response.getApiResultCode() != null) {
