@@ -146,7 +146,7 @@ public class CallExpressServiceTools {
 
         order.setContactInfoList(contactInfoList);
         order.setLanguage("zh_CN");
-        order.setOrderId("QIAO-20200618-004");
+        order.setOrderId("QIAO-20200618-003");
         order.setCustomsInfo(new CustomsInfo());
         order.setExtraInfoList(new ArrayList<>());
         order.setIsOneselfPickup(0);

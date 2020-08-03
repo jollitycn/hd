@@ -28,8 +28,8 @@ public class Demo {
 
 	public static final int TIMEOUT = 30000;
 	public static final String CHARSET = "UTF-8";
-	public static final String AES256_KEY = "uG9NgFmNFH7BHqtHAFFZiTtsrWYD6HxK";// key
-	public static final String MACSHA_512 = "Gmnf7y2TKMhCZ6lDWmsCOid3wRK3UMNp";// 盐
+	public static final String AES256_KEY = "9A94Nt5372630G6o1pF6H2786f446F61";// key
+	public static final String MACSHA_512 = "v2NlU9A59N4uI75cc6F5mDZ242S5xM72";// 盐
 	public static final String REQUES_URL = "http://scs-oms2-bspwms.sit.sf-express.com/index.do?appId=111111&method=inbound&source=jialefuapptoken&appToken=jialefuapptoken&v=1.0&timestamp=123456789&signMethod=md5&sign=223&deviceToken=444&userToken=jialefu&format=json";
 	//public static final String REQUES_URL = "http://localhost:8080/index.do?appId=111111&method=inbound&source=jialefuapptoken&appToken=jialefuapptoken&v=1.0&timestamp=123456789&signMethod=md5&sign=223&deviceToken=444&userToken=jialefu&format=json";
 	/**

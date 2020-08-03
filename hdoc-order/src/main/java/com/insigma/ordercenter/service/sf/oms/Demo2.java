@@ -3,6 +3,7 @@ package com.insigma.ordercenter.service.sf.oms;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.UUID;
 
 import com.insigma.ordercenter.logistics.sf.oms.AESCipher;
 import com.insigma.ordercenter.logistics.sf.oms.HmacSha512CoderFactory;
@@ -18,6 +19,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 顺丰订单接口调用DEMO
@@ -27,8 +30,10 @@ import com.google.gson.Gson;
  */
 public class Demo2 {
 
+	private static Logger log = LoggerFactory.getLogger(Demo2.class);
 	public static final int TIMEOUT = 30000;
 	public static final String CHARSET = "UTF-8";
+	public static final String VERSION = "1.0";
 	public static final String AES256_KEY = "9A94Nt5372630G6o1pF6H2786f446F61";// key
 	public static final String MACSHA_512 = "v2NlU9A59N4uI75cc6F5mDZ242S5xM72";// 盐
 	//public static final String REQUES_URL = "http://scs-oms2-bspwms.sit.sf-express.com/index.do?appId=111111&method=inbound&source=jialefuapptoken&appToken=jialefuapptoken&v=1.0&timestamp=123456789&signMethod=md5&sign=223&deviceToken=444&userToken=jialefu&format=json";
@@ -36,36 +41,62 @@ public class Demo2 {
 	//public static final String REQUES_URL = "http://localhost:8080/index.do?appId=111111&method=inbound&source=jialefuapptoken&appToken=jialefuapptoken&v=1.0&timestamp=123456789&signMethod=md5&sign=223&deviceToken=444&userToken=jialefu&format=json";
 
 
+	private static  final String API_TOKEN="YNXH_NEWAPPTOKEN";
+	private static  final String USER_API="YNXH_NEWTOKEN";
+	private static  final String SOURCE_CHANNEL="YNXH_NEW";
+	private static  final String USER_TOKEN="YNXH_NEWTOKEN";
 
 		private static void demo(OMSServiceCode method) throws UnsupportedEncodingException {
 		String	source = CallExpressServiceTools.packageMsgData(method);
+ 	AESCipher cipher = new AESCipher(AES256_KEY.getBytes(CHARSET));
+ 		String msgData = cipher.getEncryptedMessage(source);
+ 		System.out.println(msgData);
 
-		// STEP.1 业务报文urlencode
-		String urlSource = URLEncoder.encode(source, "UTF-8");
+			 System.out.println(cipher.getDecryptedMessage(msgData));
+			 System.err.println(	AES256CipherExternalFactory.AES256Decode(msgData, AES256_KEY));
+			String dataDigest = HmacSha512CoderFactory.getHmacSha512Coder(MACSHA_512, msgData);
+			log.info("dataDigest:{}", dataDigest);
 
-		// STEP.2 业务报文加密 [注:AESCipher非线程安全]
-		AESCipher aesciphe = new AESCipher(AES256_KEY.getBytes(CHARSET));
-		String encrySource = aesciphe.getEncryptedMessage(urlSource);
+			String msgDataToUrlEncode = URLEncoder.encode(msgData, CHARSET);
+			log.info("msgDataToUrlEncode:{}", msgDataToUrlEncode);
+			String dataDigestToUrlEncode = URLEncoder.encode(dataDigest, CHARSET);
+			log.info("dataDigestToUrlEncode:{}", dataDigestToUrlEncode);
 
-		System.out.println("加密报文:"+encrySource);
+			String msgDataToUrlDecode = sfmd5.decodeUrl(msgDataToUrlEncode);
+			log.info("msgDataToUrlDecode:{}", msgDataToUrlDecode);
+			String dataDigestToUrlDecode = sfmd5.decodeUrl(dataDigestToUrlEncode);
+			log.info("dataDigestToUrlDecode:{}", dataDigestToUrlDecode);
 
-		// STEP.3 生成摘要
-		String sourceDiges = HmacSha512CoderFactory.getHmacSha512Coder(MACSHA_512, encrySource);
+			if (HmacSha512CoderFactory.getHmacSha512Coder(MACSHA_512, msgDataToUrlDecode).equals(dataDigestToUrlDecode)) {
+				log.info("SUCCESS");
 
-		// STEP.4 报文及摘要再次转码
-		String encrySourceEncode = URLEncoder.encode(encrySource, CHARSET);
-		String sourceDigesEncode = URLEncoder.encode(sourceDiges, CHARSET);
+				String decodeMsgData = AES256CipherExternalFactory.AES256Decode(msgDataToUrlDecode, AES256_KEY);
+				log.info("decodeMsgData:{}", decodeMsgData);
+			} else {
+				log.info("Error");
+			}
 
 		// STEP.5 准备参数报文
-		RequestBean request = new RequestBean(new RequestBean.Request(encrySourceEncode, sourceDigesEncode));
-			RequestBean request1 = new RequestBean(new RequestBean.Request(encrySourceEncode, sourceDigesEncode));
-request.setAppId("111111");
-request.setMethod(method.getCode());
-request.setSource("YNXH_NEW");
-request.setTimestamp(System.currentTimeMillis());
-request.setAppToken("YNXH_NEWAPPTOKEN");
-			request.setUserToken("YNXH_NEWTOKEN");
-request.setV("1.0");
+		RequestBean request = new RequestBean(new RequestBean.Request(msgDataToUrlEncode, dataDigestToUrlEncode));
+			RequestBean request1 = new RequestBean(new RequestBean.Request(msgDataToUrlEncode, dataDigestToUrlEncode));
+		request.setAppId("111111");
+		request.setMethod(method.getCode());
+//			params.put("appID", UUID.randomUUID().toString().replace("-", ""));
+//			params.put("method", testService.getCode());// 接口服务码
+//			params.put("source", SOURCE_CHANNEL);
+//			params.put("sourceChannel", SOURCE_CHANNEL);
+//			params.put("appToken", API_TOKEN);
+//			params.put("v", "1.0");
+//			params.put("timestamp", timeStamp);
+//			params.put("userToken", USER_TOKEN);
+//			params.put("msgData", msgData);
+//			params.put("msgDigest",msgDigest );
+
+		request.setSource(SOURCE_CHANNEL);
+		request.setTimestamp(System.currentTimeMillis());
+		request.setAppToken(API_TOKEN);
+		request.setUserToken(USER_TOKEN);
+		request.setV(VERSION);
 		String json = new Gson().toJson(request1);
 
 		// STEP.5 HTTP调用顺丰接口 [注:响应为明文]
@@ -78,6 +109,8 @@ request.setV("1.0");
 			+ "&v="+request.getV();
 			String response = post(    url , json);
 
+			System.out.println("远程接口:"+url);
+			System.out.println("远程body:"+json);
 		System.out.println("远程接口响应:"+response);
 	}
 
@@ -90,7 +123,7 @@ request.setV("1.0");
 	public static void demo(String source) throws IOException {
 		
 		// STEP.1 业务报文urlencode
-		String urlSource = URLEncoder.encode(source, "UTF-8");
+		String urlSource = URLEncoder.encode(source, CHARSET);
 		
 		// STEP.2 业务报文加密 [注:AESCipher非线程安全]
 		AESCipher aesciphe = new AESCipher(AES256_KEY.getBytes(CHARSET));
@@ -180,10 +213,10 @@ request.setV("1.0");
 				"	\"shipperProvinceName\": \"广东省\",\r\n" +
 				"	\"shipperContactName\": \"奥特曼\",\r\n" +
 				"	\"shipperCityName\": \"深圳市\",\r\n" +
-				"	\"consigneeLocationName\": \"广东省广州市南山区深圳南山深南大道58号\",\r\n" +
+				"	\"consigneeLocationName\": \"广东省深圳市南山区深圳南山深南大道58号\",\r\n" +
 				"	\"extenSystemOrderNo\": \"A00000002\",\r\n" +
 				"	\"shipperName\": \"M17星制药\",\r\n" +
-				"	\"consigneeCityName\": \"广州市\",\r\n" +
+				"	\"consigneeCityName\": \"深圳市\",\r\n" +
 				"	\"remark\": \"这是备注\",\r\n" +
 				"	\"consigneeName\": \"顺丰物流公司\",\r\n" +
 				"	\"consigneeContactName\": \"李生\",\r\n" +
@@ -235,8 +268,11 @@ request.setV("1.0");
 		//Demo2.demo(OMSServiceCode.OUTBOUND);
 
 		//Demo2.demo(OMSServiceCode.ROUTE_QUERY);
-		 Demo2.demo(OMSServiceCode.OUTBOUND);
-		//Demo2.demo(OMSServiceCode.OUTBOUND_CONFIRM);
+		// 	 Demo2.demo(OMSServiceCode.OUTBOUND);
+   //{"sfOrderNo":"OB569100647279728026-100","erpOrder":"00200703840107","code":"200","errMsg":"success"}}
+		//	Demo2.demo(OMSServiceCode.TRANSPORT);
+		// Demo2.demo(OMSServiceCode.OUTBOUND_CONFIRM);
+		Demo2.demo(OMSServiceCode.CANCEL_OUTBOUND);
 
 	}
 

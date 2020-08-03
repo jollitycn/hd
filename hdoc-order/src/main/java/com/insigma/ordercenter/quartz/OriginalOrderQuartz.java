@@ -69,7 +69,7 @@ public class OriginalOrderQuartz {
             order.setConsumerName(originalOrder.getConsumerName());
             order.setCreateTime(LocalDateTime.now());
             order.setIsPeriod(0);
-            order.setMobilePhone(originalOrder.getMobilePhone());
+           // order.setMobilePhone(originalOrder.getMobilePhone());
             order.setOrderNo(originalOrder.getOrderNo());
             order.setOrderStatus(0);
             order.setShopId(originalOrder.getShopId());
@@ -139,7 +139,7 @@ public class OriginalOrderQuartz {
                     order.setConsumerName(originalOrder.getConsumerName());
                     order.setCreateTime(LocalDateTime.now());
                     order.setIsPeriod(0);
-                    order.setMobilePhone(originalOrder.getMobilePhone());
+                  //  order.setMobilePhone(originalOrder.getMobilePhone());
                     order.setOrderNo(originalOrder.getOrderNo());
                     order.setOrderStatus(0);
                     totalPrice = totalPrice.add(originalOrder.getTotalPrice());

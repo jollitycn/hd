@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import org.springframework.boot.autoconfigure.web.ResourceProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,8 @@ class CodeGenerator {
         gc.setOutputDir(projectPath + "/hdoc-order/src/main/java");
         gc.setAuthor("AH");
         gc.setIdType(IdType.ID_WORKER);
+        gc.setBaseColumnList(true).setBaseResultMap(true);
+
         gc.setOpen(false);
         gc.setSwagger2(true);
         mpg.setGlobalConfig(gc);
@@ -108,26 +111,67 @@ class CodeGenerator {
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
 
+
+        focList.add(new FileOutConfig("/templates/entityDetailDTO.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return projectPath + "/hdoc-order/src/main/java/com/insigma/ordercenter/entity/dto/"
+                        + tableInfo.getEntityName() + "DetailDTO.java";
+            }
+        });
+        focList.add(new FileOutConfig("/templates/entitySaveDTO.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return projectPath + "/hdoc-order/src/main/java/com/insigma/ordercenter/entity/dto/"
+                        + tableInfo.getEntityName() + "SaveDTO.java";
+            }
+        });
+        focList.add(new FileOutConfig("/templates/entityPageDTO.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return projectPath + "/hdoc-order/src/main/java/com/insigma/ordercenter/entity/dto/"
+                        + tableInfo.getEntityName() + "PageDTO.java";
+            }
+        });
+        focList.add(new FileOutConfig("/templates/entityDetailVO.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return projectPath + "/hdoc-order/src/main/java/com/insigma/ordercenter/entity/vo/"
+                        + tableInfo.getEntityName() + "DetailVO.java";
+            }
+        });
+
+        focList.add(new FileOutConfig("/templates/entityPageVO.java.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return projectPath + "/hdoc-order/src/main/java/com/insigma/ordercenter/entity/vo/"
+                        + tableInfo.getEntityName() + "PageVO.java";
+            }
+        });
+        cfg.setFileOutConfigList(focList);
+        mpg.setCfg(cfg);
+
         // 配置模板
         TemplateConfig templateConfig = new TemplateConfig();
-
+//        templateConfig.setXml()
         // 配置自定义输出模板
         //指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
         // templateConfig.setEntity("templates/entity2.java");
         // templateConfig.setService();
-        // templateConfig.setController();
-
-        templateConfig.setXml(null);
+     //  templateConfig.setController("/templates/controller.java");
+       // templateConfig.setXml(null);
         mpg.setTemplate(templateConfig);
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
+        strategy.setEntityColumnConstant(true);
         //        strategy.setSuperEntityClass("com.baomidou.ant.common.BaseEntity");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         // 公共父类
+        strategy.setLogicDeleteFieldName("is_deleted");
         strategy.setSuperControllerClass("com.insigma.ordercenter.controller.BaseController");
         // 写于父类中的公共字段
         //        strategy.setSuperEntityColumns("id");
@@ -135,9 +179,35 @@ class CodeGenerator {
         strategy.setControllerMappingHyphenStyle(true);
 //        strategy.setTablePrefix(pc.getModuleName() + "_");
         strategy.setTablePrefix("t_");
+//        strategy.set
         strategy.setEntityColumnConstant(true);
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
         mpg.execute();
+//        templateConfig.setEntity("templates/entityVO.java");
+//        // 如果模板引擎是 freemarker
+//        templatePath = "/templates/entityVO.java.ftl";
+//        // 自定义配置会被优先输出
+//        focList.add(new FileOutConfig(templatePath) {
+//            @Override
+//            public String outputFile(TableInfo tableInfo) {
+//                // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
+//                return projectPath + "/hdoc-order/src/main/java/com/insigma/ordercenter/entity/vo"
+//                        + tableInfo.getEntityName() + "VO" + StringPool.DOT_XML;
+//            }
+//        });
+//        mpg.execute();
+//        templateConfig.setEntity("templates/entityDTO.java");
+//        templatePath = "/templates/entityDetailDTO.java.ftl";
+//        // 自定义配置会被优先输出
+//        focList.add(new FileOutConfig(templatePath) {
+//            @Override
+//            public String outputFile(TableInfo tableInfo) {
+//                // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
+//                return projectPath + "/hdoc-order/src/main/java/com/insigma/ordercenter/entity/dto"
+//                        + tableInfo.getEntityName() + "DTO" + StringPool.DOT_XML;
+//            }
+//        });
+//        mpg.execute();
     }
 }
