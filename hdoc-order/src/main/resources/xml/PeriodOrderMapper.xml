@@ -24,8 +24,8 @@
             LEFT JOIN t_shop s ON po.shop_id = s.shop_id
         WHERE
             1 =1
-        <if test="periodOrderDTO.periodOrderId != null and periodOrderDTO.periodOrderId != ''">
-            AND po.period_order_id = #{periodOrderDTO.periodOrderId}
+        <if test="periodOrderDTO.periodOrderNo != null and periodOrderDTO.periodOrderNo != ''">
+            AND po.period_order_no = #{periodOrderDTO.periodOrderNo}
         </if>
         <if test="periodOrderDTO.periodOrderType != null">
             AND po.period_order_type = #{periodOrderDTO.periodOrderType}

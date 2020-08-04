@@ -56,9 +56,6 @@ public class SendReceiveInfoVO extends BaseVO{
     @ApiModelProperty(value = "运费")
     private BigDecimal fee;
 
-    @ApiModelProperty(value = "是否异常（0：否，1：是）")
-    private Integer isError;
-
     @ApiModelProperty(value = "异常原因")
     private String errorReason;
 

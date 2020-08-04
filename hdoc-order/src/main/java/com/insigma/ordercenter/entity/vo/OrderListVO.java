@@ -42,6 +42,18 @@ public class OrderListVO extends BaseVO {
     @ApiModelProperty(value = "订单来源")
     private String platformName;
 
+    @ApiModelProperty(value = "详细地址")
+    private String address;
+
+    @ApiModelProperty(value = "城市")
+    private String locationCity;
+
+    @ApiModelProperty(value = "省名称")
+    private String province;
+
+    @ApiModelProperty(value = "收货人备注")
+    private String receiveRemark;
+
     @ApiModelProperty(value = "下单时间")
     @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -92,9 +104,6 @@ public class OrderListVO extends BaseVO {
 
     @ApiModelProperty(value = "运费")
     private BigDecimal fee;
-
-    @ApiModelProperty(value = "是否异常（0：否，1：是）")
-    private Integer isError;
 
     @ApiModelProperty(value = "是否是预约订单（0：否，1：是）")
     private Integer isPeriod;

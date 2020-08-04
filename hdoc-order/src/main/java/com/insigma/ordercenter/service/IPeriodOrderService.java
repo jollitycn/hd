@@ -10,6 +10,7 @@ import com.insigma.ordercenter.entity.PeriodSendReceiveInfo;
 import com.insigma.ordercenter.entity.dto.OrderDTO;
 import com.insigma.ordercenter.entity.dto.PeriodOrderDTO;
 import com.insigma.ordercenter.entity.dto.PeriodOrderStatuDTO;
+import com.insigma.ordercenter.entity.dto.PeriodStatuDTO;
 import com.insigma.ordercenter.entity.vo.*;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,6 +29,8 @@ public interface IPeriodOrderService extends IService<PeriodOrder> {
     IPage<PeriodOrderVO> queryPeriodOrderListPage(Page<PeriodOrderVO> page, PeriodOrderDTO periodOrderDTO);
 
     Boolean updatePeriodOrderStatu(PeriodOrderStatuDTO periodOrderStatuDTO);
+
+    Boolean updatePeriodStatu(PeriodStatuDTO periodStatuDTO);
 
     List<PeriodOrderDetail> getPeriodOrderDetailList(Long periodOrderId);
 

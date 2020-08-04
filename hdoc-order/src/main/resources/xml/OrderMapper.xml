@@ -4,25 +4,30 @@
 
     <select id="queryOrderListPage" resultType="com.insigma.ordercenter.entity.vo.OrderListVO">
         SELECT
-            o.order_id,
-            o.order_no,
-            o.order_status,
-            sp.platform_name,
-            o.create_time,
-            o.review_time,
-            so.send_time,
-            so.receive_name,
-            so.mobile_phone,
-            o.error_reason,
-            o.is_combined,
-            o.is_hand_order
+        o.order_id,
+        o.order_no,
+        o.order_status,
+        sp.platform_name,
+        o.create_time,
+        o.review_time,
+        ( SELECT MIN( tso.send_time ) FROM t_shipping_order tso WHERE tso.shipping_order_id = os.shipping_order_id ) send_time,
+        so.receive_name,
+        so.mobile_phone,
+        o.error_reason,
+        o.is_combined,
+        o.is_hand_order,
+        sr.address,
+        sr.location_city,
+        sr.province,
+        sr.receive_remark
         FROM
-            t_order o
+        t_order o
         LEFT JOIN t_shop sp ON o.shop_id = sp.shop_id
         LEFT JOIN t_order_shipping_order_relation os ON o.order_id = os.order_id
         LEFT JOIN t_shipping_order so ON os.shipping_order_id = so.shipping_order_id
+        LEFT JOIN t_order_send_receive sr ON o.order_id = sr.order_id
         WHERE
-            1=1
+        1 =1
         <if test="orderDTO.orderId != null and orderDTO.orderId != ''">
             AND o.order_id = #{orderDTO.orderId}
         </if>
@@ -121,7 +126,8 @@
     <select id="queryExpressCompany" resultType="com.insigma.ordercenter.entity.vo.ExpressCompanyVO">
         SELECT
             ec.company_name,
-            ec.company_no
+            ec.company_no,
+            ec.express_company_id
         FROM
             t_express_warehouse_relation wr
             LEFT JOIN t_express_company ec ON wr.express_company_id = ec.express_company_id
@@ -167,12 +173,11 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
         <result column="shop_id" property="shopId" jdbcType="BIGINT" />
         <result column="consumer_name" property="consumerName" jdbcType="VARCHAR" />
-        <result column="mobile_phone_order" property="mobilePhoneOrder" jdbcType="VARCHAR" />
+        <result column="mobile_phone" property="mobilePhoneOrder" jdbcType="VARCHAR" />
         <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
         <result column="is_combined" property="isCombined" jdbcType="TINYINT" />
         <result column="origin_order_id" property="originOrderId" jdbcType="VARCHAR" />
         <result column="fee" property="fee" jdbcType="DECIMAL" />
-        <result column="is_error" property="isError" jdbcType="TINYINT" />
         <result column="error_reason" property="errorReason" jdbcType="VARCHAR" />
         <result column="is_period" property="isPeriod" jdbcType="TINYINT" />
         <result column="period_order_id" property="periodOrderId" jdbcType="BIGINT" />
@@ -231,11 +236,10 @@
             o.create_time,
             o.shop_id,
             o.consumer_name,
-            o.mobile_phone_order,
+            o.mobile_phone,
             o.total_price,
             o.is_combined,
             o.fee,
-            o.is_error,
             o.error_reason,
             o.is_period,
             o.period_order_id,

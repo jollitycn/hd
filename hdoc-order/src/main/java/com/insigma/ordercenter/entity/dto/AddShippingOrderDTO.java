@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 public class AddShippingOrderDTO {
 
     @ApiModelProperty(value = "发货单ID")
-    @TableId(value = "shipping_order_id", type = IdType.ID_WORKER)
     private Long shippingOrderId;
 
     @ApiModelProperty(value = "仓库ID ")

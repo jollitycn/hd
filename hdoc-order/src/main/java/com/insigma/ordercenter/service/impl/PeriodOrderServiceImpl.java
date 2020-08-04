@@ -3,12 +3,14 @@ package com.insigma.ordercenter.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.PeriodOrder;
 import com.insigma.ordercenter.entity.PeriodOrderDetail;
 import com.insigma.ordercenter.entity.PeriodOrderOperationLog;
 import com.insigma.ordercenter.entity.PeriodSendReceiveInfo;
 import com.insigma.ordercenter.entity.dto.PeriodOrderDTO;
 import com.insigma.ordercenter.entity.dto.PeriodOrderStatuDTO;
+import com.insigma.ordercenter.entity.dto.PeriodStatuDTO;
 import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.mapper.PeriodOrderMapper;
 import com.insigma.ordercenter.service.*;
@@ -47,7 +49,23 @@ public class PeriodOrderServiceImpl extends ServiceImpl<PeriodOrderMapper, Perio
     public Boolean updatePeriodOrderStatu(PeriodOrderStatuDTO periodOrderStatuDTO) {
         PeriodOrder periodOrder=new PeriodOrder();
         periodOrder.setPeriodOrderId(periodOrderStatuDTO.getPeriodOrderId());
-        periodOrder.setIsStop(periodOrderStatuDTO.getOrderStatus());
+        periodOrder.setOrderStatus(periodOrderStatuDTO.getOrderStatus());
+        int i = baseMapper.updateById(periodOrder);
+        if(i>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean updatePeriodStatu(PeriodStatuDTO periodStatuDTO) {
+        PeriodOrder periodOrder=new PeriodOrder();
+        periodOrder.setPeriodOrderId(periodStatuDTO.getPeriodOrderId());
+        periodOrder.setIsStop(periodStatuDTO.getIsStop());
+        if(periodOrder.getIsStop() == 1){
+            periodOrder.setOrderStatus(Constant.SYS_ONE);
+        }
         int i = baseMapper.updateById(periodOrder);
         if(i>0){
             return true;
