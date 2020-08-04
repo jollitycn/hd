@@ -42,4 +42,6 @@ public interface IPeriodOrderService extends IService<PeriodOrder> {
 
     List<PeriodOrderShippingVO> getPeriodShippingInfo(Long periodOrderId);
 
+    List<?> queryExpressInfo(Long shippingOrderNo);
+
 }

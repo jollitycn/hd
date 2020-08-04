@@ -11,6 +11,7 @@ import com.insigma.ordercenter.entity.dto.OrderSourceDTO;
 import com.insigma.ordercenter.entity.dto.UpdateOrderStatuDTO;
 import com.insigma.ordercenter.entity.vo.*;
 import org.apache.ibatis.annotations.Param;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.util.List;
 
@@ -47,4 +48,7 @@ public interface IOrderService extends IService<Order> {
 
     List<OrderOperationLogVO> queryOrderOperationLogInfo(Long orderId);
 
+    Boolean deleteOrder(Long orderId);
+
+    List<?> queryExpressInfo(Long shippingOrderNo);
 }
