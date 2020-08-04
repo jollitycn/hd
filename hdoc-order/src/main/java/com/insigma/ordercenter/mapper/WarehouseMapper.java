@@ -24,20 +24,20 @@ import java.util.List;
  */
 public interface WarehouseMapper extends BaseMapper<Warehouse> {
 
-    List<WarehouseProductPage> list(Page page, WarehouseProductPageQuery request);
+    List<WarehouseProductPage> list(@Param("page") Page page, @Param("request") WarehouseProductPageQuery request);
 
-    List<WarehouseVo> page(IPage<WarehouseVo> page, WarehouseDTO map);
+    List<WarehouseVo> page(@Param("page") IPage<WarehouseVo> page,@Param("map")  WarehouseDTO map);
 
-    void removeProduct(Integer warehouseId, Integer productId);
+    void removeProduct(@Param("warehouseId") Integer warehouseId,@Param("productId")  Integer productId);
 
-    int getWarningCount(Integer warehouseId, Integer productId);
+    int getWarningCount(@Param("warehouseId") Integer warehouseId,@Param("productId")  Integer productId);
 
-    void updateWarningCount(Integer warehouseId, Integer productId,Integer warningCount);
+    void updateWarningCount(@Param("warehouseId") Integer warehouseId, @Param("productId") Integer productId,@Param("warningCount") Integer warningCount);
 
-    int getWarningCount(String warehouseId, String productId);
+    int getWarningCount(@Param("warehouseId") String warehouseId, @Param("productId") String productId);
 
-    void updateWarningCount(String warehouseId, String productId, String warningCount);
+    void updateWarningCount(@Param("warehouseId") String warehouseId,@Param("productId")  String productId, @Param("warningCount")  String warningCount);
 
-    void removeProduct(String warehouseId, String productId);
+    void removeProduct(@Param("warehouseId") String warehouseId,@Param("productId")  String productId);
 
 }

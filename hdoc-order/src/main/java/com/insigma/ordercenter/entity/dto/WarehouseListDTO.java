@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.entity.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 @ApiModel(value = "仓库列表DTO")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WarehouseListDTO {
 
     /**
