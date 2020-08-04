@@ -42,21 +42,21 @@ public class SysMenuController {
 
     @GetMapping("/getAllMenuList")
     @ApiOperation("查询所有的菜单列表信息")
-    public Result getAllMenuList() {
+    public Result<?> getAllMenuList() {
         List<SysMenuVO> allMenuList = sysMenuService.getAllMenuList();
         return Result.success(allMenuList);
     }
 
     @GetMapping("/listByRoleId/{roleId}")
     @ApiOperation("根据角色获取菜单列表")
-    public Result listByRoleId(@PathVariable Long roleId) {
+    public Result<?> listByRoleId(@PathVariable Long roleId) {
         List<SysMenu> result = sysMenuService.listByRoleId(roleId);
         return Result.success(result);
     }
 
     @GetMapping("/listByUserId/{userId}")
     @ApiOperation("根据账号ID获取菜单列表")
-    public Result listByUserId(@PathVariable Long userId) {
+    public Result<?> listByUserId(@PathVariable Long userId) {
         List<SysMenu> result = sysMenuService.listByUserId(userId);
         userRoleRelationService.listByUserId(userId);
         return Result.success(result);
@@ -64,7 +64,7 @@ public class SysMenuController {
 
     @PostMapping("/addRoleMenuRelatiin")
     @ApiOperation("添加角色和菜单关系信息")
-    public Result addRoleMenuRelatiin(AddMenuQuery addMenuQuery) {
+    public Result<?> addRoleMenuRelatiin(AddMenuQuery addMenuQuery) {
         Boolean aBoolean = roleMenuRelationService.addRoleMenuList(addMenuQuery);
         if(aBoolean){
             return Result.success();
