@@ -8,6 +8,7 @@ import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderProductDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
+import com.insigma.ordercenter.entity.vo.LogisticsVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
 import com.insigma.ordercenter.service.IShippingOrderService;
@@ -15,8 +16,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * <p>
@@ -144,5 +143,14 @@ public class ShippingOrderController extends BaseController{
             return Result.success();
         }
         return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @GetMapping("/queryLogistics/{shippingOrderId}")
+    @ApiOperation("物流查询")
+    public Result queryLogistics(@PathVariable Long shippingOrderId) {
+
+        LogisticsVO result = shippingOrderService.queryLogistics(shippingOrderId);
+
+        return Result.success(result);
     }
 }

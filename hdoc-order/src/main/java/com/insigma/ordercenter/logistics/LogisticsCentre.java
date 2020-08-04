@@ -7,11 +7,11 @@ import com.insigma.ordercenter.entity.dto.CommonProductDTO;
 
 /**
  * @program: hdoc-parent
- * @description: 物流中心服务类
+ * @description: 物流中心
  * @author: XuChao
  * @create: 2020-08-03 15:30
  **/
-public class LogisticsCentreService {
+public class LogisticsCentre {
 
 
     /**
