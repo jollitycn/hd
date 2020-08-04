@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.entity.ExchangeStrategy;
 import com.insigma.ordercenter.entity.dto.AddExchangeStrategyDTO;
 import com.insigma.ordercenter.entity.dto.StrategyParamDTO;
+import com.insigma.ordercenter.entity.dto.UpdateExchangeStrategyDTO;
 import com.insigma.ordercenter.entity.vo.ExchangeOrGiftStrategyVO;
 
 import java.util.List;
@@ -35,4 +36,20 @@ public interface IExchangeStrategyService extends IService<ExchangeStrategy> {
      * @date 2020/7/30 14:02
      */
     void addExchangeStrategy(AddExchangeStrategyDTO req);
+
+    /**
+     * 新增换货策略参数配置
+     *
+     * @param req 参数信息
+     * @author yaoshibin
+     * @date 2020/8/03 17:02
+     */
+    void updateExchangeStrategy(UpdateExchangeStrategyDTO req);
+
+    /**
+     * 获取换货策略详情
+     * @param exchangeStrategyId
+     * @return
+     */
+    ExchangeOrGiftStrategyVO getExchangeStrategy(Long exchangeStrategyId);
 }

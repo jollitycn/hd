@@ -21,7 +21,7 @@ public class PeriodOrderStatuDTO {
     @TableId(value = "period_order_id", type = IdType.ID_WORKER)
     private Long periodOrderId;
 
-    @ApiModelProperty(value = "订单状态（0：进行中，1：已停止，2：已结束）")
+    @ApiModelProperty(value = "订单状态（0：待审核，1：待出库，2：打单出库，3：已完成，4：冻结）")
     private Integer orderStatus;
 
 }

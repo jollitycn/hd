@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * @author Pan Juncai
@@ -22,6 +23,9 @@ public class ExchangeOrGiftStrategyVO extends BaseVO {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
+    @ApiModelProperty(value = "策略id")
+    private Long strategyId;
+
     @ApiModelProperty(value = "主题")
     private String theme;
 
@@ -35,4 +39,28 @@ public class ExchangeOrGiftStrategyVO extends BaseVO {
 
     @ApiModelProperty(value = "是否停用（0：未停用，1：已停用）")
     private Integer isStop;
+
+    @ApiModelProperty(value = "原商品id")
+    private Long oldProductId;
+
+    @ApiModelProperty(value = "新商品id")
+    private Long newProductId;
+
+    @ApiModelProperty(value = "原商品名称")
+    private String oldProductName;
+
+    @ApiModelProperty(value = "新商品名称")
+    private String newProductName;
+
+    @ApiModelProperty(value = "店铺列表")
+    private List<ShopListVO> shopIdList;
+
+    @ApiModelProperty(value = "旧商品编码")
+    private String oldProductNo;
+
+    @ApiModelProperty(value = "新商品编码")
+    private String newProductNo;
+
+    @ApiModelProperty(value = "店铺名称")
+    private String shopName;
 }

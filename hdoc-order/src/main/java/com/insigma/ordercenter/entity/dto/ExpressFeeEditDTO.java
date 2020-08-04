@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.entity.dto;
 
+import com.insigma.ordercenter.entity.ExpressFee;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,8 +16,8 @@ import javax.validation.constraints.NotNull;
  * @date Create in 2020/7/17
  */
 @Data
-@ApiModel(value = "仓库列表DTO")
-public class WarehouseListDTO {
+@ApiModel(value = "承运商列表DTO")
+public class ExpressFeeEditDTO extends ExpressFee {
 
     /**
      * 当前页
@@ -35,10 +36,4 @@ public class WarehouseListDTO {
     @Min(value = 1L, message = "每页最少查询一条数据")
     @Max(value = 100L, message = "查询数量超出限制")
     protected Integer pageSize;
-
-    @ApiModelProperty(value = "承运商名称")
-    private String companyName;
-
-    @ApiModelProperty(value = "承运商编码")
-    private String companyNo;
 }

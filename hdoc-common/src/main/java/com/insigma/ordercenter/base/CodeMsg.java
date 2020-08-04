@@ -48,7 +48,7 @@ public class CodeMsg {
     public static CodeMsg STRATEGY_NOT_EXIST = new CodeMsg(500138,"策略不存在");
     public static CodeMsg SHOP_NOT_EXIST = new CodeMsg(500139,"店铺不存在");
     public static CodeMsg STRATEGY_PARAM_NOT_EXIST = new CodeMsg(500140,"策略参数不存在");
-
+    public static CodeMsg ROLE_USER = new CodeMsg(500141,"角色删除失败，该角色下绑定账号，不允许删除");
     public CodeMsg(int retCode, String message) {
         this.retCode = retCode;
         this.message = message;

@@ -51,8 +51,8 @@ public class ExchangeStrategy implements Serializable {
     @ApiModelProperty(value = "新商品id")
     private Long newProductId;
 
-    @ApiModelProperty(value = "关联的店铺（使用英文逗号分隔）")
-    private String shopIds;
+//    @ApiModelProperty(value = "关联的店铺（使用英文逗号分隔）")
+//    private String shopIds;
 
     @ApiModelProperty(value = "是否停用（0：未停用，1：已停用）")
     private Integer isStop;

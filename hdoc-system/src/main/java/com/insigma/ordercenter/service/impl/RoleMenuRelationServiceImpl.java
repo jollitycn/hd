@@ -1,10 +1,13 @@
 package com.insigma.ordercenter.service.impl;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.entity.RoleMenuRelation;
 import com.insigma.ordercenter.entity.query.AddMenuQuery;
 import com.insigma.ordercenter.mapper.RoleMenuRelationMapper;
 import com.insigma.ordercenter.service.IRoleMenuRelationService;
 import org.springframework.stereotype.Service;
+
+import javax.xml.bind.annotation.W3CDomHandler;
 
 /**
  * <p>
@@ -24,7 +27,10 @@ public class RoleMenuRelationServiceImpl extends ServiceImpl<RoleMenuRelationMap
             return false;
         }
         //先删除，再添加
-        baseMapper.deleteByRoleId(addMenuQuery.getRoleId());
+        QueryWrapper<RoleMenuRelation> wrapper = new QueryWrapper<>();
+        wrapper.eq(RoleMenuRelation.ROLE_ID,addMenuQuery.getRoleId());
+        baseMapper.delete(wrapper);
+
         addMenuQuery.getMenuId().forEach(str -> {
             RoleMenuRelation roleMenuRelation=new RoleMenuRelation();
             roleMenuRelation.setMenuId(str);
