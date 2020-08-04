@@ -29,5 +29,5 @@ public interface PeriodOrderMapper extends BaseMapper<PeriodOrder> {
 
     List<PeriodOrderOperationLogVO> getPeriodOrderOperationLog(@Param("periodOrderId") Long periodOrderId);
 
-    List<PeriodOrderShippingVO> getPeriodShippingInfo(@Param("periodOrderId") Long periodOrderId);
+    List<PeriodOrderShippingVO> getPeriodShippingInfo(@Param("orderId") Long orderId);
 }
