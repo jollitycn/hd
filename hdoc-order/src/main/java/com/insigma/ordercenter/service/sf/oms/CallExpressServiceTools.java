@@ -87,7 +87,7 @@ public class CallExpressServiceTools {
                 request = transport();
                 break;
             case INBOUND:
-                request = expReceSearchOrderResp();
+                request = inbound();
                 break;
             case OUTBOUND:
                 request = outbound();
@@ -238,15 +238,61 @@ String request= "{\n" +
         return request;
     }
 
-    private static String expReceSearchOrderResp() {
-        String request = "";
-        OrderSearchReqDto dto = new OrderSearchReqDto();
-        dto.setCargoDetails(new ArrayList<>());
-        dto.setContactInfoList(new ArrayList<>());
-        dto.setOrderId("SF7444407670710");
-        dto.setLanguage("zh_CN");
-        dto.setSearchType(1);
-        request = JSON.toJSONString(dto);
+    private static String inbound() {
+//        {"code":"200","message":"操作成功","model":[{"code":"200","errMsg":null,"sfOrderNo":"IB569100677344501338-100","extenSystemOrderNo":"11000853401258","transactionId":null}],"success":true}
+        String request = "{\"supplierCode\": \"CARREFOUR\",\n" +
+                "\"warehouseCode\": \"P024CSB\",\n" +
+                "\"sfOrderType\": \"PI\",\n" +
+                "\"licensePlateNumber\": \"221\",\n" +
+                "\"orderTime\": \"2018-09-20 15:50:50\",\n" +
+                "\"distributionType\": \"Y\",\n" +
+                "\"tradePlatform\": \"JD\",\n" +
+                "\"erpOrder\": \"11000853401258\",\n" +
+                "\"userDef1\": \"\",\n" +
+                "\"item\": [{\n" +
+                "\"lotatt02\": \"2018-09-20 15:50:50\",\n" +
+                "\"qtyUm\": \"EA\",\n" +
+                "\"lotatt03\": \"2018-09-20 15:50:50\",\n" +
+                "\"lotatt01\": \"2018-09-20 15:50:50\",\n" +
+                "\"usetItemDef4\": \"\",\n" +
+                "\"usetItemDef3\": \"\",\n" +
+                "\"usetItemDef2\": \"\",\n" +
+                "\"inventoryStatus\": \"10\",\n" +
+                "\"lotatt05\": \"1234\",\n" +
+                "\"usetItemDef1\": \"\",\n" +
+                "\"remark\": \"\",\n" +
+                "\"erpOrderLineNum\": \"123123\",\n" +
+                "\"lot\": \"123\",\n" +
+                "\"expirationTime\": 6,\n" +
+                "\"price\": 11,\n" +
+                "\"qty\": \"2616\",\n" +
+                "\"skuNo\": \"LF15050041001\",\n" +
+                "\"usetItemDef8\": \"\",\n" +
+                "\"usetItemDef7\": \"\",\n" +
+                "\"usetItemDef6\": \"\",\n" +
+                "\"usetItemDef5\": \"\"\n" +
+                "}],\n" +
+                "\"tradeOrder\": \"111\",\n" +
+                "\"originalNo\": \"\",\n" +
+                "\"userDef8\": \"\",\n" +
+                "\"userDef6\": \"\",\n" +
+                "\"requirement\": \"\",\n" +
+                "\"userDef7\": \"\",\n" +
+                "\"userDef4\": \"\",\n" +
+                "\"userDef5\": \"\",\n" +
+                "\"userDef2\": \"\",\n" +
+                "\"buyer\": \"\",\n" +
+                "\"driverCalls\": \"\",\n" +
+                "\"erpOrderType\": \"10\",\n" +
+                "\"userDef3\": \"\",\n" +
+                "\"buyerPhone\": \"\",\n" +
+                "\"driver\": \"\",\n" +
+                "\"expectDate\": \"2018-09-20 15:50:50\",\n" +
+                "\"customer\": {\n" +
+                "\"companyCode\": \"7550057640\",\n" +
+                "\"customerMonthlyCard\": \"7550057640\"\n" +
+                "}\n" +
+                "}";
         return request;
     }
 
@@ -290,7 +336,7 @@ String request= "{\n" +
                 "        {}" +
                 "    ]," +
                 "    \"paymentDistrict\": \"大兴区\"," +
-                "    \"erpOrder\": \"00200703840109\"" +
+                "    \"erpOrder\": \"00200703840110\"" +
                 "}";
         return request;
     }
@@ -340,7 +386,6 @@ String request= "{\n" +
         request = JSON.toJSONString(dto);
         return request;
     }
-
 
     public static String getMsgDigest(String msgData, String timeStamp, String md5Key) throws UnsupportedEncodingException {
         String msgDigest = VerifyCodeUtil.md5EncryptAndBase64(URLEncoder.encode(msgData + timeStamp + md5Key, "UTF-8"));

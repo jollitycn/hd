@@ -1,12 +1,6 @@
-package com.insigma.ordercenter.service.sf.oms;
+package sf.oms;
 
-
-import com.insigma.ordercenter.logistics.sf.oms.AESCipher;
-import com.insigma.ordercenter.logistics.sf.oms.HmacSha512CoderFactory;
-
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.UUID;
+import com.insigma.ordercenter.service.sf.oms.OMSServiceCode;
 
 public class Main {
 	public static final String UTF_8 = "UTF-8";
@@ -14,7 +8,7 @@ public class Main {
 	private static  final String AES256KEY="alcTaVtXvKtuOfc9ZyC8rEc8j6Hzogmg";
     private static  final String HMACSHA512="W0b4XVyNzMaO9u0QZ3KwilcVbeAv6sN6";
 	public static void main(String[] args) throws Exception{
-	    Demo.demo("test",OMSServiceCode.TRANSPORT);
+	    Demo.demo("test", OMSServiceCode.TRANSPORT);
 //
 //
 //        String str = "!@#$%^&*(测试内容";

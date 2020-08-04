@@ -1,13 +1,16 @@
-package com.insigma.ordercenter.service.sf.oms;
+package sf.oms;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.UUID;
 
 import com.insigma.ordercenter.logistics.sf.oms.AESCipher;
 import com.insigma.ordercenter.logistics.sf.oms.HmacSha512CoderFactory;
 import com.insigma.ordercenter.logistics.sf.oms.RequestBean;
+import com.insigma.ordercenter.service.sf.oms.AES256CipherExternalFactory;
+import com.insigma.ordercenter.service.sf.oms.CallExpressServiceTools;
+import com.insigma.ordercenter.service.sf.oms.OMSServiceCode;
+import com.insigma.ordercenter.service.sf.oms.sfmd5;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
@@ -261,18 +264,18 @@ public class Demo2 {
 	//source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_TRANSPORT);
 //		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.ROUTE_QUERY);
 //		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.QUERY_WAYBILL);
-//		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.INBOUND);
+ 	source = CallExpressServiceTools.packageMsgData(OMSServiceCode.INBOUND);
 //		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_INBOUND);
 //		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.CANCEL_OUTBOUND);
 //		source = CallExpressServiceTools.packageMsgData(OMSServiceCode.COMMODITY_INFO);
-		//Demo2.demo(OMSServiceCode.OUTBOUND);
-
-		//Demo2.demo(OMSServiceCode.ROUTE_QUERY);
-		// 	 Demo2.demo(OMSServiceCode.OUTBOUND);
+		//sf.oms.Demo2.demo(OMSServiceCode.OUTBOUND);
+		 Demo2.demo(OMSServiceCode.INBOUND);
+		//sf.oms.Demo2.demo(OMSServiceCode.ROUTE_QUERY);
+		 //	 sf.oms.Demo2.demo(OMSServiceCode.OUTBOUND);
    //{"sfOrderNo":"OB569100647279728026-100","erpOrder":"00200703840107","code":"200","errMsg":"success"}}
-		//	Demo2.demo(OMSServiceCode.TRANSPORT);
-		// Demo2.demo(OMSServiceCode.OUTBOUND_CONFIRM);
-		Demo2.demo(OMSServiceCode.CANCEL_OUTBOUND);
+		//	sf.oms.Demo2.demo(OMSServiceCode.TRANSPORT);
+		// sf.oms.Demo2.demo(OMSServiceCode.OUTBOUND_CONFIRM);
+		//sf.oms.Demo2.demo(OMSServiceCode.CANCEL_OUTBOUND);
 
 	}
 

@@ -1,4 +1,4 @@
-package com.insigma.ordercenter.service.sf.oms;
+package sf.oms;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import com.insigma.ordercenter.logistics.sf.oms.AESCipher;
 import com.insigma.ordercenter.logistics.sf.oms.HmacSha512CoderFactory;
 import com.insigma.ordercenter.logistics.sf.oms.RequestBean;
+import com.insigma.ordercenter.service.sf.oms.OMSServiceCode;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
@@ -38,7 +39,7 @@ public class Demo {
 	 * @param source 业务报文
 	 * @throws IOException
 	 */
-	public static void demo(String source,OMSServiceCode method) throws IOException {
+	public static void demo(String source, OMSServiceCode method) throws IOException {
 
 		// STEP.1 业务报文urlencode
 		String urlSource = URLEncoder.encode(source, "UTF-8");
