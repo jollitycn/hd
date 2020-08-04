@@ -16,7 +16,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -32,13 +31,13 @@ import java.util.List;
 @Api(tags = {"商品管理-xuchao"})
 public class ProductController extends BaseController {
 
-    @Resource
+    @Autowired
     private IProductService productService;
 
     @Autowired
     private IProductComboService productComboService;
 
-    @Resource
+    @Autowired
     private IWarehouseProductRelationService warehouseProductRelationService;
 
 
