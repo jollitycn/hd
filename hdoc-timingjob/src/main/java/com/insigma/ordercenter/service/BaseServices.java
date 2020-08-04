@@ -12,11 +12,11 @@ import com.insigma.ordercenter.utils.SpringContextUtils;
 public class BaseServices {
 
 
-    protected static PersonnelFeignService personnelFeignService;
+    protected static OrderFeignService orderFeignService;
 
 
     static {
-        personnelFeignService = SpringContextUtils.getBean(PersonnelFeignService.class);
+        orderFeignService = SpringContextUtils.getBean(OrderFeignService.class);
     }
 
 }

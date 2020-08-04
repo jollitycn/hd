@@ -13,6 +13,7 @@ import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderProductDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
 import com.insigma.ordercenter.entity.vo.EditOrderProductDTO;
+import com.insigma.ordercenter.entity.vo.LogisticsVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
 import com.insigma.ordercenter.mapper.*;
@@ -243,6 +244,19 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
 
         refundMapper.insert(refund);
         return  this.updateById(shippingOrder);
+    }
+
+    /**
+     * 物流查询
+     *
+     * @param shippingOrderId
+     * @return
+     */
+    @Override
+    public LogisticsVO queryLogistics(Long shippingOrderId) {
+        //TODO
+
+        return null;
     }
 
 

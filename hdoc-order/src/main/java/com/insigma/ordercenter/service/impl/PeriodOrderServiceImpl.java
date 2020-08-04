@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.constant.Constant;
-import com.insigma.ordercenter.entity.PeriodOrder;
-import com.insigma.ordercenter.entity.PeriodOrderDetail;
-import com.insigma.ordercenter.entity.PeriodOrderOperationLog;
-import com.insigma.ordercenter.entity.PeriodSendReceiveInfo;
+import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.entity.dto.PeriodOrderDTO;
 import com.insigma.ordercenter.entity.dto.PeriodOrderStatuDTO;
 import com.insigma.ordercenter.entity.dto.PeriodStatuDTO;
@@ -39,6 +36,9 @@ public class PeriodOrderServiceImpl extends ServiceImpl<PeriodOrderMapper, Perio
 
     @Resource
     private IPeriodOrderOperationLogService periodOrderOperationLogService;
+
+    @Resource
+    private IShippingOrderService shippingOrderService;
 
     @Override
     public IPage<PeriodOrderVO> queryPeriodOrderListPage(Page<PeriodOrderVO> page, PeriodOrderDTO periodOrderDTO) {
@@ -108,4 +108,14 @@ public class PeriodOrderServiceImpl extends ServiceImpl<PeriodOrderMapper, Perio
         return baseMapper.getPeriodShippingInfo(periodOrderId);
     }
 
+    @Override
+    public List<?> queryExpressInfo(Long shippingOrderNo) {
+        QueryWrapper<ShippingOrder> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("shipping_order_no",shippingOrderNo);
+        ShippingOrder shippingOrder = shippingOrderService.getOne(queryWrapper);
+        if(null != shippingOrder && shippingOrder.getExpressNo() != null){
+            //TODO 调用物流接口，用物流单号查询物流信息
+        }
+        return null;
+    }
 }

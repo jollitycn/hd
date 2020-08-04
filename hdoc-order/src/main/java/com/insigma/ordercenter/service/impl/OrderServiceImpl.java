@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,6 +16,7 @@ import com.insigma.ordercenter.mapper.OrderMapper;
 import com.insigma.ordercenter.service.*;
 import com.insigma.ordercenter.utils.DateUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -94,7 +96,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             orderSendReceiveService.save(sendReceiveInfo);
 
             //新增订单明细信息
-            if(null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size()>0){
+            if (null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size() > 0) {
                 sendReceiveInfoVO.getOrderDetails().forEach(OrderDetail -> {
                     OrderDetail.setOrderId(order.getOrderId());
                     orderDetailService.save(OrderDetail);
@@ -123,6 +125,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public List<ExpressCompanyVO> queryExpressCompany(Long warehouseId) {
         return baseMapper.queryExpressCompany(warehouseId);
     }
+
+
 
     @Override
     public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO) {
@@ -208,14 +212,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (null != shop) {
             platformNo = shop.getPlatformNo();
         }
-        String timestamp = DateUtils.formatLocalDateTimeToString(LocalDateTime.now(),DateUtils.TIME_PATTERN_MILLISECOND);
+        String timestamp = DateUtils.formatLocalDateTimeToString(LocalDateTime.now(), DateUtils.TIME_PATTERN_MILLISECOND);
         String randomNum = String.valueOf(RandomUtils.nextInt(999));
         if (randomNum.length() == 1) {
-            randomNum = "00" +randomNum;
+            randomNum = "00" + randomNum;
         } else if (randomNum.length() == 2) {
-            randomNum = "0" +randomNum;
+            randomNum = "0" + randomNum;
         }
-        String orderNo = platformNo + "00" + timestamp +randomNum;
+        String orderNo = platformNo + "00" + timestamp + randomNum;
         return orderNo;
     }
 
@@ -224,5 +228,38 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             Integer s = RandomUtils.nextInt(999);
             System.out.println(s);
         }
+    }
+
+    @Override
+    public Boolean deleteOrder(Long orderId) {
+        try{
+            //删除订单明细表信息
+            QueryWrapper<OrderDetail> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("order_id", orderId);
+            orderDetailService.remove(queryWrapper);
+
+            //删除订单收发人信息表信息
+            QueryWrapper<OrderSendReceive> orderSendReceiveQueryWrapper = new QueryWrapper<>();
+            orderSendReceiveQueryWrapper.eq("order_id", orderId);
+            orderSendReceiveService.remove(orderSendReceiveQueryWrapper);
+
+            //删除订单表信息
+            orderService.removeById(orderId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public List<T> queryExpressInfo(Long shippingOrderNo) {
+        QueryWrapper<ShippingOrder> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("shipping_order_no",shippingOrderNo);
+        ShippingOrder shippingOrder = shippingOrderService.getOne(queryWrapper);
+        if(null != shippingOrder && shippingOrder.getExpressNo() != null){
+            //TODO 调用物流接口，用物流单号查询物流信息
+        }
+        return null;
     }
 }

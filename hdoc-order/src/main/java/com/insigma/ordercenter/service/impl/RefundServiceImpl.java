@@ -11,10 +11,13 @@ import com.insigma.ordercenter.entity.dto.RefundDTO;
 import com.insigma.ordercenter.entity.vo.RefundDetailVO;
 import com.insigma.ordercenter.entity.vo.RefundVO;
 import com.insigma.ordercenter.mapper.RefundMapper;
+import com.insigma.ordercenter.service.IOrderDetailService;
 import com.insigma.ordercenter.service.IRefundService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -26,6 +29,10 @@ import java.time.LocalDateTime;
  */
 @Service
 public class RefundServiceImpl extends ServiceImpl<RefundMapper, Refund> implements IRefundService {
+
+    @Resource
+    private IOrderDetailService orderDetailService;
+
 
     @Override
     public IPage<RefundVO> getRefundList(RefundDTO refundDTO) {
@@ -48,9 +55,10 @@ public class RefundServiceImpl extends ServiceImpl<RefundMapper, Refund> impleme
     @Override
     public RefundDetailVO getRefundDetail(Long refundId) {
 
-        //TODO
+        RefundDetailVO result=baseMapper.getRefundDetail(refundId);
+        result.setProductList(orderDetailService.getOrderDetail(result.getOrderId()));
 
-        return null;
+        return result;
     }
 
     /**
@@ -62,11 +70,24 @@ public class RefundServiceImpl extends ServiceImpl<RefundMapper, Refund> impleme
     @Override
     public boolean addRefund(AddRefundDTO addRefundDTO) {
 
-        Refund refund=new Refund();
-        BeanUtil.copyProperties(addRefundDTO,refund);
-        refund.setCreateTime(LocalDateTime.now());
+        Long refundId=addRefundDTO.getRefundId();
 
-        return this.save(refund);
+        List<Long> productIdList=addRefundDTO.getProductIdList();
+        //处理退货的商品
+        //TODO
+
+        Refund refund=new Refund();
+
+        //新增退货单
+        if(null==refundId){
+            refund.setCreateTime(LocalDateTime.now());
+            //编辑
+        }else {
+            refund=this.getById(refundId);
+        }
+        BeanUtil.copyProperties(addRefundDTO,refund);
+
+        return null==refundId?this.save(refund):this.updateById(refund);
     }
 
     /**

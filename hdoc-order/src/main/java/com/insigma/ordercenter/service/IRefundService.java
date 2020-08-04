@@ -33,7 +33,7 @@ public interface IRefundService extends IService<Refund> {
     RefundDetailVO getRefundDetail(Long refundId);
 
     /**
-     * 添加退货单
+     * 添加/编辑退货单
      * @param addRefundDTO
      * @return
      */

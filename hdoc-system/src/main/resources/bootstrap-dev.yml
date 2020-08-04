@@ -4,8 +4,8 @@ spring:
     nacos:
       discovery:
         server-addr: 100.168.2.115:8848
-        namespace: fd570590-90fc-498d-900b-85a8ebc79208
-        group: AH
+        namespace: 3d42c062-ec69-4007-ac39-ee54c98f68ec
+        group: hdoc
       config:
         server-addr: 100.168.2.115:8848
         file-extension: yml

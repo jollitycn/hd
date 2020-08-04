@@ -27,4 +27,23 @@
         LEFT JOIN t_warehouse c ON a.warehouse_id = c.warehouse_id
         LEFT JOIN t_express_company d ON c.express_company_id=d.express_company_id
     </select>
+
+    <select id="getRefundDetail" resultType="com.insigma.ordercenter.entity.vo.RefundDetailVO">
+        SELECT
+            a.refund_id,
+            a.order_id,
+            a.warehouse_id,
+            c.warehouse_name,
+            a.create_time,
+            a.audit_status,
+            a.audit_id,
+            b.user_name,
+            a.reason,
+            a.`status`
+        FROM
+            t_refund a
+        LEFT JOIN sys_user b ON a.audit_id = b.user_id
+        LEFT JOIN t_warehouse c ON a.warehouse_id = c.warehouse_id
+        WHERE a.refund_id=#{refundId}
+    </select>
 </mapper>

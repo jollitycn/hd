@@ -83,67 +83,49 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
         Long productId=productAddDTO.getProductId();
 
+        Product product = new Product();
+
         //新增商品
         if(null==productId){
 
-            Product product = new Product();
             BeanUtils.copyProperties(productAddDTO, product);
             product.setIsPutOn(Constant.SYS_ONE);
             product.setCreateTime(LocalDateTime.now());
 
-            //处理预约发货参数
-            Integer isReserve=productAddDTO.getIsReserve();
-            Integer cycle=productAddDTO.getCycle();
-            if(Constant.SYS_ONE==isReserve.intValue()&&Constant.SYS_FOUR==cycle.intValue()){
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                product.setReserveTime(LocalDateTime.parse(productAddDTO.getReserveTime(),formatter));
-            }
-
-            //写入商品标签
-            List<String> tagCodeList=productAddDTO.getTagList();
-            if(CollUtil.isNotEmpty(tagCodeList)){
-                for (String tagCode:tagCodeList) {
-                    Tag tag=new Tag();
-                    tag.setTag(tagCode);
-                    tag.setProductId(product.getProductId());
-                    tagMapper.insert(tag);
-                }
-            }
-
             return this.save(product);
         }else{
             //编辑商品
-            Product product = getById(productId);
+            product = getById(productId);
             BeanUtils.copyProperties(productAddDTO, product);
-
-            //处理预约发货参数
-            Integer isReserve=productAddDTO.getIsReserve();
-            Integer cycle=productAddDTO.getCycle();
-            if(Constant.SYS_ONE==isReserve.intValue()&&Constant.SYS_FOUR==cycle.intValue()){
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                product.setReserveTime(LocalDateTime.parse(productAddDTO.getReserveTime(),formatter));
-            }
 
             //删除旧的商品标签
             QueryWrapper queryWrapper=new QueryWrapper();
             queryWrapper.eq(Tag.PRODUCT_ID,productId);
             tagMapper.delete(queryWrapper);
 
-            //写入商品标签
-            List<String> tagCodeList=productAddDTO.getTagList();
-            if(CollUtil.isNotEmpty(tagCodeList)){
-                for (String tagCode:tagCodeList) {
-                    Tag tag=new Tag();
-                    tag.setTag(tagCode);
-                    tag.setProductId(product.getProductId());
-                    tagMapper.insert(tag);
-                }
-            }
-
-            return this.updateById(product);
         }
 
+        //处理预约发货参数
+        Integer isReserve=productAddDTO.getIsReserve();
+        Integer cycle=productAddDTO.getCycle();
+        if(Constant.SYS_ONE==isReserve.intValue()&&Constant.SYS_FOUR==cycle.intValue()){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            product.setReserveTime(LocalDateTime.parse(productAddDTO.getReserveTime(),formatter));
+        }
 
+        //写入商品标签
+        List<String> tagCodeList=productAddDTO.getTagList();
+        if(CollUtil.isNotEmpty(tagCodeList)){
+            for (String tagCode:tagCodeList) {
+                Tag tag=new Tag();
+                tag.setTag(tagCode);
+                tag.setProductId(product.getProductId());
+                tagMapper.insert(tag);
+            }
+        }
+
+        //保存或者删除
+        return productId==null?this.save(product):this.updateById(product);
     }
 
 
