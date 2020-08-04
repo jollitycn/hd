@@ -4,13 +4,12 @@ package com.insigma.ordercenter.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
-import com.insigma.ordercenter.controller.BaseController;
 
-import com.insigma.ordercenter.entity.dto.ExpressFeeAddDTO;
-import com.insigma.ordercenter.entity.dto.ExpressFeeEditDTO;
 import com.insigma.ordercenter.entity.dto.ExpressFeePageDTO;
+import com.insigma.ordercenter.entity.dto.ExpressFeeSaveDTO;
 import com.insigma.ordercenter.entity.vo.ExpressFeeDetailVO;
 import com.insigma.ordercenter.entity.vo.ExpressFeePageVO;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -19,8 +18,7 @@ import javax.validation.Valid;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
-import com.insigma.ordercenter.controller.BaseController;
- import com.insigma.ordercenter.service.IExpressFeeService;
+import com.insigma.ordercenter.service.IExpressFeeService;
 
 /**
  * <p>
@@ -32,6 +30,7 @@ import com.insigma.ordercenter.controller.BaseController;
  */
 @RestController
 @RequestMapping("/express-fee")
+@Api(tags = {"物流报价表"})
 public class ExpressFeeController extends BaseController {
  @Resource
  private IExpressFeeService iExpressFeeService;
@@ -45,24 +44,13 @@ public class ExpressFeeController extends BaseController {
 
  @PostMapping("/add")
  @ApiOperation(value = "新增")
- public Result<?> add(@Valid @RequestBody ExpressFeeAddDTO expressFeeAddDTO) {
+ public Result<?> add(@Valid @RequestBody ExpressFeeSaveDTO expressFeeAddDTO) {
   boolean status = iExpressFeeService.add(expressFeeAddDTO);
 
   if (status) {
    return Result.success();
   } else {
    return Result.error(CodeMsg.DATA_INSERT_ERROR);
-  }
- }
-
- @PutMapping("/edit")
- @ApiOperation(value = "编辑")
- public Result<?> edit(@Valid @RequestBody ExpressFeeEditDTO expressFeeEditDTO) {
-  boolean status = iExpressFeeService.edit(expressFeeEditDTO);
-  if (status) {
-   return Result.success();
-  } else {
-   return Result.error(CodeMsg.DATA_UPDATE_ERROR);
   }
  }
 
