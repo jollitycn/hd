@@ -13,7 +13,7 @@ import lombok.Data;
 public class ShopListVO {
 
     @ApiModelProperty("店铺id")
-    private Long shopId;
+    private String shopId;
 
     @ApiModelProperty("店铺名称")
     private String shopName;

@@ -90,6 +90,7 @@ public class ExchangeStrategyServiceImpl extends ServiceImpl<ExchangeStrategyMap
 
         // 修改参数关联的店铺
         QueryWrapper<ParamShop> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(ParamShop.PARAM_TYPE,1);
         queryWrapper.eq(ParamShop.PARAM_ID,exchangeStrategy.getExchangeStrategyId());
         paramShopService.remove(queryWrapper);
 
