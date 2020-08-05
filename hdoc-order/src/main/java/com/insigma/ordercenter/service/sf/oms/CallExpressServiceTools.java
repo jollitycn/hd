@@ -247,7 +247,7 @@ String request= "{\n" +
                 "\"orderTime\": \"2018-09-20 15:50:50\",\n" +
                 "\"distributionType\": \"Y\",\n" +
                 "\"tradePlatform\": \"JD\",\n" +
-                "\"erpOrder\": \"11000853401258\",\n" +
+                "\"erpOrder\": \""+System.currentTimeMillis()+"\",\n" +
                 "\"userDef1\": \"\",\n" +
                 "\"item\": [{\n" +
                 "\"lotatt02\": \"2018-09-20 15:50:50\",\n" +

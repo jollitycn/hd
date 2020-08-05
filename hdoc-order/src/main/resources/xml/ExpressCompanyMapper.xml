@@ -24,7 +24,7 @@
             AND ex.company_no like #{companyNo}
         </if>
         <if test="expressCompanyListDTO.isStop != null">
-            AND ex.is_stop = #{orderSource.isStop}
+            AND ex.is_stop = #{expressCompanyListDTO.isStop}
         </if>
     </select>
 </mapper>
