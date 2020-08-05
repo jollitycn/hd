@@ -91,9 +91,15 @@ public class SFOMSExpressController extends BaseController {
         for (String reqStr: body) {
             if (!StringUtils.isEmpty(reqStr)) {
                 JSONObject obj = JSON.parseObject(reqStr);
+
                 Object wayBillNo = obj.get("wayBillNo");
                 if(wayBillNo!=null) {
-                    redisUtil.hset("sfoms.callback", wayBillNo.toString(), reqStr);
+                    redisUtil.hset("sfoms:callback:out", wayBillNo.toString(), reqStr);
+                }else {
+                    Object warehouseCode = obj.get("warehouserCode");
+                    if(warehouseCode!=null) {
+                        redisUtil.hset("sfoms:callback:in", warehouseCode.toString(), reqStr);
+                    }
                 }
             }
         }
@@ -107,18 +113,36 @@ public class SFOMSExpressController extends BaseController {
     @GetMapping("/outboundConfirm/{wayBillNo}")
     @ApiOperation("outboundConfirm")
     public Result outboundConfirm(@PathVariable String wayBillNo) throws Exception {
-        return Result.success(redisUtil.hget("sfoms.callback", wayBillNo));
+        return Result.success(redisUtil.hget("sfoms:callback:out", wayBillNo));
     }
     @GetMapping("/outboundConfirms/")
     @ApiOperation("outboundConfirms")
     public Result outboundConfirms(HttpServletRequest request) throws Exception {
-        return Result.success(redisUtil.hmget("sfoms.callback"));
+        return Result.success(redisUtil.hmget("sfoms:callback:out"));
     }
 
     @GetMapping("/outboundConfirmRemove/{wayBillNo}")
     @ApiOperation("outboundConfirmRemove")
     public Result outboundConfirmRemove(@PathVariable String wayBillNo) throws Exception {
-        redisUtil.hdel("sfoms.callback" , wayBillNo);
+        redisUtil.hdel("sfoms:callback:out" , wayBillNo);
+        return Result.success();
+    }
+
+    @GetMapping("/inboundConfirm/{warehouserCode}")
+    @ApiOperation("inboundConfirm")
+    public Result inboundConfirm(@PathVariable String warehouserCode) throws Exception {
+        return Result.success(redisUtil.hget("sfoms:callback:in", warehouserCode));
+    }
+    @GetMapping("/inboundConfirms/")
+    @ApiOperation("inboundConfirms")
+    public Result inboundConfirms(HttpServletRequest request) throws Exception {
+        return Result.success(redisUtil.hmget("sfoms:callback:in"));
+    }
+
+    @GetMapping("/inboundConfirmRemove/{wayBillNo}")
+    @ApiOperation("inboundConfirmRemove")
+    public Result inboundConfirmRemove(@PathVariable String wayBillNo) throws Exception {
+        redisUtil.hdel("sfoms:callback:in" , wayBillNo);
         return Result.success();
     }
 
