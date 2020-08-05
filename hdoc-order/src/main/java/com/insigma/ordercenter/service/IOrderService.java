@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.insigma.ordercenter.entity.dto.AddShippingOrderResultDTO;
-import com.insigma.ordercenter.entity.dto.OrderDTO;
-import com.insigma.ordercenter.entity.dto.OrderSourceDTO;
-import com.insigma.ordercenter.entity.dto.UpdateOrderStatuDTO;
+import com.insigma.ordercenter.entity.dto.*;
 import com.insigma.ordercenter.entity.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.formula.functions.T;
@@ -51,4 +48,6 @@ public interface IOrderService extends IService<Order> {
     Boolean deleteOrder(Long orderId);
 
     List<?> queryExpressInfo(Long shippingOrderNo);
+
+    Boolean shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO);
 }

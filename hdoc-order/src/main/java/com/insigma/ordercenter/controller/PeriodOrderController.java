@@ -3,6 +3,7 @@ package com.insigma.ordercenter.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.PeriodOrder;
 import com.insigma.ordercenter.entity.PeriodOrderDetail;
@@ -55,7 +56,11 @@ public class PeriodOrderController extends BaseController {
     @ApiOperation(value = "审单查询商品，以及仓库列表信息")
     public Result<?> updatePeriodOrderStatu(@Valid PeriodOrderStatuDTO periodOrderStatuDTO) {
         Boolean aBoolean = periodOrderService.updatePeriodOrderStatu(periodOrderStatuDTO);
-        return Result.success(aBoolean);
+        if(aBoolean){
+            return Result.success();
+        }else{
+            return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+        }
     }
 
 

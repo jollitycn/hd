@@ -80,6 +80,9 @@ package com.insigma.ordercenter.entity;
     @ApiModelProperty(value = "店铺过滤策略是否启用（0-未启用，1-已启用）")
     private int strategyStatus;
 
+    private String cName;
+    private String cPhone;
+    private String sAddr;
 
     public static final String SHOP_ID = "shop_id";
 

@@ -23,5 +23,8 @@
         <if test="companyNo != null and companyNo != ''">
             AND ex.company_no like #{companyNo}
         </if>
+        <if test="expressCompanyListDTO.isStop != null">
+            AND ex.is_stop = #{expressCompanyListDTO.isStop}
+        </if>
     </select>
 </mapper>

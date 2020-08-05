@@ -91,4 +91,7 @@ public class ShippingOrder implements Serializable {
     @ApiModelProperty(value = "运费")
     private BigDecimal expressFee;
 
+    @ApiModelProperty(value = "订单ID")
+    private Long orderId;
+
 }

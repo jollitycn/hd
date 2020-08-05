@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -7,23 +8,31 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.constant.Constant;
+import com.insigma.ordercenter.constant.OrderStatus;
 import com.insigma.ordercenter.entity.*;
-import com.insigma.ordercenter.entity.dto.AddShippingOrderResultDTO;
-import com.insigma.ordercenter.entity.dto.OrderDTO;
-import com.insigma.ordercenter.entity.dto.UpdateOrderStatuDTO;
+import com.insigma.ordercenter.entity.dto.*;
 import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.mapper.OrderMapper;
 import com.insigma.ordercenter.service.*;
 import com.insigma.ordercenter.utils.DateUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.poi.ss.formula.functions.T;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendCallback;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.common.RemotingHelper;
+import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -58,6 +67,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Autowired
     private IShopService shopService;
+
+    @Autowired
+    private DefaultMQProducer producer;
 
     @Override
     public IPage<OrderListVO> queryOrderListPage(Page<OrderListVO> page, OrderDTO orderDTO) {
@@ -127,6 +139,137 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
 
+    @Override
+    public Boolean shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO) {
+        //提供修改订单的接口，在发货单状态改变的时候，调用修改订单状态接口
+        //发货单状态（0：待出库，1：待取货，2：已发货，3：冻结，4：取消 5：拒收 6:异常 7：已完成）
+        //订单状态：订单状态（0：新建状态，1：手动审核状态，2：待审核状态，3：审核异常状态，4：待出库状态，
+        //      5：已出库状态，6：冻结状态，7：发货异常状态，8：已完成状态，9：取消状态）
+        //取消
+        AtomicReference<Boolean> flag = new AtomicReference<>(true);
+        AtomicReference<Integer> count = new AtomicReference<>(0);
+        //完成
+        AtomicReference<Boolean> slag = new AtomicReference<>(true);
+        AtomicReference<Integer> completeCount = new AtomicReference<>(0);
+        //第一步：随着发货单状态，修改订单状态
+        if(null == updateOrderStatuDTO.getOrderId()){
+            return false;
+        }
+        List<ShippingOrderCancelVO> shippingOrderCancelVOS = orderMapper.cancelOrder(updateOrderStatuDTO.getOrderId());
+        shippingOrderCancelVOS.forEach(ShippingOrderCancelVO -> {
+
+            //当有一个发货单为已发货状态，订单状态为已出库状态
+            if(ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FIVE){
+                UpdateOrderStatuDTO orderStatuDTO = new UpdateOrderStatuDTO();
+                orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
+                //订单状态 2 为已发货
+                orderStatuDTO.setOrderStatus(OrderStatus.ORDER_TWO);
+                orderService.updateOrderStatu(orderStatuDTO);
+                return;
+            }
+
+            //当有一个发货单为拒收时，订单状态为冻结
+            //异常时，订单状态不变
+            //冻结时，是由订单状态引起的，发货单状态冻结
+            if(ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FIVE ){
+                UpdateOrderStatuDTO orderStatuDTO = new UpdateOrderStatuDTO();
+                orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
+                //订单状态 6 为冻结
+                orderStatuDTO.setOrderStatus(OrderStatus.ORDER_SIX);
+                orderService.updateOrderStatu(orderStatuDTO);
+                return;
+            }
+
+            //当所有的发货单为已完成状态，订单状态为已完成
+            if(ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FOUR){
+                slag.set(false);
+            }else {
+                completeCount.getAndSet(completeCount.get() + 1);
+            }
+
+            //当所有的发货单为取消时，订单状态为取消
+            if(ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FOUR){
+                flag.set(false);
+            }else {
+                count.getAndSet(count.get() + 1);
+            }
+        });
+        if (flag.get() && shippingOrderCancelVOS.size() == count.get()) {
+            UpdateOrderStatuDTO orderStatuDTO = new UpdateOrderStatuDTO();
+            orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
+            //订单状态 9 为取消
+            orderStatuDTO.setOrderStatus(OrderStatus.ORDER_NINE);
+            orderService.updateOrderStatu(orderStatuDTO);
+        }
+
+        if (slag.get() && shippingOrderCancelVOS.size() == completeCount.get()) {
+            UpdateOrderStatuDTO orderStatuDTO = new UpdateOrderStatuDTO();
+            orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
+            //订单状态 8 为已完成
+            orderStatuDTO.setOrderStatus(OrderStatus.ORDER_EIGHT);
+            orderService.updateOrderStatu(orderStatuDTO);
+        }
+
+        //第二步：发送MQ消息
+        this.sendMQMessage(updateOrderStatuDTO.getOrderId(),shippingOrderCancelVOS);
+
+        return true;
+    }
+
+
+    public void sendMQMessage(Long orderId,List<ShippingOrderCancelVO> shippingOrderCancelVOS){
+        //查询修改后的订单信息
+        Order order = orderService.getById(orderId);
+        Shop shop = shopService.getById(order.getShopId());
+
+        //组装需要发送消息的实体
+        List<MQMessageDTO> mqMessageDTO=new ArrayList<>();
+        shippingOrderCancelVOS.forEach(ShippingOrderCancelVO -> {
+            MQMessageDTO messageDTO=new MQMessageDTO();
+            messageDTO.setExpressCompanyId(ShippingOrderCancelVO.getExpressCompanyId());
+            messageDTO.setExpressNo(ShippingOrderCancelVO.getExpressNo());
+            messageDTO.setOrderId(orderId);
+            messageDTO.setOrderNo(order.getOrderNo());
+            messageDTO.setOrderStatus(order.getOrderStatus());
+            messageDTO.setOriginOrderId(order.getOriginOrderId());
+            messageDTO.setShopId(order.getShopId());
+            messageDTO.setWarehouseId(ShippingOrderCancelVO.getWarehouseId());
+            messageDTO.setStatus(ShippingOrderCancelVO.getStatus());
+            messageDTO.setShippingOrderId(ShippingOrderCancelVO.getShippingOrderId());
+            mqMessageDTO.add(messageDTO);
+        });
+
+        Message message = null;
+        Object obj = JSONArray.toJSON(mqMessageDTO);
+        String str = obj.toString();
+        try {
+            message = new Message("order_status",
+                    shop.getPlatformNo(),
+                    str.getBytes(RemotingHelper.DEFAULT_CHARSET));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try {
+            producer.send(message, new SendCallback() {
+                @Override
+                public void onSuccess(SendResult sendResult) {
+                    System.out.println("消息发送成功");
+                }
+                @Override
+                public void onException(Throwable e) {
+                    e.printStackTrace();
+                    System.out.println("消息发送异常");
+                }
+            });
+        } catch (MQClientException e) {
+            e.printStackTrace();
+        } catch (RemotingException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO) {
@@ -151,6 +294,37 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             detailShippingOrderRelation.setOrderDetailId(AddShippingOrderDTO.getOrderDetailId());
             detailShippingOrderRelation.setShippingOrderId(shippingOrder.getShippingOrderId());
             detailShippingOrderRelationService.save(detailShippingOrderRelation);
+
+            // 审单时，发送队列消息到卡夫卡，给储值卡系统消费
+            Message message = null;
+            Object obj = JSONArray.toJSON(AddShippingOrderDTO);
+            String str = obj.toString();
+            try {
+                message = new Message("split_order",
+                        AddShippingOrderDTO.getPlatformNo(),//以店铺编码来分类消息
+                        str.getBytes(RemotingHelper.DEFAULT_CHARSET));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                producer.send(message, new SendCallback() {
+                    @Override
+                    public void onSuccess(SendResult sendResult) {
+                        System.out.println("消息发送成功");
+                    }
+                    @Override
+                    public void onException(Throwable e) {
+                        e.printStackTrace();
+                        System.out.println("消息发送异常");
+                    }
+                });
+            } catch (MQClientException e) {
+                e.printStackTrace();
+            } catch (RemotingException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
         return Result.success();
     }
@@ -163,10 +337,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         shippingOrderCancelVOS.forEach(ShippingOrderCancelVO -> {
             if (null != ShippingOrderCancelVO && ShippingOrderCancelVO.getStatus() != null) {
                 //发货单状态，3：冻结；5：拒收；6：异常
-                if (ShippingOrderCancelVO.getStatus() == 3 || ShippingOrderCancelVO.getStatus() == 5 || ShippingOrderCancelVO.getStatus() == 6) {
+                if (ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_THREE || ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FIVE || ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_SIX) {
                     UpdateOrderStatuDTO updateOrderStatuDTO = new UpdateOrderStatuDTO();
                     updateOrderStatuDTO.setOrderId(orderId);
-                    updateOrderStatuDTO.setOrderStatus(Long.parseLong("4"));
+                    updateOrderStatuDTO.setOrderStatus(OrderStatus.ORDER_SIX);
                     orderService.updateOrderStatu(updateOrderStatuDTO);
                     flag.set(false);
                 } else {
@@ -178,9 +352,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             UpdateOrderStatuDTO updateOrderStatuDTO = new UpdateOrderStatuDTO();
             updateOrderStatuDTO.setOrderId(orderId);
             //订单状态 5 为取消
-            updateOrderStatuDTO.setOrderStatus(Long.parseLong("5"));
+            updateOrderStatuDTO.setOrderStatus(OrderStatus.ORDER_FIVE);
             orderService.updateOrderStatu(updateOrderStatuDTO);
         }
+        // TODO 发货单那边提供接口，返回是否能取消成功，否则订单状态为冻结
         return Result.success();
     }
 

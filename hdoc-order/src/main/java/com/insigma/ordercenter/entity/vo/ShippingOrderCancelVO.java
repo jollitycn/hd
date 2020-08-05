@@ -42,7 +42,7 @@ public class ShippingOrderCancelVO extends BaseVO{
     @ApiModelProperty(value = "是否删除（0：未删除，1：已删除）")
     private Integer isDeleted;
 
-    @ApiModelProperty(value = "状态（0：待出库，1：待取货，2：已发货，3：冻结，4：冻结）")
+    @ApiModelProperty(value = "状态（0：待出库，1：待取货，2：已发货，3：冻结，4：取消 5：拒收 6:异常 7：已完成）")
     private Integer status;
 
     @ApiModelProperty(value = "收货人姓名")

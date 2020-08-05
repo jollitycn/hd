@@ -77,7 +77,11 @@ public class OrderDetailController extends BaseController {
     @ApiOperation(value = "保存赠品信息")
     public Result<?> addOrderDerail(@Valid @RequestBody AddOrderDetailVO addOrderDetailVO) {
         Boolean aBoolean = orderDetailService.addOrderDerail(addOrderDetailVO);
-        return Result.success(aBoolean);
+        if(aBoolean){
+            return Result.success();
+        }else{
+            return Result.error(CodeMsg.DATA_INSERT_ERROR);
+        }
     }
 
 }

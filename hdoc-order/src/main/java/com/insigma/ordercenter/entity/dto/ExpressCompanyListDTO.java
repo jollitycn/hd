@@ -41,4 +41,7 @@ public class ExpressCompanyListDTO {
 
     @ApiModelProperty(value = "承运商编码")
     private String companyNo;
+
+    @ApiModelProperty("是否禁用")
+    private Integer isStop;
 }
