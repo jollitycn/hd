@@ -1,14 +1,10 @@
 package com.insigma.ordercenter.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.insigma.ordercenter.constant.Constant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -42,10 +38,11 @@ public class SysRole implements Serializable {
     @ApiModelProperty(value = "角色名称")
     private String roleName;
 
+    @ApiModelProperty(value = "创建人")
+    private Long createId;
+
     @ApiModelProperty(value = "创建时间")
-    @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonSerialize(using= ToStringSerializer.class)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "角色描述")
@@ -54,5 +51,8 @@ public class SysRole implements Serializable {
     @ApiModelProperty(value = "是否删除（0：未删除，1：已删除）")
     private Integer isDeleted;
 
+    @ApiModelProperty(value = "创建者")
+    @TableField(exist = false)
+    private String createName;
 
 }

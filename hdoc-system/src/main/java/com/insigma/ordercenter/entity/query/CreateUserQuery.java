@@ -38,10 +38,10 @@ public class CreateUserQuery extends BaseQuery {
     @NotBlank(message = "联系电话不能为空")
     private String mobilePhone;
 
-    @ApiModelProperty(value = "选择角色", name = "roleIds", required = true)
-    @NotNull(message = "角色不能为空")
-    @Size(min = 1, message = "选择角色出错")
-    private List<Long> roleIds;
+//    @ApiModelProperty(value = "选择角色", name = "roleIds", required = true)
+//    @NotNull(message = "角色不能为空")
+//    @Size(min = 1, message = "选择角色出错")
+//    private List<Long> roleIds;
 
     private Long userId;
 }

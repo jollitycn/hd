@@ -2,24 +2,26 @@ package com.insigma.ordercenter.entity.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
 /**
  * @author Pan Juncai
  * @version 1.0
- * @date 2020/7/29 19:19
+ * @date 2020/8/3 16:59
  */
 @Data
-@ApiModel("保存换货策略的参数实体")
-public class AddExchangeStrategyDTO implements Serializable {
+@ApiModel("编辑换货策略的参数实体")
+public class UpdateExchangeStrategyDTO {
+
     private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty(value = "换货策略id", required = true)
+    private Long exchangeStrategyId;
 
     @ApiModelProperty(value = "策略id", required = true)
     private Long strategyId;

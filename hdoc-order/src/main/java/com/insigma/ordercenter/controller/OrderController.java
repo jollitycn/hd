@@ -3,7 +3,6 @@ package com.insigma.ordercenter.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.dto.OrderDTO;
 import com.insigma.ordercenter.entity.dto.UpdateOrderStatuDTO;
@@ -12,8 +11,6 @@ import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.service.IOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -37,8 +34,8 @@ public class OrderController extends BaseController{
     private IOrderService orderService;
 
     @PostMapping("/orderList")
-    @ApiOperation(value = "订单列表")
-    public Result<?> orderList(@RequestBody OrderDTO orderDTO ) {
+    @ApiOperation(value = "订单列表", response = OrderListVO.class)
+    public Result<?> orderList(@RequestBody OrderDTO orderDTO) {
 
         Page<OrderListVO> page = new Page<>(orderDTO.getPageNum(), orderDTO.getPageSize());
 
@@ -116,24 +113,5 @@ public class OrderController extends BaseController{
         List<OrderOperationLogVO> orderOperationLogVOS = orderService.queryOrderOperationLogInfo(orderId);
         return Result.success(orderOperationLogVOS);
     }
-
-    @DeleteMapping("/deleteOrder/{orderId}")
-    @ApiOperation(value = "删除订单信息(物理删除)", response = OrderOperationLogVO.class)
-    public Result<?> deleteOrder(@Valid @PathVariable Long orderId) {
-        Boolean aBoolean = orderService.deleteOrder(orderId);
-        if(aBoolean){
-            return Result.success();
-        }else{
-            return Result.error(CodeMsg.DATA_DELETE_ERROR);
-        }
-    }
-
-    @GetMapping("/queryExpressInfo/{shippingOrderNo}")
-    @ApiOperation(value = "点击发货信息中的发货单号，查询物流信息")
-    public Result<?> queryExpressInfo(@Valid @PathVariable Long shippingOrderNo) {
-        List<?> ts = orderService.queryExpressInfo(shippingOrderNo);
-        return Result.success(ts);
-    }
-
 
 }

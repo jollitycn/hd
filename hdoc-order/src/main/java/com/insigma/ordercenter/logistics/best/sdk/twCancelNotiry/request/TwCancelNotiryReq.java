@@ -4,10 +4,21 @@ import com.insigma.ordercenter.logistics.best.sdk.BaseRequest;
 import com.insigma.ordercenter.logistics.best.sdk.BaseResponse;
 import com.insigma.ordercenter.logistics.best.sdk.Parser;
 import com.insigma.ordercenter.logistics.best.sdk.twCancelNotiry.response.TwCancelNotiryRsp;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
+@Data
+@ApiModel("取消的发货单信息入参实体")
 public class TwCancelNotiryReq implements BaseRequest {
+
+    @ApiModelProperty(name = "strategyId",value = "单据类型：入库单：ASN,退货单：DI,销售B2B单：WDO,销售B2C单：NORMAL")
 	private String customerCode;
-	private String orderCode;
+
+    @ApiModelProperty(name = "orderCode",value = "外部单号，保证唯一")
+    private String orderCode;
+
+    @ApiModelProperty(name = "customerCode",value = "客户编码，保证唯一")
 	private String operationTypeCode;
 
     public String getCustomerCode()

@@ -14,6 +14,4 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface RoleMenuRelationMapper extends BaseMapper<RoleMenuRelation> {
 
-    int deleteByRoleId(@Param("roleId") Long roleId);
-
 }

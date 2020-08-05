@@ -23,39 +23,39 @@
     <select id="page" resultType="com.insigma.ordercenter.entity.vo.ExpressFeePageVO">
         select
 
-<include refid="Base_Column_List" />
+        <include refid="Base_Column_List" />
         from t_express_fee where 1=1
-            express_fee_id Long
-                <if test="#{request.expressFeeId}!= null and #{request.expressFeeId} >0">
-                and   express_fee_id=#{request.expressFeeId}
-                </if>
-            express_company_id Long
-                <if test="#{request.expressCompanyId}!= null and #{request.expressCompanyId} >0">
-                and   express_company_id=#{request.expressCompanyId}
-                </if>
-            province String
-                <if test="#{request.province} != null and #{request.province} != ''">
-                    and   province=#{request.province}
-                </if>
-            warehouse_id Long
-                <if test="#{request.warehouseId}!= null and #{request.warehouseId} >0">
-                and   warehouse_id=#{request.warehouseId}
-                </if>
-            warehouse_name String
-                <if test="#{request.warehouseName} != null and #{request.warehouseName} != ''">
-                    and   warehouse_name=#{request.warehouseName}
-                </if>
-            first_weight BigDecimal
-                <if test="#{request.firstWeight}!= null and #{request.firstWeight} >0">
-                and   first_weight=#{request.firstWeight}
-                </if>
-            first_price BigDecimal
-                <if test="#{request.firstPrice}!= null and #{request.firstPrice} >0">
-                and   first_price=#{request.firstPrice}
-                </if>
-            additional_price BigDecimal
-                <if test="#{request.additionalPrice}!= null and #{request.additionalPrice} >0">
-                and   additional_price=#{request.additionalPrice}
-                </if>
+        express_fee_id Long
+        <if test="#{request.expressFeeId}!= null and #{request.expressFeeId} >0">
+            and   express_fee_id=#{request.expressFeeId}
+        </if>
+        express_company_id Long
+        <if test="#{request.expressCompanyId}!= null and #{request.expressCompanyId} >0">
+            and   express_company_id=#{request.expressCompanyId}
+        </if>
+        province String
+        <if test="#{request.province} != null and #{request.province} != ''">
+            and   province=#{request.province}
+        </if>
+        warehouse_id Long
+        <if test="#{request.warehouseId}!= null and #{request.warehouseId} >0">
+            and   warehouse_id=#{request.warehouseId}
+        </if>
+        warehouse_name String
+        <if test="#{request.warehouseName} != null and #{request.warehouseName} != ''">
+            and   warehouse_name=#{request.warehouseName}
+        </if>
+        first_weight BigDecimal
+        <if test="#{request.firstWeight}!= null and #{request.firstWeight} >0">
+            and   first_weight=#{request.firstWeight}
+        </if>
+        first_price BigDecimal
+        <if test="#{request.firstPrice}!= null and #{request.firstPrice} >0">
+            and   first_price=#{request.firstPrice}
+        </if>
+        additional_price BigDecimal
+        <if test="#{request.additionalPrice}!= null and #{request.additionalPrice} >0">
+            and   additional_price=#{request.additionalPrice}
+        </if>
     </select>
 </mapper>

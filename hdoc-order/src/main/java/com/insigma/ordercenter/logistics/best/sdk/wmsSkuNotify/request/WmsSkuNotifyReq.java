@@ -4,9 +4,15 @@ import com.insigma.ordercenter.logistics.best.sdk.BaseRequest;
 import com.insigma.ordercenter.logistics.best.sdk.BaseResponse;
 import com.insigma.ordercenter.logistics.best.sdk.Parser;
 import com.insigma.ordercenter.logistics.best.sdk.wmsSkuNotify.response.WmsSkuNotifyRsp;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel("商品信息同步实体")
 public class WmsSkuNotifyReq implements BaseRequest {
+
+    @ApiModelProperty(name = "providerCode",value = "供应商代码")
 	private String providerCode;
+
 	private Products products;
 
     public String getProviderCode()

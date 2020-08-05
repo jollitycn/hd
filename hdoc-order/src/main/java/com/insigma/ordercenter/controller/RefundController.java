@@ -41,7 +41,7 @@ public class RefundController extends BaseController {
     }
 
     @GetMapping("/detail/{refundId}")
-    @ApiOperation(value = "退货单详情", response = RefundDetailVO.class)
+    @ApiOperation(value = "退货单详情", response = RefundVO.class)
     public Result detail(@PathVariable Long refundId) {
 
         RefundDetailVO result = refundService.getRefundDetail(refundId);
@@ -50,8 +50,8 @@ public class RefundController extends BaseController {
     }
 
     @PostMapping("/add")
-    @ApiOperation(value = "新增/编辑 退货单")
-    public Result add(@RequestBody AddRefundDTO addRefundDTO) {
+    @ApiOperation(value = "新增退货单")
+    public Result add(AddRefundDTO addRefundDTO) {
 
         boolean result = refundService.addRefund(addRefundDTO);
 

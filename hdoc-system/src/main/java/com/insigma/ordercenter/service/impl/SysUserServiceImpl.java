@@ -208,17 +208,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         sysUser.setCreateId(loginUser.getUserId());
         sysUser.setCreateTime(LocalDateTime.now());
         boolean status = save(sysUser);
-        if (!status) {
-            return false;
-        } else {
-            //存储用户角色关联
-            for (Long roleId : user.getRoleIds()) {
-                UserRoleRelation userRoleRelation = new UserRoleRelation();
-                userRoleRelation.setUserId(sysUser.getUserId());
-                userRoleRelation.setRoleId(roleId);
-                status = status && userRoleRelationService.save(userRoleRelation);
-            }
-        }
+//        if (!status) {
+//            return false;
+//        } else {
+//            //存储用户角色关联
+//            for (Long roleId : user.getRoleIds()) {
+//                UserRoleRelation userRoleRelation = new UserRoleRelation();
+//                userRoleRelation.setUserId(sysUser.getUserId());
+//                userRoleRelation.setRoleId(roleId);
+//                status = status && userRoleRelationService.save(userRoleRelation);
+//            }
+//        }
         return status;
 
     }

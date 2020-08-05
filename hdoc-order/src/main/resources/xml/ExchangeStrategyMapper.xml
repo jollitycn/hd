@@ -2,4 +2,59 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.ExchangeStrategyMapper">
 
+    <select id="selectExchangeStrategy"
+            resultType="com.insigma.ordercenter.entity.vo.ExchangeOrGiftStrategyVO">
+
+        SELECT
+            es.exchange_strategy_id AS id,
+            es.strategy_id,
+            es.exchange_theme AS theme,
+            es.start_date,
+            es.end_date,
+            es.old_product_id,
+            pd.product_name AS oldProductName,
+            es.new_product_id,
+            pdt.product_name AS newProductName,
+            es.is_stop
+        FROM
+            t_exchange_strategy es
+        LEFT JOIN t_product pd ON pd.product_id = es.old_product_id
+        LEFT JOIN t_product pdt ON pdt.product_id = es.old_product_id
+        WHERE
+            es.strategy_id = #{strategyId}
+    </select>
+    <select id="getShopList" resultType="com.insigma.ordercenter.entity.vo.ShopListVO">
+
+        SELECT
+            ps.shop_id,
+            sp.shop_name
+        FROM
+            t_param_shop ps
+        LEFT JOIN t_shop sp ON sp.shop_id = ps.shop_id
+        WHERE
+            ps.param_type = 1
+        AND ps.param_id = #{id}
+    </select>
+    <select id="getExchangeStrategy" resultType="com.insigma.ordercenter.entity.vo.ExchangeOrGiftStrategyVO">
+
+        SELECT
+            es.exchange_strategy_id AS id,
+            es.strategy_id,
+            es.exchange_theme AS theme,
+            es.start_date,
+            es.end_date,
+            es.old_product_id,
+            pd.product_name AS oldProductName,
+            pd.product_no AS oldProductNo,
+            es.new_product_id,
+            pdt.product_name AS newProductName,
+            pdt.product_no AS newProductNo,
+            es.is_stop
+        FROM
+            t_exchange_strategy es
+        LEFT JOIN t_product pd ON pd.product_id = es.old_product_id
+        LEFT JOIN t_product pdt ON pdt.product_id = es.old_product_id
+        WHERE
+            es.exchange_strategy_id = #{exchangeStrategyId}
+    </select>
 </mapper>

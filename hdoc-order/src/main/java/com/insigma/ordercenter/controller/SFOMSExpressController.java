@@ -1,8 +1,5 @@
 package com.insigma.ordercenter.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.logistics.sf.qiao.Order;
@@ -12,21 +9,16 @@ import com.insigma.ordercenter.logistics.sf.qiao.QuerySFRoute;
 import com.insigma.ordercenter.service.sf.qiao.APIResponse;
 import com.insigma.ordercenter.service.sf.qiao.EspServiceCode;
 import com.insigma.ordercenter.service.sf.qiao.QiaoAPIService;
-import com.insigma.ordercenter.utils.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.*;
 
@@ -45,39 +37,22 @@ import java.util.*;
 @RestController
 @RequestMapping("/sfoms")
 @Configuration
-@Slf4j
 public class SFOMSExpressController extends BaseController {
 
-    @Autowired
-    private RedisUtil redisUtil;
     //    @Autowired
 //    private TestCallExpressNewAPIService testCallExpressNewAPIService;
     @PostMapping("/cb")
     @ApiOperation("cb")
-    public String cb(HttpServletRequest request) throws Exception {
-//        {"actualShipDateTime":1596452750000,"carrier":"CP","carrierProduct":"SE0113","companyCode":"0208255482","dataStatus":"100","erpOrder":"00200703840108","nakeExpress":"2","orderTypeCode":"PO","returnTracking":"","sfOrderNo":"OB569100647279728041-100","transactionId":"203SO010VB200803000075","userDef1":"","userDef2":",","userDef3":"","userDef4":"","userDef5":"","userDef6":"","userDef7":"0","userDef8":"0","warehouseCode":"010VB","wayBillNo":"SF1040276461418"}
-
-
+    public Result cb(HttpServletRequest request) throws Exception {
 
         //  APIResponse response = QiaoAPIService.query(EspServiceCode.EXP_RECE_CREATE_ORDER, order);
         //  if (response.getApiResultCode() != null) {
         //      return Result.error(new CodeMsg(CodeMsg.API_FAILED.getRetCode(), response.toString()));
         //  } else {
-        List<String> body = null;
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
-            body  = IOUtils.readLines(reader);
-            System.out.println("返回json数据");
-            System.out.println(body);
-            System.out.println("结束");
-        }catch (Exception e){
-            System.out.println("错误信息");
-        }
         request.getParameterMap();
         HashMap<Object, Object> map = new HashMap<Object, Object>();
         HashMap parameterMap = new HashMap();
         parameterMap.putAll(request.getParameterMap());
-        map.put("body", body);
         map.put("parameterMap", parameterMap);
         map.put("queryString", request.getQueryString());
         List<String> list = new ArrayList<String>();
@@ -86,40 +61,9 @@ public class SFOMSExpressController extends BaseController {
             v.add(e.nextElement());
         }
 
-//        {"actualShipDateTime":1596519913000,"carrier":"CP","carrierProduct":"SE0113","companyCode":"0208255482","dataStatus":"900","erpOrder":"00200703840110","nakeExpress":"2","orderTypeCode":"PO","outboundContainer":[{"containerId":"SF1020000726965","containerNo":"101000052224375","containerType":"0","items":[{"actualQty":1.0,"erpOrderLineNum":"1","inventoryStatus":"10","lot":"","lotattdesc":"2019-01-18;2020-05-25;2019-01-18;;;;;N;;;;;","skuNo":"6950142400845","userDef1":"","userDef11":"2019-01-18","userDef2":"10","userDef3":"1","userDef4":"2019-01-18","userDef5":"2020-05-25","userDef6":"","userDef7":"0","userDef8":"1","weight":20.0,"weightUm":"KG"}],"userDef1":"","userDef11":"","userDef2":"","userDef3":"","userDef4":"","userDef5":"","userDef6":"","userDef7":"0","userDef8":"1","weight":20.0,"weightUm":"KG"}],"outboundDetail":[{"actualQty":1.0,"erpOrderLineNum":"1","shelflife":"493","skuNo":"6950142400845"}],"returnTracking":"","sfOrderNo":"OB569100866323069873-100","transactionId":"203SO010VB200804001463","userDef1":"","userDef2":",","userDef3":"","userDef4":"","userDef5":"","userDef6":"","userDef7":"0","userDef8":"0","warehouseCode":"010VB","wayBillNo":"SF1020000726965"}
         map.put("attributeNames", v);
-        for (String reqStr: body) {
-            if (!StringUtils.isEmpty(reqStr)) {
-                JSONObject obj = JSON.parseObject(reqStr);
-                Object wayBillNo = obj.get("wayBillNo");
-                if(wayBillNo!=null) {
-                    redisUtil.hset("sfoms.callback", wayBillNo.toString(), reqStr);
-                }
-            }
-        }
-
-        log.debug("cb result",map);
-        return "{\"code\":200,\"message\":\"接受成功\"}";//Result.success(map);
+        return Result.success(map);
         //  }
-    }
-
-
-    @GetMapping("/outboundConfirm/{wayBillNo}")
-    @ApiOperation("outboundConfirm")
-    public Result outboundConfirm(@PathVariable String wayBillNo) throws Exception {
-        return Result.success(redisUtil.hget("sfoms.callback", wayBillNo));
-    }
-    @GetMapping("/outboundConfirms/")
-    @ApiOperation("outboundConfirms")
-    public Result outboundConfirms(HttpServletRequest request) throws Exception {
-        return Result.success(redisUtil.hmget("sfoms.callback"));
-    }
-
-    @GetMapping("/outboundConfirmRemove/{wayBillNo}")
-    @ApiOperation("outboundConfirmRemove")
-    public Result outboundConfirmRemove(@PathVariable String wayBillNo) throws Exception {
-        redisUtil.hdel("sfoms.callback" , wayBillNo);
-        return Result.success();
     }
 
     //    @Autowired

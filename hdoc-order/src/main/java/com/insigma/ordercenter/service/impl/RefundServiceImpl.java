@@ -70,24 +70,10 @@ public class RefundServiceImpl extends ServiceImpl<RefundMapper, Refund> impleme
     @Override
     public boolean addRefund(AddRefundDTO addRefundDTO) {
 
-        Long refundId=addRefundDTO.getRefundId();
-
-        List<Long> productIdList=addRefundDTO.getProductIdList();
-        //处理退货的商品
-        //TODO
-
         Refund refund=new Refund();
-
-        //新增退货单
-        if(null==refundId){
-            refund.setCreateTime(LocalDateTime.now());
-            //编辑
-        }else {
-            refund=this.getById(refundId);
-        }
         BeanUtil.copyProperties(addRefundDTO,refund);
 
-        return null==refundId?this.save(refund):this.updateById(refund);
+        return this.save(refund);
     }
 
     /**

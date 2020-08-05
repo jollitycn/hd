@@ -2,17 +2,20 @@ package com.insigma.ordercenter.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.entity.dto.*;
+import com.insigma.ordercenter.entity.vo.ExchangeOrGiftStrategyVO;
 import com.insigma.ordercenter.entity.vo.StrategyVO;
 import com.insigma.ordercenter.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -59,6 +62,9 @@ public class StrategyController extends BaseController {
 
     @Resource
     private IGiftStrategyService giftStrategyService;
+
+    @Resource
+    private IParamShopService paramShopService;
 
     @GetMapping("/listStrategy")
     @ApiOperation("获取所有策略")
@@ -229,11 +235,55 @@ public class StrategyController extends BaseController {
         return Result.success();
     }
 
+    @PostMapping("/updateExchangeStrategy")
+    @ApiOperation("编辑换货策略参数")
+    public Result updateExchangeStrategy(@RequestBody @Valid UpdateExchangeStrategyDTO req) {
+        exchangeStrategyService.updateExchangeStrategy(req);
+        return Result.success();
+    }
+
+    @GetMapping("/getExchangeStrategy/{exchangeStrategyId}")
+    @ApiOperation("获取换货策略参数")
+    public Result getExchangeStrategy(@PathVariable("exchangeStrategyId") Long exchangeStrategyId) {
+
+        ExchangeOrGiftStrategyVO exchangeStrategy = this.exchangeStrategyService.getExchangeStrategy(exchangeStrategyId);
+
+//        ExchangeStrategy strategy = this.exchangeStrategyService.getById(exchangeStrategyId);
+//
+//        ExchangeOrGiftStrategyVO exchangeOrGiftStrategyVO = new ExchangeOrGiftStrategyVO();
+//        BeanUtil.copyProperties(strategy, exchangeOrGiftStrategyVO);
+//        exchangeOrGiftStrategyVO.setId(strategy.getExchangeStrategyId());
+//        exchangeOrGiftStrategyVO.setTheme(strategy.getExchangeTheme());
+
+        return Result.success(exchangeStrategy);
+    }
+
+    @DeleteMapping("/delExchangeStrategy/{id}")
+    @ApiOperation("删除换货策略参数")
+    @Transactional(rollbackFor = Exception.class)
+    public Result delExchangeStrategy(@PathVariable("id") Long id) {
+
+        // 先删除关联的商铺
+        QueryWrapper<ParamShop> wrapper = new QueryWrapper<>();
+        wrapper.eq(ParamShop.PARAM_ID,id);
+        wrapper.eq(ParamShop.PARAM_TYPE,1);
+        boolean remove = this.paramShopService.remove(wrapper);
+
+        boolean b = this.exchangeStrategyService.removeById(id);
+
+        if(remove && b){
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_DELETE_ERROR);
+    }
+
     @PostMapping("/addGiftStrategy")
     @ApiOperation("新增赠品策略参数")
     public Result addGiftStrategy(@RequestBody @Valid AddGiftStrategyDTO req) {
         giftStrategyService.addGiftStrategy(req);
         return Result.success();
     }
+
+
 
 }
