@@ -32,6 +32,13 @@
         on wh.order_source_id = os.order_source_id
         LEFT JOIN t_express_company ec
         on wh.express_company_id = ec.express_company_id
+       where 1= 1
+        <if test=" map.warehouseName != null and map.warehouseName != ''">
+            AND wh.warehouse_name = #{map.warehouseName}
+        </if>
+        <if test=" map.warehouseNo != null and map.warehouseNo > 0">
+            AND wh.warehouse_no = #{map.warehouseNo}
+        </if>
     </select>
 
     <select id="list" resultType="com.insigma.ordercenter.entity.dto.WarehouseProductPage">
