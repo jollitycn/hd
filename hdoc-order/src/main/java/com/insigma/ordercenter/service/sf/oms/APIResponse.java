@@ -6,9 +6,8 @@ import java.io.Serializable;
 
 @Data
 public class APIResponse  implements Serializable {
-    private String apiErrorMsg;
-    private String apiResponseID;
-    private String apiResultCode;
-    private Object apiResultData;
-    private static final long serialVersionUID = 1L;
+    private String code;
+    private String message;
+
+
 }
