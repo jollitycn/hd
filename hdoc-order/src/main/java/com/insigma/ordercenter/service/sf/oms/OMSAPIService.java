@@ -20,7 +20,7 @@ public class OMSAPIService {
 
 
     public static APIResponse query(OMSServiceCode testService, BaseVO data) throws UnsupportedEncodingException {
-        CallExpressServiceTools client = CallExpressServiceTools.getInstance();
+//        CallExpressServiceTools client = CallExpressServiceTools.getInstance();
 
         // set common header
         Map<String, String> params = new HashMap<String, String>();
