@@ -15,14 +15,14 @@ private int dealType;
 private java.util.List<WaybillNoInfo> waybillNoInfoList;
     @ApiModelProperty(value = "报关批次")
 private String customsBatchs ;
-    @ApiModelProperty(value = "父节点ID")
+    @ApiModelProperty(value = "collectEmpCode")
 private String collectEmpCode;
-    @ApiModelProperty(value = "父节点ID")
+    @ApiModelProperty(value = "inProcessWaybillNo")
 private String inProcessWaybillNo;
-    @ApiModelProperty(value = "父节点ID")
+    @ApiModelProperty(value = "sourceZoneCode")
 private String sourceZoneCode;
-    @ApiModelProperty(value = "父节点ID")
+    @ApiModelProperty(value = "destZoneCode")
 private String destZoneCode;
-    @ApiModelProperty(value = "父节点ID")
+    @ApiModelProperty(value = "totalWeight")
 private double totalWeight;
 }
