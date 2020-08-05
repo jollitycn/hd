@@ -8,6 +8,8 @@
         o.order_no,
         o.order_status,
         sp.platform_name,
+        sp.shop_id,
+        sp.platform_no,
         o.create_time,
         o.review_time,
         ( SELECT MIN( tso.send_time ) FROM t_shipping_order tso WHERE tso.shipping_order_id = os.shipping_order_id ) send_time,
@@ -23,8 +25,7 @@
         FROM
         t_order o
         LEFT JOIN t_shop sp ON o.shop_id = sp.shop_id
-        LEFT JOIN t_order_shipping_order_relation os ON o.order_id = os.order_id
-        LEFT JOIN t_shipping_order so ON os.shipping_order_id = so.shipping_order_id
+        LEFT JOIN t_shipping_order so ON o.order_id = so.order_id
         LEFT JOIN t_order_send_receive sr ON o.order_id = sr.order_id
         WHERE
         1 =1
@@ -158,10 +159,9 @@
             so.shipping_order_no,
             so.send_time
         FROM
-            t_order_shipping_order_relation sor
-            LEFT JOIN t_shipping_order so ON sor.shipping_order_id = so.shipping_order_id
+             t_shipping_order so
         WHERE
-            sor.order_id = #{orderId}
+            so.order_id = #{orderId}
     </select>
 
 
@@ -279,9 +279,8 @@
             ec.create_time,
             ec.remark
         FROM
-            t_order_shipping_order_relation sor
-            LEFT JOIN t_shipping_order so ON sor.shipping_order_id = so.shipping_order_id
-            left join t_express_company ec on so.express_company_id=so.express_company_id
+            t_shipping_order so
+            left join t_express_company ec on so.express_company_id=ec.express_company_id
         WHERE
             sor.order_id = #{orderId}
     </select>

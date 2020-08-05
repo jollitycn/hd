@@ -90,6 +90,9 @@ public class OrderListVO extends BaseVO {
     @ApiModelProperty(value = "店铺ID")
     private Long shopId;
 
+    @ApiModelProperty(value = "店铺编码")
+    private String platformNo;
+
     @ApiModelProperty(value = "联系方式")
     private String mobilePhoneOrder;
 

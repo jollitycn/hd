@@ -1,6 +1,7 @@
 package com.insigma.ordercenter.controller;
 
 
+import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.vo.SendReceiveInfoVO;
 import com.insigma.ordercenter.entity.vo.UpdateSendReceiveInfoVO;
@@ -42,7 +43,11 @@ public class OrderSendReceiveController extends BaseController {
     @ApiOperation(value = "根据订单修改收发件人信息")
     public Result<?> updateSendReceiveInfo(@Valid UpdateSendReceiveInfoVO updateSendReceiveInfoVO) {
         Boolean aBoolean = orderSendReceiveService.updateSendReceiveInfo(updateSendReceiveInfoVO);
-        return Result.success(aBoolean);
+        if(aBoolean){
+            return Result.success();
+        }else{
+            return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+        }
     }
 
 }
