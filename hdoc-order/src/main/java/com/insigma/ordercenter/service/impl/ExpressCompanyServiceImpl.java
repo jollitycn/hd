@@ -41,7 +41,7 @@ public class ExpressCompanyServiceImpl extends ServiceImpl<ExpressCompanyMapper,
             companyNo = StringUtil.addPercent(expressCompanyListDTO.getCompanyNo());
         }
 
-        return baseMapper.getCompanyList(page, companyName, companyNo);
+        return baseMapper.getCompanyList(page, companyName, companyNo,expressCompanyListDTO);
     }
 
     @Override
