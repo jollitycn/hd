@@ -49,7 +49,7 @@ public class CallExpressServiceTools {
     public static String querySFAPIservice(String url, String xml, String verifyCode) {
         HttpClientUtil httpclient = new HttpClientUtil();
         if (url == null) {
-            url = OMSAPIService.CALL_URL_BOX;
+            url = OMSUtil.CALL_URL_BOX;
         }
 
         String result = null;
