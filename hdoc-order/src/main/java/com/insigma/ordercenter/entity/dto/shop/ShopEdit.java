@@ -36,8 +36,11 @@ public class ShopEdit extends BaseVO {
     private String platformNo;
 
 
+    @ApiModelProperty(value = "cName")
     private String cName;
+    @ApiModelProperty(value = "cPhone")
     private String cPhone;
+    @ApiModelProperty(value = "sAddr")
     private String sAddr;
 
     private List<String> warehouseIds;
