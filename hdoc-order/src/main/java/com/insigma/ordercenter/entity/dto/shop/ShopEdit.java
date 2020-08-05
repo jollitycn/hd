@@ -36,6 +36,10 @@ public class ShopEdit extends BaseVO {
     private String platformNo;
 
 
+    private String cName;
+    private String cPhone;
+    private String sAddr;
+
     private List<String> warehouseIds;
 
 }
