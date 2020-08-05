@@ -22,6 +22,9 @@ import java.util.List;
 public class AddGiftStrategyDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty(value = "赠品策略id")
+    private Long giftStrategyId;
+
     @ApiModelProperty(value = "策略id", required = true)
     private Long strategyId;
 
@@ -39,7 +42,7 @@ public class AddGiftStrategyDTO implements Serializable {
     @ApiModelProperty(value = "关联的店铺集合")
     private List<Long> shopIdList;
 
-    @Valid
-    @ApiModelProperty(value = "赠品信息集合", required = true)
-    private List<AddGiftDTO> giftList;
+//    @Valid
+//    @ApiModelProperty(value = "赠品信息集合", required = true)
+//    private List<AddGiftDTO> giftList;
 }
