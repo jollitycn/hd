@@ -43,4 +43,14 @@ public class ProductListDTO {
 
     @ApiModelProperty(value = "商品编码")
     private String productNo;
+
+    @ApiModelProperty(value = "是否上架（0：未上架，1：已上架）")
+    private Integer isPutOn;
+
+    @ApiModelProperty(value = "是否是组合商品（0：单品，1：组合）")
+    private Integer isCombo;
+
+    @ApiModelProperty(value = "商品品牌")
+    private String brand;
+
 }

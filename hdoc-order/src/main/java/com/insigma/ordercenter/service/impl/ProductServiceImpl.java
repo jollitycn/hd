@@ -1,6 +1,7 @@
 package com.insigma.ordercenter.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -53,19 +54,23 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public IPage<ProductListPageVO> getProductListPage(Page<ProductListPageVO> page, ProductListDTO productListDTO) {
 
-        String productName = null;
-        if (productListDTO.getProductName() != null) {
+        //处理查询参数
+        String productName = productListDTO.getProductName();
+        if (StrUtil.isNotEmpty(productName)) {
             productName = StringUtil.addPercent(productListDTO.getProductName());
         }
-        String productSku = null;
-        if (productListDTO.getProductSku() != null) {
+        String productSku = productListDTO.getProductSku();
+        if (StrUtil.isNotEmpty(productSku)) {
             productSku = StringUtil.addPercent(productListDTO.getProductSku());
         }
-        String productNo = null;
-        if (productListDTO.getProductNo() != null) {
+        String productNo = productListDTO.getProductNo();
+        if (StrUtil.isNotEmpty(productNo)) {
             productNo = StringUtil.addPercent(productListDTO.getProductNo());
         }
-        List<ProductListPageVO> resultList = baseMapper.getProductListPage(page, productName, productSku,productNo);
+
+
+        List<ProductListPageVO> resultList = baseMapper.getProductListPage(page, productName,
+                productSku,productNo,productListDTO.getIsPutOn(),productListDTO.getIsCombo(),productListDTO.getBrand());
 
         //获取商品的总库存数量
         for (ProductListPageVO productListPageVO : resultList) {

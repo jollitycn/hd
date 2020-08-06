@@ -1,4 +1,4 @@
-package com.insigma.ordercenter.entity.express;
+package com.insigma.ordercenter.logistics.zjs.express;
 
 import lombok.Data;
 

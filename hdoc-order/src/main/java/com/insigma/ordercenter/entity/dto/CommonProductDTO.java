@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.entity.dto;
 
+import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import lombok.Data;
 
 /**
@@ -9,7 +10,9 @@ import lombok.Data;
  * @create: 2020-08-03 15:47
  **/
 @Data
-public class CommonProductDTO {
+public class CommonProductDTO extends ProductDetailVO {
+
+
 
 
 }

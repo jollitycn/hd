@@ -5,14 +5,17 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.LoginUser;
+import com.insigma.ordercenter.entity.ShippingOrder;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderProductDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
+import com.insigma.ordercenter.entity.vo.LogisticsVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
 import com.insigma.ordercenter.service.IShippingOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +32,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/shipping-order")
 @Api(tags = {"发货单模块-xuchao"})
+@Log4j2
 public class ShippingOrderController extends BaseController{
 
 
@@ -144,5 +148,45 @@ public class ShippingOrderController extends BaseController{
             return Result.success();
         }
         return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @GetMapping("/queryLogistics/{shippingOrderId}")
+    @ApiOperation("物流查询")
+    public Result queryLogistics(@PathVariable Long shippingOrderId) {
+
+        //TODO
+        LogisticsVO result = shippingOrderService.queryLogistics(shippingOrderId);
+
+        return Result.success(result);
+    }
+
+    /**
+     * 创建物流快递单 定时任务调用
+     * @return
+     */
+    @GetMapping("/createLogisticsJob")
+    public Result createLogisticsJob() {
+
+        //查询符合条件的发货单
+        List<ShippingOrder> shippingOrderList=shippingOrderService.getShippingOrderByStatus();
+
+        //循环处理
+        for (ShippingOrder shippingOrder:shippingOrderList) {
+
+
+            //调度对应物流下单
+//        LogisticsCentre.generateLogistics();
+
+
+        }
+
+
+        log.info("调度成功啦！！！！！！");
+        System.out.println("调度成功啦============");
+
+
+        //更新发货单状态
+
+        return Result.success();
     }
 }

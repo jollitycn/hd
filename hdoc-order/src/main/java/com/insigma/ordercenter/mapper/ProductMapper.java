@@ -23,7 +23,10 @@ public interface ProductMapper extends BaseMapper<Product> {
     List<ProductListPageVO> getProductListPage(Page<ProductListPageVO> page,
                                                @Param("productName") String productName,
                                                @Param("productSku") String productSku,
-                                               @Param("productNo")String productNo);
+                                               @Param("productNo")String productNo,
+                                               @Param("isPutOn")Integer isPutOn,
+                                               @Param("isCombo")Integer isCombo,
+                                               @Param("brand")String brand);
 
     ProductDetailVO getProductDetail(@Param("productId")Long productId);
 

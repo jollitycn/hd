@@ -7,7 +7,7 @@ import com.dangdang.ddframe.job.lite.api.JobScheduler;
 import com.dangdang.ddframe.job.lite.config.LiteJobConfiguration;
 import com.dangdang.ddframe.job.lite.spring.api.SpringJobScheduler;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
-import com.insigma.ordercenter.scheduler.AnnualLeaveJob;
+import com.insigma.ordercenter.scheduler.CreateLogisticsJob;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -49,12 +49,12 @@ public class MyJobConfig {
      * @return
      */
     @Bean(initMethod = "init")
-    public JobScheduler AnnualLeaveJob(
-            @Value("${AnnualLeaveJob.cron}") final String cron,
-            @Value("${AnnualLeaveJob.shardingTotalCount}") final int shardingTotalCount,
-            @Value("${AnnualLeaveJob.shardingItemParameters}") final String shardingItemParameters) {
+    public JobScheduler CreateLogisticsJob(
+            @Value("${CreateLogisticsJob.cron}") final String cron,
+            @Value("${CreateLogisticsJob.shardingTotalCount}") final int shardingTotalCount,
+            @Value("${CreateLogisticsJob.shardingItemParameters}") final String shardingItemParameters) {
 
-        return new SpringJobScheduler(new AnnualLeaveJob(), regCenter, getLiteJobConfiguration(AnnualLeaveJob.class,
+        return new SpringJobScheduler(new CreateLogisticsJob(), regCenter, getLiteJobConfiguration(CreateLogisticsJob.class,
                 cron, shardingTotalCount, shardingItemParameters, "TEST！！！"));
     }
 

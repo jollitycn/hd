@@ -1,12 +1,9 @@
-package com.insigma.ordercenter.entity.express;
+package com.insigma.ordercenter.logistics.zjs.express;
 
-import com.insigma.ordercenter.utils.JsonUtil;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author youwk
