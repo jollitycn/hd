@@ -12,6 +12,7 @@ import com.insigma.ordercenter.util.HttpClientUtil;
 import com.insigma.ordercenter.util.VerifyCodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import springfox.documentation.spring.web.json.Json;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -341,19 +342,28 @@ String request= "{\n" +
                 "        {}" +
                 "    ]," +
                 "    \"paymentDistrict\": \"大兴区\"," +
-                "    \"erpOrder\": \"00200703840110\"" +
+                "    \"erpOrder\": \"00200703840113\"" +
                 "}";
+
+
         return request;
     }
 
     private static String cancelInbound() {
-        //CancelInbound   cancelInbound = new CancelInbound();
-        String request = "[{\n" +
-                "\"companyCode\": \"200\",\n" +
-                "\"warehouseCode\": \"200\",\n" +
-                "\"erpOrder\": \"200\",\n" +
-                "\"sfOrderNo\": \"接收成功\"\n" +
-                "}]";
+        String request = "";
+        List<CancelInbound> cancelInbounds = new ArrayList<CancelInbound>();
+        String companyCode = "200";
+        String warehouseCode = "200";
+        String erpOrder = "200";
+        String sfOrderNo = "接收成功";
+        cancelInbounds.add(new CancelInbound(companyCode, warehouseCode, erpOrder, sfOrderNo));
+//        String request = "[{\n" +
+//                "\"companyCode\": \"200\",\n" +
+//                "\"warehouseCode\": \"200\",\n" +
+//                "\"erpOrder\": \"200\",\n" +
+//                "\"sfOrderNo\": \"接收成功\"\n" +
+//                "}]";
+        request = JSON.toJSONString(cancelInbounds);
         return request;
     }
 
@@ -361,7 +371,7 @@ String request= "{\n" +
         String request = "";
         RouteQuery dto = new RouteQuery();
         dto.setOrderType("1");
-        dto.setErpOrder("PO18101713423778");
+        dto.setErpOrder("00200703840110");
         request = JSON.toJSONString(dto);
         return request;
     }
