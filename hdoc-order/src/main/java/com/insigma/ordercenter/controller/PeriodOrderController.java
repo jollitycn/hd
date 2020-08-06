@@ -12,6 +12,7 @@ import com.insigma.ordercenter.entity.PeriodSendReceiveInfo;
 import com.insigma.ordercenter.entity.dto.OrderDTO;
 import com.insigma.ordercenter.entity.dto.PeriodOrderDTO;
 import com.insigma.ordercenter.entity.dto.PeriodOrderStatuDTO;
+import com.insigma.ordercenter.entity.dto.PeriodStatuDTO;
 import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.service.IPeriodOrderService;
 import io.swagger.annotations.Api;
@@ -102,5 +103,26 @@ public class PeriodOrderController extends BaseController {
         List<PeriodOrderShippingVO> periodShippingInfo = periodOrderService.getPeriodShippingInfo(periodOderId);
         return Result.success(periodShippingInfo);
     }
+
+
+    @GetMapping("/queryExpressInfo/{shippingOrderNo}")
+    @ApiOperation(value = "点击发货信息中的发货单号，查询物流信息")
+    public Result<?> queryExpressInfo(@Valid @PathVariable Long shippingOrderNo) {
+        List<?> ts = periodOrderService.queryExpressInfo(shippingOrderNo);
+        return Result.success(ts);
+    }
+
+
+    @PutMapping("/updatePeriodStatu")
+    @ApiOperation(value = "预约订单停止、启用状态修改")
+    public Result<?> updatePeriodStatu(@Valid PeriodStatuDTO periodStatuDTO) {
+        Boolean aBoolean = periodOrderService.updatePeriodStatu(periodStatuDTO);
+        if(aBoolean){
+            return Result.success();
+        }else{
+            return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+        }
+    }
+
 
 }

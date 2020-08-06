@@ -37,7 +37,7 @@
     <select id="getShippingDetail" resultType="com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO">
         SELECT
             a.shipping_order_id,
-            b.order_id,
+            a.order_id,
             c.order_no,
             a.receive_name,
             a.mobile_phone,

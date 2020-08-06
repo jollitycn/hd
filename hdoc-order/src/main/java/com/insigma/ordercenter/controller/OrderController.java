@@ -144,6 +144,12 @@ public class OrderController extends BaseController{
     }
 
 
+    @GetMapping("/queryExpressInfo/{shippingOrderNo}")
+    @ApiOperation(value = "点击发货信息中的发货单号，查询物流信息")
+    public Result<?> queryExpressInfo(@Valid @PathVariable Long shippingOrderNo) {
+        List<?> ts = orderService.queryExpressInfo(shippingOrderNo);
+        return Result.success(ts);
+    }
 
 
 
