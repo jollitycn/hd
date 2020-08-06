@@ -18,12 +18,14 @@ import com.insigma.ordercenter.mapper.GiftStrategyMapper;
 import com.insigma.ordercenter.service.IGiftService;
 import com.insigma.ordercenter.service.IGiftStrategyService;
 import com.insigma.ordercenter.service.IParamShopService;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -45,6 +47,7 @@ public class GiftStrategyServiceImpl extends ServiceImpl<GiftStrategyMapper, Gif
     @Override
     public List<ExchangeOrGiftStrategyVO> listGiftStrategy(StrategyParamDTO req) {
         List<ExchangeOrGiftStrategyVO> list = Lists.newArrayList();
+
         QueryWrapper<GiftStrategy> giftStrategyWrapper = new QueryWrapper<>();
         giftStrategyWrapper.eq(GiftStrategy.STRATEGY_ID, req.getStrategyId());
         // 查询赠品策略
@@ -57,6 +60,16 @@ public class GiftStrategyServiceImpl extends ServiceImpl<GiftStrategyMapper, Gif
             exchangeOrGiftStrategyVO.setTheme(giftStrategy.getGiftTheme());
             list.add(exchangeOrGiftStrategyVO);
         });
+
+        for (ExchangeOrGiftStrategyVO strategyVO : list) {
+            List<ShopListVO> shopList = this.baseMapper.getShop(strategyVO.getId());
+            strategyVO.setShopIdList(shopList);
+
+            // 查找赠品信息
+            List<GiftListVO> giftList = this.baseMapper.getGiftList(strategyVO.getId());
+            strategyVO.setGiftListVOS(giftList);
+        }
+
         return list;
     }
 
@@ -65,19 +78,23 @@ public class GiftStrategyServiceImpl extends ServiceImpl<GiftStrategyMapper, Gif
     public void addGiftStrategy(AddGiftStrategyDTO req) {
         // 先新增赠品策略参数
         GiftStrategy giftStrategy = BeanUtil.toBean(req, GiftStrategy.class);
+        giftStrategy.setGiftTheme(req.getTheme());
         baseMapper.insert(giftStrategy);
 
         // 在新增参数与赠品的关联关系
-//        List<Gift> giftList = Lists.newArrayList();
-//        req.getGiftList().forEach(addGiftDTO -> {
-//            Gift gift = new Gift();
-//            BeanUtil.copyProperties(addGiftDTO, gift);
-//            gift.setGiftStrategyId(giftStrategy.getGiftStrategyId());
-//            giftList.add(gift);
-//        });
-//        if (!giftList.isEmpty()) {
-//            giftService.saveBatch(giftList);
-//        }
+        List<Gift> giftList = Lists.newArrayList();
+        if(null != req.getGiftList() && !req.getGiftList().isEmpty()){
+            req.getGiftList().forEach(addGiftDTO -> {
+                Gift gift = new Gift();
+                BeanUtil.copyProperties(addGiftDTO, gift);
+                gift.setGiftStrategyId(giftStrategy.getGiftStrategyId());
+                giftList.add(gift);
+            });
+            if (!giftList.isEmpty()) {
+                giftService.saveBatch(giftList);
+            }
+        }
+
 
         // 新增参数关联的店铺
         if (null != req.getShopIdList() && !req.getShopIdList().isEmpty()) {
@@ -123,11 +140,13 @@ public class GiftStrategyServiceImpl extends ServiceImpl<GiftStrategyMapper, Gif
         GiftStrategyInfoVO infoVO = new GiftStrategyInfoVO();
         // 查询赠品参数信息
         GiftStrategy giftStrategy = this.baseMapper.selectById(giftStrategyId);
+        infoVO.setTheme(giftStrategy.getGiftTheme());
         BeanUtil.copyProperties(giftStrategy,infoVO);
 
         // 查找商铺信息
         List<ShopListVO> shopList = this.baseMapper.getShop(giftStrategyId);
-        infoVO.setShopIdList(shopList);
+        List<String> strings = shopList.stream().map(ShopListVO::getShopName).collect(Collectors.toList());
+        infoVO.setShopName(String.join(",",strings));
 
         // 查找赠品信息
         List<GiftListVO> giftList = this.baseMapper.getGiftList(giftStrategyId);
@@ -142,6 +161,7 @@ public class GiftStrategyServiceImpl extends ServiceImpl<GiftStrategyMapper, Gif
 
         // 先更新赠品策略参数
         GiftStrategy giftStrategy = BeanUtil.toBean(req, GiftStrategy.class);
+        giftStrategy.setGiftTheme(req.getTheme());
         int i = baseMapper.updateById(giftStrategy);
 
         // 先删除关联商铺

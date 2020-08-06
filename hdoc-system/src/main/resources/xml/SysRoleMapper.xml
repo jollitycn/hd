@@ -16,6 +16,17 @@
         WHERE
             rr.role_id =#{id} and su.is_deleted = 0
     </select>
+    <select id="getUserRoleList" resultType="com.insigma.ordercenter.entity.vo.UserRoleVO">
+            SELECT
+                ur.role_id,
+                sr.role_name
+            FROM
+                t_user_role_relation ur
+            LEFT JOIN sys_role sr ON sr.role_id = ur.role_id
+            WHERE
+                ur.user_id = #{userId}
+
+    </select>
 
     <resultMap id="queryByRoleIdResult" type="com.insigma.ordercenter.entity.vo.SysRoleVO">
         <result property="userAccount" column="user_account"></result>

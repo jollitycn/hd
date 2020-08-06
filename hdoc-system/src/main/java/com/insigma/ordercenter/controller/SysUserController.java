@@ -15,6 +15,7 @@ import com.insigma.ordercenter.entity.query.UpdateUserQuery;
 import com.insigma.ordercenter.entity.query.UpdateUserRoleQuery;
 import com.insigma.ordercenter.entity.query.UpdateUserShopQuery;
 import com.insigma.ordercenter.entity.vo.ShopInfoVO;
+import com.insigma.ordercenter.entity.vo.UserRoleVO;
 import com.insigma.ordercenter.entity.vo.sysuservo.SysUserDetailVO;
 import com.insigma.ordercenter.entity.vo.sysuservo.SysUserListVO;
 import com.insigma.ordercenter.service.ISysRoleService;
@@ -222,4 +223,18 @@ public class SysUserController extends BaseController {
         sysUser.setUserId(null);
         return Result.success(sysUserService.save(sysUser));
     }
+
+    @GetMapping("/getUserRoleList/{userId}")
+    @ApiImplicitParam(name = "userId", value = "用户id", required = true)
+    @ApiOperation("获取用户角色列表信息")
+    public Result getUserRoleList(@PathVariable("userId") @Valid
+                                      @NotNull(message = "用户id不能为空")
+                                      @Min(value = 1L, message = "用户id不合法")
+                                      @Max(value = Long.MAX_VALUE, message = "用户id不合法") Long userId){
+
+        List<UserRoleVO> list = this.sysRoleService.getUserRoleList(userId);
+
+        return  Result.success(list);
+    }
+
 }

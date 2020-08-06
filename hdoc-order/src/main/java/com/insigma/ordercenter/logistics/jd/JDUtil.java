@@ -51,8 +51,8 @@ public class JDUtil {
 
 
 
-        //addTransportGoodsInfo();
-       /// getTransportGoodsInfo();
+       // addTransportGoodsInfo();
+       // getTransportGoodsInfo();
          addPoOrder();
       //  queryPoOrder();
         //cancalPoOrder();
@@ -94,12 +94,12 @@ public class JDUtil {
 
         JdClient client=new DefaultJdClient(SERVER_URL,accessToken,appKey,appSecret);
         EclpGoodsTransportGoodsInfoRequest request=new EclpGoodsTransportGoodsInfoRequest();
-        request.setDeptNo(" EBU4418046549450 ");
-        request.setIsvGoodsNo(" 23145433 ");
-        request.setSpGoodsNo("38578045095");
-        request.setBarcodes("6970805738061,4527080573324 ");
-        request.setThirdCategoryNo("15606");
-        request.setGoodsName("洗衣机");
+        request.setDeptNo("EBU4418046549450");
+        request.setIsvGoodsNo("ceshi00010");
+        request.setSpGoodsNo("");
+        request.setBarcodes("6900000000000010");
+        request.setThirdCategoryNo("655");
+        request.setGoodsName("接口测试下发商品");
         request.setAbbreviation("悦丝spa精选海藻  护手霜80g");
         request.setBrandNo("290850");
         request.setBrandName("奥克斯品牌");
@@ -121,10 +121,10 @@ public class JDUtil {
         JdClient client=new DefaultJdClient(SERVER_URL,accessToken,appKey,appSecret);
         EclpGoodsQueryGoodsInfoRequest request=new EclpGoodsQueryGoodsInfoRequest();
         request.setDeptNo("EBU4418046549450");
-        request.setIsvGoodsNos("23145433,23145432");
-        request.setGoodsNos("EMG445930335,EMG445930335");
+        request.setIsvGoodsNos("");
+        request.setGoodsNos("EMG4418100996085");
         request.setQueryType("1");
-        request.setBarcodes("6970805738061,4527080573324");
+        request.setBarcodes("");
         request.setPageNo(1);
         request.setPageSize(100);
         try {
@@ -148,8 +148,8 @@ public class JDUtil {
         request.setInboundRemark("备注信息");
         request.setBuyer("111");
         request.setLogicParam("111,114,333,3");
-        request.setWhNo("110013693");
-        request.setSupplierNo("EMS0000000000001");
+        request.setWhNo("110011046");
+        request.setSupplierNo("EMS4418047435805");
         request.setSellerSaleOrder("20180923992,22912843233");
         request.setSaleOrder("ESL999923992,ESL99992843233");
         request.setNumApplication(String.valueOf(1));
@@ -198,28 +198,28 @@ public class JDUtil {
         JdClient client=new DefaultJdClient(SERVER_URL,accessToken,appKey,appSecret);
         EclpOrderAddOrderRequest request=new EclpOrderAddOrderRequest();
 
-        request.setIsvUUID("ISVNO0***0001");
-        request.setIsvSource("ISV0020***00006");
-        request.setShopNo("ESP002***006997");
-        request.setBdOwnerNo("01***0417");
-        request.setDepartmentNo("EBU44***15786");
-        request.setWarehouseNo("110***394");
-        request.setShipperNo("CYS44***11256");
-        request.setSalesPlatformOrderNo("60380****3419000");
+        request.setIsvUUID("1111111");
+        request.setIsvSource("ISV0020000000068");
+        request.setShopNo("ESP0020000035310");
+        request.setBdOwnerNo("");
+        request.setDepartmentNo("EBU4418046549450");
+        request.setWarehouseNo("110011046");
+        request.setShipperNo("CYS0000010");
+        request.setSalesPlatformOrderNo("");
         request.setSalePlatformSource("6");
         request.setSalesPlatformCreateTime(new Date());
         request.setSoType("1");
-        request.setConsigneeName("刘*容");
-        request.setConsigneeMobile("137****8921");
-        request.setConsigneePhone("137****8921");
-        request.setConsigneeEmail("xxx@jd.com");
+        request.setConsigneeName("测试");
+        request.setConsigneeMobile("18825162021");
+        request.setConsigneePhone("");
+        request.setConsigneeEmail("");
         request.setExpectDate(new Date());
-        request.setAddressProvince("广东省");
-        request.setAddressCity("汕头市");
-        request.setAddressCounty("金平区");
-        request.setAddressTown("鮀浦");
-        request.setConsigneeAddress("汕头市***路路口");
-        request.setConsigneePostcode("32**23");
+        request.setAddressProvince("");
+        request.setAddressCity("");
+        request.setAddressCounty("");
+        request.setAddressTown("");
+        request.setConsigneeAddress("广东省广州市增城区海伦堡花园23座403");
+        request.setConsigneePostcode("");
         request.setOrderMark("00002122401000000000110000000200004000200000002000");
         request.setQuantity("10");
 

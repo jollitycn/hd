@@ -2,6 +2,7 @@ package com.insigma.ordercenter.controller;
 
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.Warehouse;
+import com.insigma.ordercenter.entity.dto.SendMqDTO;
 import com.insigma.ordercenter.utils.JsonUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,10 +17,14 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -74,4 +79,71 @@ public class MqController {
         return Result.success();
     }
 
-}
+//    @PutMapping("/sendMSG")
+//    @ApiOperation("发送消息")
+    public static void sendMSG( SendMqDTO sendMqDTO) throws Exception{
+
+        String s = "http://10.47.2.166:9072/clit-service/rocketMQ/sendMessage";
+        OutputStreamWriter out = null;
+        BufferedReader br = null;
+        String result = "";
+        try {
+            URL url = new URL(s);
+            //打开和url之间的连接
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            //请求方式
+            conn.setRequestMethod("POST");
+            //conn.setRequestMethod("GET");
+
+            //设置通用的请求属性
+            conn.setRequestProperty("accept", "*/*");
+            conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)");
+            conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+
+            //获取URLConnection对象对应的输出流
+            out = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
+            //发送请求参数即数据
+            out.write(sendMqDTO.toString());
+            //flush输出流的缓冲
+            out.flush();
+
+            //获取URLConnection对象对应的输入流
+            InputStream is = conn.getInputStream();
+            //构造一个字符流缓存
+            br = new BufferedReader(new InputStreamReader(is));
+            String str = "";
+            while ((str = br.readLine()) != null){
+                result += str;
+            }
+            System.out.println(result);
+            //关闭流
+            is.close();
+            conn.disconnect();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (out != null){
+                    out.close();
+                }
+                if (br != null){
+                    br.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        SendMqDTO sendMqDTO = new SendMqDTO();
+        sendMSG(sendMqDTO);
+    }
+
+
+    }

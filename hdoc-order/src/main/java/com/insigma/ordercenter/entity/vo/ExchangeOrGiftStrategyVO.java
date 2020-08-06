@@ -55,6 +55,10 @@ public class ExchangeOrGiftStrategyVO extends BaseVO {
     @ApiModelProperty(value = "店铺列表")
     private List<ShopListVO> shopIdList;
 
+    @ApiModelProperty(value = "赠品列表")
+    private List<GiftListVO> giftListVOS;
+
+
     @ApiModelProperty(value = "旧商品编码")
     private String oldProductNo;
 

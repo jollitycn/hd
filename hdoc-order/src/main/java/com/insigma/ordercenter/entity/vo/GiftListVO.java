@@ -27,5 +27,5 @@ public class GiftListVO {
     private String productSpecs;
 
     @ApiModelProperty("单位数量")
-    private Integer unitQuantity;
+    private Integer stockQuantity;
 }

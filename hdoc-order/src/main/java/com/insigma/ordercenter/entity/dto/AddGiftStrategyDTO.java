@@ -29,7 +29,7 @@ public class AddGiftStrategyDTO implements Serializable {
     private Long strategyId;
 
     @ApiModelProperty(value = "赠品主题", required = true)
-    private String giftTheme;
+    private String theme;
 
     @ApiModelProperty(value = "开始日期", required = true)
     @JsonDeserialize(using = LocalDateDeserializer.class)
@@ -42,7 +42,7 @@ public class AddGiftStrategyDTO implements Serializable {
     @ApiModelProperty(value = "关联的店铺集合")
     private List<Long> shopIdList;
 
-//    @Valid
-//    @ApiModelProperty(value = "赠品信息集合", required = true)
-//    private List<AddGiftDTO> giftList;
+    @Valid
+    @ApiModelProperty(value = "赠品信息集合", required = true)
+    private List<AddGiftStrDTO> giftList;
 }

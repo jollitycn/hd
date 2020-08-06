@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.base.BaseRequest;
 import com.insigma.ordercenter.entity.SysRole;
 import com.insigma.ordercenter.entity.vo.SysRoleVO;
+import com.insigma.ordercenter.entity.vo.UserRoleVO;
 import com.insigma.ordercenter.mapper.SysRoleMapper;
 import com.insigma.ordercenter.service.ISysRoleService;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,14 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         List<SysRoleVO> sysRoleVOS = baseMapper.queryByRoleId(page, request.getId());
         page.setRecords(sysRoleVOS);
         return page;
+    }
+
+    @Override
+    public List<UserRoleVO> getUserRoleList(Long userId) {
+
+        List<UserRoleVO> list = this.baseMapper.getUserRoleList(userId);
+
+        return list;
     }
 
 }

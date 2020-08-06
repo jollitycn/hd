@@ -73,7 +73,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public IPage<SysUserListVO> getSysUserList(Page<SysUserListVO> page, BaseRequest request) {
 
         String userAccount = StringUtil.addPercent(request.getSearchKey());
-        List<SysUserListVO> resultList = baseMapper.getSysUserList(page, userAccount);
+        List<SysUserListVO> resultList = baseMapper.getSysUserList(page, userAccount,request.getUserName(),request.getRoleId());
         for (SysUserListVO user : resultList) {
             SysUser sysUser = getById(user.getCreateId());
 

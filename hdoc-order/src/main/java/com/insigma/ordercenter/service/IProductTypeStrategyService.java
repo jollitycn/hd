@@ -1,8 +1,10 @@
 package com.insigma.ordercenter.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.entity.ProductTypeStrategy;
 import com.insigma.ordercenter.entity.dto.AddProductTypeStrategyDTO;
+import com.insigma.ordercenter.entity.dto.StrategyParamDTO;
 import com.insigma.ordercenter.entity.vo.ProductTypeStrategyVO;
 
 import java.util.List;
@@ -19,12 +21,14 @@ public interface IProductTypeStrategyService extends IService<ProductTypeStrateg
     /**
      * 查询策略关联的商品分类
      *
+     *
+     * @param req
      * @param strategyId 策略id
      * @return java.util.List&lt;com.insigma.ordercenter.entity.vo.ProductTypeStrategyVO&gt;
      * @author Pan Juncai
      * @date 2020/7/29 10:24
      */
-    List<ProductTypeStrategyVO> listProductTypeStrategy(Long strategyId);
+    IPage<ProductTypeStrategyVO> listProductTypeStrategy(StrategyParamDTO req, Long strategyId);
 
     /**
      * 保存按商品分类拆分策略

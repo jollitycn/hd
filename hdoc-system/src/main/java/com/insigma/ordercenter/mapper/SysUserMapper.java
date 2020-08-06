@@ -16,7 +16,8 @@ import java.util.List;
  * @since 2020-01-09
  */
 public interface SysUserMapper extends BaseMapper<SysUser> {
-    List<SysUserListVO> getSysUserList(Page<SysUserListVO> page, @Param("userAccount") String userAccount);
+    List<SysUserListVO> getSysUserList(Page<SysUserListVO> page, @Param("userAccount") String userAccount,@Param(
+    "userName")String userName,@Param("roleId")Long roleId);
 
     /**
      * 根据账号查询用户信息

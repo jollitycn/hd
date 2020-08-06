@@ -1,7 +1,13 @@
 package com.insigma.ordercenter.entity.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.insigma.ordercenter.constant.Constant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,18 +28,21 @@ public class GiftStrategyInfoVO {
     private Long giftStrategyId;
 
     @ApiModelProperty(value = "赠品主题")
-    private String giftTheme;
+    private String theme;
 
     @ApiModelProperty(value = "开始日期")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDate startDate;
 
     @ApiModelProperty(value = "结束日期")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     private LocalDate endDate;
 
     @ApiModelProperty(value = "店铺列表")
     private List<ShopListVO> shopIdList;
+
+    @ApiModelProperty(value = "店铺名稱")
+    private String shopName;
 
     @ApiModelProperty(value = "赠品列表")
     private List<GiftListVO> giftListVOS;
