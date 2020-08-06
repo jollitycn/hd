@@ -73,6 +73,9 @@ public class AddShippingOrderDTO {
     @ApiModelProperty(value = "店铺编码")
     private String platformNo;
 
+    @ApiModelProperty(value = "订单Id")
+    private Long orderId;
+
     @ApiModelProperty(value = "订单明细列表")
     private List<OrderDetail> orderDetails;
 }
