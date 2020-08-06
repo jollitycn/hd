@@ -19,6 +19,6 @@ public class UpdateOrderStatuDTO implements Serializable {
     private Long orderId;
 
     @ApiModelProperty(value = "订单状态")
-    private Long orderStatus;
+    private Integer orderStatus;
 
 }

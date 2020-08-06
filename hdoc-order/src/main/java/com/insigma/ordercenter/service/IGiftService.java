@@ -2,6 +2,7 @@ package com.insigma.ordercenter.service;
 
 import com.insigma.ordercenter.entity.Gift;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.dto.GiftNumDTO;
 
 /**
  * <p>
@@ -13,4 +14,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IGiftService extends IService<Gift> {
 
+    /**
+     * 更新赠品數量
+     * @return
+     * @param giftNumDTO
+     */
+    Boolean updateGiftNum(GiftNumDTO giftNumDTO);
 }

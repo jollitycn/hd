@@ -2,4 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.GiftStrategyMapper">
 
+    <select id="getGiftList" resultType="com.insigma.ordercenter.entity.vo.GiftListVO">
+            SELECT
+                gt.gift_id,
+                gt.gift_num,
+                pt.product_name,
+                pt.product_no,
+                pt.product_specs,
+                pt.unit_quantity
+            FROM
+                t_gift gt
+            LEFT JOIN t_product pt ON pt.product_id = gt.product_id
+            WHERE
+                gt.gift_strategy_id= #{giftStrategyId}
+    </select>
+
+
+    <select id="getShop" resultType="com.insigma.ordercenter.entity.vo.ShopListVO">
+            SELECT
+                ps.shop_id,
+                sp.shop_name
+            FROM
+                t_param_shop ps
+            LEFT JOIN t_shop sp ON sp.shop_id = ps.shop_id
+            WHERE
+                ps.param_type = 2
+            AND ps.param_id = #{giftStrategyId}
+    </select>
 </mapper>

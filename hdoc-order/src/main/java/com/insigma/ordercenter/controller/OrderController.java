@@ -3,10 +3,12 @@ package com.insigma.ordercenter.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.dto.OrderDTO;
 import com.insigma.ordercenter.entity.dto.UpdateOrderStatuDTO;
 import com.insigma.ordercenter.entity.dto.AddShippingOrderResultDTO;
+import com.insigma.ordercenter.entity.dto.UpdateShippingOrderStatuDTO;
 import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.service.IOrderService;
 import io.swagger.annotations.Api;
@@ -54,8 +56,24 @@ public class OrderController extends BaseController{
     @ApiOperation(value = "修改订单状态")
     public Result<?> updateOrderStatu(UpdateOrderStatuDTO updateOrderStatuDTO) {
         Boolean aBoolean = orderService.updateOrderStatu(updateOrderStatuDTO);
-        return Result.success(aBoolean);
+        if(aBoolean){
+            return Result.success();
+        }else{
+            return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+        }
     }
+
+    @PutMapping("/shippingOrderStatuChange")
+    @ApiOperation(value = "发货单状态改变回调接口")
+    public Result<?> shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO) {
+        Boolean aBoolean = orderService.shippingOrderStatuChange(updateOrderStatuDTO);
+        if(aBoolean){
+            return Result.success();
+        }else{
+            return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+        }
+    }
+
 
     @GetMapping("/getOrderDetailList/{orderId}")
     @ApiOperation(value = "审单查询商品，以及仓库列表信息",response = OrderDetailExamineVO.class)
@@ -113,5 +131,20 @@ public class OrderController extends BaseController{
         List<OrderOperationLogVO> orderOperationLogVOS = orderService.queryOrderOperationLogInfo(orderId);
         return Result.success(orderOperationLogVOS);
     }
+
+    @GetMapping("/deleteOrder/{orderId}")
+    @ApiOperation(value = "删除订单信息（新建状态）")
+    public Result<?> deleteOrder(@Valid @PathVariable Long orderId) {
+        Boolean aBoolean = orderService.deleteOrder(orderId);
+        if(aBoolean){
+            return Result.success();
+        }else{
+            return Result.error(CodeMsg.DATA_DELETE_ERROR);
+        }
+    }
+
+
+
+
 
 }

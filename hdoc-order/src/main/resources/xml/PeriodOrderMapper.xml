@@ -113,10 +113,9 @@
             so.shipping_order_no,
             so.send_time
         FROM
-            t_order_shipping_order_relation sor
-            LEFT JOIN t_shipping_order so ON sor.shipping_order_id = so.shipping_order_id
+             t_shipping_order so
         WHERE
-            sor.order_id = #{orderId}
+            so.order_id = #{orderId}
     </select>
 
 </mapper>

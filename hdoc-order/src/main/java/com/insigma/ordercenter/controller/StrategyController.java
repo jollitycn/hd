@@ -2,6 +2,7 @@ package com.insigma.ordercenter.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Lists;
 import com.insigma.ordercenter.base.CodeMsg;
@@ -9,6 +10,8 @@ import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.entity.dto.*;
 import com.insigma.ordercenter.entity.vo.ExchangeOrGiftStrategyVO;
+import com.insigma.ordercenter.entity.vo.GiftListVO;
+import com.insigma.ordercenter.entity.vo.GiftStrategyInfoVO;
 import com.insigma.ordercenter.entity.vo.StrategyVO;
 import com.insigma.ordercenter.service.*;
 import io.swagger.annotations.Api;
@@ -65,6 +68,9 @@ public class StrategyController extends BaseController {
 
     @Resource
     private IParamShopService paramShopService;
+
+    @Resource
+    private IGiftService iGiftService;
 
     @GetMapping("/listStrategy")
     @ApiOperation("获取所有策略")
@@ -248,13 +254,6 @@ public class StrategyController extends BaseController {
 
         ExchangeOrGiftStrategyVO exchangeStrategy = this.exchangeStrategyService.getExchangeStrategy(exchangeStrategyId);
 
-//        ExchangeStrategy strategy = this.exchangeStrategyService.getById(exchangeStrategyId);
-//
-//        ExchangeOrGiftStrategyVO exchangeOrGiftStrategyVO = new ExchangeOrGiftStrategyVO();
-//        BeanUtil.copyProperties(strategy, exchangeOrGiftStrategyVO);
-//        exchangeOrGiftStrategyVO.setId(strategy.getExchangeStrategyId());
-//        exchangeOrGiftStrategyVO.setTheme(strategy.getExchangeTheme());
-
         return Result.success(exchangeStrategy);
     }
 
@@ -284,6 +283,96 @@ public class StrategyController extends BaseController {
         return Result.success();
     }
 
+    @PostMapping("/addGift")
+    @ApiOperation("新增赠品")
+    public Result addGift(@RequestBody @Valid AddGiftDTO req) {
 
+        boolean save = this.giftStrategyService.addGift(req);
+
+        if(save){
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_INSERT_ERROR);
+    }
+
+    @GetMapping("/getGiftList/{giftStrategyId}")
+    @ApiOperation("获取赠品列表")
+    public Result getGiftList(@PathVariable("giftStrategyId") Long giftStrategyId) {
+
+        List<GiftListVO> list = this.giftStrategyService.getGiftList(giftStrategyId);
+
+        return Result.success(list);
+    }
+
+
+
+    @PostMapping("/updateGiftNum")
+    @ApiOperation("更新赠品數量")
+    public Result updateGiftNum(@RequestBody @Valid GiftNumDTO giftNumDTO) {
+
+        Boolean update = this.iGiftService.updateGiftNum(giftNumDTO);
+        if(update){
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @DeleteMapping("/delGift/{giftId}")
+    @ApiOperation("移除赠品")
+    public Result delGift(@PathVariable("giftId") Long giftId) {
+
+        boolean remove = this.iGiftService.removeById(giftId);
+        if(remove){
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_DELETE_ERROR);
+    }
+
+
+    @GetMapping("/getGiftStrategyInfo/{giftStrategyId}")
+    @ApiOperation("查看赠品参数详情")
+    public Result getGiftStrategyInfo(@PathVariable("giftStrategyId") Long giftStrategyId) {
+
+        GiftStrategyInfoVO infoVO = this.giftStrategyService.getGiftStrategyInfo(giftStrategyId);
+
+        return Result.success(infoVO);
+    }
+
+
+    @PostMapping("/updateGiftStrategy")
+    @ApiOperation("更新赠品策略参数")
+    public Result updateGiftStrategy(@RequestBody @Valid AddGiftStrategyDTO req) {
+
+        Boolean update = this.giftStrategyService.updateGiftStrategy(req);
+
+        if(update){
+            return Result.success();
+        }
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
+    }
+
+    @DeleteMapping("/delGiftStrategyInfo/{giftStrategyId}")
+    @ApiOperation("删除赠品参数详情")
+    @Transactional(rollbackFor = Exception.class)
+    public Result delGiftStrategyInfo(@PathVariable("giftStrategyId") Long giftStrategyId){
+
+        boolean b = this.giftStrategyService.removeById(giftStrategyId);
+
+        // 删除关联商铺
+        QueryWrapper<ParamShop> wrapper = new QueryWrapper<>();
+        wrapper.eq(ParamShop.PARAM_TYPE,2);
+        wrapper.eq(ParamShop.PARAM_ID,giftStrategyId);
+        boolean remove = this.paramShopService.remove(wrapper);
+
+        // 删除赠品
+        QueryWrapper<Gift> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(Gift.GIFT_STRATEGY_ID,giftStrategyId);
+        boolean remove1 = this.iGiftService.remove(queryWrapper);
+
+        if(b && remove && remove1){
+            return Result.success();
+        }
+        throw new JSONException(CodeMsg.DATA_DELETE_ERROR.getMessage());
+    }
 
 }
