@@ -7,7 +7,7 @@ import lombok.Data;
 public class OrderFilterResponse extends BaseVO {
 
     private boolean success;
-    private int errorCode;
+    private String errorCode;
     private String errorMsg;
     private OrderFilterData msgData;
 

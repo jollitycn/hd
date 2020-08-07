@@ -9,5 +9,5 @@ import lombok.Data;
  * @create: 2020-08-03 15:47
  **/
 @Data
-public class CommonConsigneeDTO {
+public class CommonConsigneeDTO extends ContactDTO{
 }

@@ -12,6 +12,7 @@ import com.insigma.ordercenter.util.HttpClientUtil;
 import com.insigma.ordercenter.util.VerifyCodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import springfox.documentation.spring.web.json.Json;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -96,7 +97,7 @@ public class CallExpressServiceTools {
                 request = outboundConfirm();
                 break;
             case CANCEL_TRANSPORT:
-                request = expReceFilterOrderBsp();
+              //  request = expReceFilterOrderBsp();
                 break;
             case ROUTE_QUERY:
                 request = expReceSearchRoutes();
@@ -105,11 +106,15 @@ public class CallExpressServiceTools {
                 request = expReceGetSubMailno();
                 break;
             case CANCEL_INBOUND:
+                request = cancelInbound();
+                break;
+            case INBOUND_QUERY:
                 request = cancelOutbound();
                 break;
-            case CANCEL_OUTBOUND:
+                case CANCEL_OUTBOUND:
                 request = cancelOutbound();
                 break;
+
             case COMMODITY_INFO:
                 request = cancelOutbound();
                 break;
@@ -297,6 +302,7 @@ String request= "{\n" +
     }
 
     private static String outbound() {
+        Outbound  outbound = new Outbound();
         String request = "{" +
                 "    \"detail\": [" +
                 "        {" +
@@ -336,32 +342,36 @@ String request= "{\n" +
                 "        {}" +
                 "    ]," +
                 "    \"paymentDistrict\": \"大兴区\"," +
-                "    \"erpOrder\": \"00200703840110\"" +
+                "    \"erpOrder\": \"00200703840113\"" +
                 "}";
+
+
         return request;
     }
 
-    private static String expReceFilterOrderBsp() {
-        String request = "{" +
-                "\"erpOrder\": \"客户erp单号\"," +
-                "\"sfOrderNo\": \"SF生成订单号\"," +
-                "\"sourceCode\": \"SFTEST\"" +
-                "}";
+    private static String cancelInbound() {
+        String request = "";
+        List<CancelInbound> cancelInbounds = new ArrayList<CancelInbound>();
+        String companyCode = "200";
+        String warehouseCode = "200";
+        String erpOrder = "200";
+        String sfOrderNo = "接收成功";
+        cancelInbounds.add(new CancelInbound(companyCode, warehouseCode, erpOrder, sfOrderNo));
+//        String request = "[{\n" +
+//                "\"companyCode\": \"200\",\n" +
+//                "\"warehouseCode\": \"200\",\n" +
+//                "\"erpOrder\": \"200\",\n" +
+//                "\"sfOrderNo\": \"接收成功\"\n" +
+//                "}]";
+        request = JSON.toJSONString(cancelInbounds);
         return request;
     }
 
     private static String expReceSearchRoutes() {
         String request = "";
-        QuerySFRoute dto = new QuerySFRoute();
-        //dto.setCheckPhoneNo();
-        dto.setLanguage(0);
-        dto.setMethodType(1);
-        dto.setTrackingType(1);
-        List<String> numbers = new ArrayList<>();
-        numbers.add("444003077898");
-        numbers.add("441003077850");
-        dto.setTrackingNumber(numbers);
-        //dto.setReferenceNumber();
+        RouteQuery dto = new RouteQuery();
+        dto.setOrderType("1");
+        dto.setErpOrder("00200703840110");
         request = JSON.toJSONString(dto);
         return request;
     }

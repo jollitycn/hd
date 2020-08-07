@@ -65,10 +65,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Resource
     private IOrderSendReceiveService orderSendReceiveService;
 
-    @Autowired
+    @Resource
     private IShopService shopService;
 
-    @Autowired
+    @Resource
     private DefaultMQProducer producer;
 
     @Override
@@ -80,9 +80,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public Result addOrder(SendReceiveInfoVO sendReceiveInfoVO) {
         try {
+            //手动新增订单时，生成订单号
+            String orderId = generateOrderNo(sendReceiveInfoVO.getShopId());
             //新增订单表信息
             Order order = new Order();
-            // TODO 按规则定义订单号 order.setOrderNo();
+            order.setOrderNo(orderId);
             order.setCreateTime(LocalDateTime.now());
             order.setConsumerName(sendReceiveInfoVO.getConsumerName());
             order.setShopId(sendReceiveInfoVO.getShopId());
@@ -295,7 +297,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             detailShippingOrderRelation.setShippingOrderId(shippingOrder.getShippingOrderId());
             detailShippingOrderRelationService.save(detailShippingOrderRelation);
 
-            // 审单时，发送队列消息到卡夫卡，给储值卡系统消费
+            // 审单时，发送队列消息到卡夫卡，给储值卡系统消费(* 给原始订单Id,发货单信息)
             Message message = null;
             Object obj = JSONArray.toJSON(AddShippingOrderDTO);
             String str = obj.toString();

@@ -10,6 +10,8 @@ import com.insigma.ordercenter.entity.vo.LogisticsVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
 
+import java.util.List;
+
 /**
  * <p>
  * 发货单表 服务类
@@ -94,4 +96,10 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * @return
      */
     LogisticsVO queryLogistics(Long shippingOrderId);
+
+    /**
+     *获取待出库的发货单
+     * @return
+     */
+    List<ShippingOrder> getShippingOrderByStatus();
 }

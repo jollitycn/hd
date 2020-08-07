@@ -85,7 +85,7 @@ public class RefundServiceImpl extends ServiceImpl<RefundMapper, Refund> impleme
     @Override
     public boolean warehousing(Long refundId) {
 
-        //TODO 规划库存
+        //TODO 归还库存
 
         //更改退货单状态
         Refund refund=this.getById(refundId);

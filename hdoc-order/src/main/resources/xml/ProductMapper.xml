@@ -27,8 +27,17 @@
         <if test="productSku != null and productSku != ''">
             AND product_sku like #{productSku}
         </if>
-        <if test="productSku != null and productSku != ''">
+        <if test="productNo != null and productNo != ''">
             AND product_no like #{productNo}
+        </if>
+        <if test="isPutOn != null">
+            AND is_put_on=#{isPutOn}
+        </if>
+        <if test="isCombo != null">
+            AND is_combo=#{isCombo}
+        </if>
+        <if test="brand != null and brand != ''">
+            AND brand =#{brand}
         </if>
     </select>
 

@@ -12,7 +12,7 @@
         sp.platform_no,
         o.create_time,
         o.review_time,
-        ( SELECT MIN( tso.send_time ) FROM t_shipping_order tso WHERE tso.shipping_order_id = os.shipping_order_id ) send_time,
+        ( SELECT MIN( tso.send_time ) FROM t_shipping_order tso WHERE tso.shipping_order_id = so.shipping_order_id ) send_time,
         so.receive_name,
         so.mobile_phone,
         o.error_reason,

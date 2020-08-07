@@ -1,15 +1,16 @@
 package com.insigma.ordercenter.service;
 
 
-import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @FeignClient("hdoc-order")
 public interface OrderFeignService {
 
-    @ApiOperation(value = "获取年假发放规则")
-    @GetMapping("/personnel/getAnnualLeaveRule")
-    void getAnnualLeaveRule();
+    /**
+     * 根据系统发货单创建物流快递单
+     */
+    @GetMapping("/order/shipping-order/createLogisticsJob")
+    void createLogisticsJob();
 
 }

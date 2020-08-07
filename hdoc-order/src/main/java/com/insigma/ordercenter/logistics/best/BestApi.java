@@ -34,7 +34,7 @@ import java.util.List;
  * @date 2020/7/30 15:39
  */
 @Slf4j
-public class Test {
+public class BestApi {
     public static void getSign() {
         String url = "http://183.129.172.49/eoms/api/process?serviceVersion=1" +
                 ".0&serviceType=SyncProductInfo&msgType=async&partnerKey=123456&sign=67ecefcc8b3398ccf4f7d7c25a9ccea1" +
@@ -101,7 +101,7 @@ public class Test {
         TwSoNotifyReq req = new TwSoNotifyReq();
         req.setOperationFlag("W");
         req.setCustomerCode("FXNN");
-        req.setOrderCode("TEST0001");
+        req.setOrderCode("TEST0003");
         req.setWarehouseCode("QIMEN");
         req.setActionType("ADD");
         req.setOperationTypeCode("WDO");
@@ -148,6 +148,9 @@ public class Test {
         log.info("WmsSkuNotifyRsp = {}", executed);
     }
 
+    /**
+     * 运单查询
+     */
     public static void synTraceQuery() {
         Client client = new Client("http://183.129.172.49/ecapi/api/process", "FX-CS", "FXCS202005080001", "json");
         GetShippingOrderInfoReq req = new GetShippingOrderInfoReq();
@@ -166,10 +169,46 @@ public class Test {
         log.info("GetShippingOrderInfoRsp = {}", executed);
     }
 
+
+    public static TwSoNotifyRsp twSoNotify(TwSoNotifyReq twSoNotifyReq) {
+        Client client = new Client("http://183.129.172.49/ecapi/api/process", "FX-CS", "FXCS202005080001", "json");
+        TwSoNotifyReq req = new TwSoNotifyReq();
+        req.setOperationFlag("W");
+        req.setCustomerCode("FXNN");
+        req.setOrderCode("TEST0002");
+        req.setWarehouseCode("QIMEN");
+        req.setActionType("ADD");
+        req.setOperationTypeCode("WDO");
+
+        Receiver receiver = new Receiver();
+        receiver.setName("pjc");
+        receiver.setProvince("江西省");
+        receiver.setCity("赣州市");
+        receiver.setDistrict("章贡区");
+        receiver.setAddress("长征第一渡");
+        req.setReceiver(receiver);
+
+        ItemList itemList = new ItemList();
+        List<Item> items = Lists.newArrayList();
+        Item item = new Item();
+        item.setLineNo(1);
+        item.setItemSkuCode("WATER-01");
+        item.setItemName("恒大冰泉");
+        item.setItemQuantity(20);
+        items.add(item);
+        itemList.setItem(items);
+        req.setItemList(itemList);
+
+        return client.executed(req);
+    }
+
+
+
+
     public static void main(String[] args) {
 //        twCancelNotiry();
-//        twSoNotify();
+        twSoNotify();
 //        wmsSkuNotify();
-        synTraceQuery();
+//        synTraceQuery();
     }
 }

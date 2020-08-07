@@ -1,6 +1,7 @@
 package com.insigma.ordercenter.service.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -257,6 +259,19 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
         //TODO
 
         return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public List<ShippingOrder> getShippingOrderByStatus() {
+        QueryWrapper queryWrapper=new QueryWrapper();
+        queryWrapper.eq("status",Constant.SYS_ZERO);
+
+        List<ShippingOrder> result=baseMapper.selectList(queryWrapper);
+
+        return result;
     }
 
 
