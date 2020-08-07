@@ -57,7 +57,6 @@ public class ExchangeStrategy implements Serializable {
     @ApiModelProperty(value = "是否停用（0：未停用，1：已停用）")
     private Integer isStop;
 
-
     public static final String EXCHANGE_STRATEGY_ID = "exchange_strategy_id";
 
     public static final String STRATEGY_ID = "strategy_id";
@@ -71,8 +70,6 @@ public class ExchangeStrategy implements Serializable {
     public static final String OLD_PRODUCT_ID = "old_product_id";
 
     public static final String NEW_PRODUCT_ID = "new_product_id";
-
-    public static final String SHOP_IDS = "shop_ids";
 
     public static final String IS_STOP = "is_stop";
 

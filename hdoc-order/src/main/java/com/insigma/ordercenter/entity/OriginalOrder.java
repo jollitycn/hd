@@ -80,6 +80,15 @@ public class OriginalOrder implements Serializable {
     @ApiModelProperty("提货卡号")
     private String cardNo;
 
+    @ApiModelProperty("所在省份")
+    private String province;
+
+    @ApiModelProperty("所在城市")
+    private String city;
+
+    @ApiModelProperty("所在地区")
+    private String district;
+
 
     public static final String ORIGINAL_ORDER_ID = "original_order_id";
 

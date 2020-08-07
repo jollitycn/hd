@@ -26,7 +26,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("t_send_receive_info")
+@TableName("t_order_send_receive")
 @ApiModel(value = "SendReceiveInfo对象", description = "收发人信息")
 public class SendReceiveInfo implements Serializable {
 
@@ -39,17 +39,17 @@ public class SendReceiveInfo implements Serializable {
     @ApiModelProperty(value = "订单ID ")
     private Long orderId;
 
-    @ApiModelProperty(value = "发货人姓名")
+    @ApiModelProperty(value = "买家账号")
     private String sendName;
 
     @ApiModelProperty(value = "支付类型")
     private Integer payType;
 
-    @ApiModelProperty(value = "发货人备注")
+    @ApiModelProperty(value = "买家备注")
     private String sendRemark;
 
     @ApiModelProperty(value = "下单时间")
-    private LocalDateTime orderTime;
+    private String orderTime;
 
     @ApiModelProperty(value = "收货人姓名")
     private String receiveName;
@@ -75,6 +75,11 @@ public class SendReceiveInfo implements Serializable {
     @ApiModelProperty(value = "所在省份")
     private String province;
 
+    @ApiModelProperty("所在区县")
+    private String district;
+
+    @ApiModelProperty("买家昵称")
+    private String buyerNickname;
 
     public static final String SEND_RECEIVE_INFO_ID = "send_receive_info_id";
 

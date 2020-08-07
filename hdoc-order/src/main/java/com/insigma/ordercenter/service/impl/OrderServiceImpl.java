@@ -25,7 +25,6 @@ import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -278,32 +277,32 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (addShippingOrderResultDTO.getAddShippingOrderDTOS().size() == 0) {
             return Result.error(CodeMsg.DATA_INSERT_ERROR);
         }
-        addShippingOrderResultDTO.getAddShippingOrderDTOS().forEach(AddShippingOrderDTO -> {
+        addShippingOrderResultDTO.getAddShippingOrderDTOS().forEach(addShippingOrderDTO -> {
             ShippingOrder shippingOrder = new ShippingOrder();
-            shippingOrder.setWarehouseId(AddShippingOrderDTO.getWarehouseId());
-            shippingOrder.setExpressCompanyId(AddShippingOrderDTO.getExpressCompanyId());
-            shippingOrder.setCreateId(AddShippingOrderDTO.getCreateId());
+            shippingOrder.setWarehouseId(addShippingOrderDTO.getWarehouseId());
+            shippingOrder.setExpressCompanyId(addShippingOrderDTO.getExpressCompanyId());
+            shippingOrder.setCreateId(addShippingOrderDTO.getCreateId());
             shippingOrder.setCreateTime(LocalDateTime.now());
             shippingOrder.setIsDeleted(Constant.SYS_ZERO);
             shippingOrder.setStatus(Constant.SYS_ZERO);
-            shippingOrder.setReceiveName(AddShippingOrderDTO.getReceiveName());
-            shippingOrder.setMobilePhone(AddShippingOrderDTO.getMobilePhone());
-            shippingOrder.setAddress(AddShippingOrderDTO.getAddress());
+            shippingOrder.setReceiveName(addShippingOrderDTO.getReceiveName());
+            shippingOrder.setMobilePhone(addShippingOrderDTO.getMobilePhone());
+            shippingOrder.setAddress(addShippingOrderDTO.getAddress());
             shippingOrder.setIsCombined(Constant.SYS_ZERO);
-            shippingOrder.setShippingOrderNo(AddShippingOrderDTO.getShippingOrderNo());
+            shippingOrder.setShippingOrderNo(addShippingOrderDTO.getShippingOrderNo());
             shippingOrderService.save(shippingOrder);
             DetailShippingOrderRelation detailShippingOrderRelation = new DetailShippingOrderRelation();
-            detailShippingOrderRelation.setOrderDetailId(AddShippingOrderDTO.getOrderDetailId());
+            detailShippingOrderRelation.setOrderDetailId(addShippingOrderDTO.getOrderDetailId());
             detailShippingOrderRelation.setShippingOrderId(shippingOrder.getShippingOrderId());
             detailShippingOrderRelationService.save(detailShippingOrderRelation);
 
             // 审单时，发送队列消息到卡夫卡，给储值卡系统消费(* 给原始订单Id,发货单信息)
             Message message = null;
-            Object obj = JSONArray.toJSON(AddShippingOrderDTO);
+            Object obj = JSONArray.toJSON(addShippingOrderDTO);
             String str = obj.toString();
             try {
                 message = new Message("split_order",
-                        AddShippingOrderDTO.getPlatformNo(),//以店铺编码来分类消息
+                        addShippingOrderDTO.getPlatformNo(),//以店铺编码来分类消息
                         str.getBytes(RemotingHelper.DEFAULT_CHARSET));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -389,6 +388,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (null != shop) {
             platformNo = shop.getPlatformNo();
         }
+
+        String orderNo = getSerializeNo(platformNo) ;
+        return orderNo;
+    }
+
+    @Override
+    public String getSerializeNo(String code) {
         String timestamp = DateUtils.formatLocalDateTimeToString(LocalDateTime.now(), DateUtils.TIME_PATTERN_MILLISECOND);
         String randomNum = String.valueOf(RandomUtils.nextInt(999));
         if (randomNum.length() == 1) {
@@ -396,15 +402,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         } else if (randomNum.length() == 2) {
             randomNum = "0" + randomNum;
         }
-        String orderNo = platformNo + "00" + timestamp + randomNum;
-        return orderNo;
+        String serialNo = code + timestamp + randomNum;
+        return serialNo;
     }
+
 
     public static void main(String[] args) {
         for (int i = 0; i < 100; i++) {
-            Integer s = RandomUtils.nextInt(999);
-            System.out.println(s);
+//            System.out.println(getSerializeNo("FH"));
         }
+
     }
 
     @Override

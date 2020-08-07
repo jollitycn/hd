@@ -80,19 +80,6 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
             if (null == hdOrder.getCard() || hdOrder.getCard().size() ==0) {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
-            /*//写入订单
-            Order order = new Order();
-            order.setConsumerName(hdOrder.getReceiver_name());
-            order.setCreateTime(DateUtils.stringToLocalDateTime(hdOrder.getCreated(),DateUtils.TIME_PATTERN));
-            order.setTotalPrice(hdOrder.getTrade_payment());
-            order.setIsCombined(0);
-            order.setIsError(0);
-            order.setIsHandOrder(0);
-            order.setIsPeriod(0);
-            order.setMobilePhone(hdOrder.getReceiver_mobile());
-            order.setOrderNo("WX"+ IdWorker.getIdStr());
-            order.setOrderStatus(0);
-            order.set*/
             //写入原始订单表
             OriginalOrder originalOrder = new OriginalOrder();
             originalOrder.setAddress(hdOrder.getReceiver_adress());
@@ -105,14 +92,20 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
             originalOrder.setOrderNo(orderService.generateOrderNo(1L));
             originalOrder.setRemark(hdOrder.getBuyer_message());
             originalOrder.setShopId(1L);
-            if (StringUtils.isNotBlank(hdOrder.getR_state()) && StringUtils.isNotBlank(hdOrder.getR_city()) && StringUtils.isNotBlank(hdOrder.getR_district())) {
+            if (StringUtils.isNotBlank(hdOrder.getR_state()) && StringUtils.isNotBlank(hdOrder.getR_city())
+                    && StringUtils.isNotBlank(hdOrder.getR_district())) {
                 SysRegion province = regionService.detail(hdOrder.getR_state());
                 SysRegion city = regionService.detail(hdOrder.getR_city());
                 SysRegion district = regionService.detail(hdOrder.getR_district());
-                originalOrder.setAddress(province.getName()+city.getName()+district.getName()+hdOrder.getReceiver_adress());
-            } else  if (StringUtils.isNotBlank(hdOrder.getReceiver_state()) && StringUtils.isNotBlank(hdOrder.getReceiver_city()) && StringUtils.isNotBlank(hdOrder.getReceiver_district())) {
-                originalOrder.setAddress(hdOrder.getReceiver_state()+hdOrder.getReceiver_city()+hdOrder.getReceiver_district()+hdOrder.getReceiver_adress());
+                originalOrder.setProvince(province.getName());
+                originalOrder.setCity(city.getName());
+                originalOrder.setDistrict(district.getName());
+            } else if (StringUtils.isNotBlank(hdOrder.getReceiver_state()) && StringUtils.isNotBlank(hdOrder.getReceiver_city()) && StringUtils.isNotBlank(hdOrder.getReceiver_district())) {
+                originalOrder.setProvince(hdOrder.getReceiver_state());
+                originalOrder.setCity(hdOrder.getReceiver_city());
+                originalOrder.setDistrict(hdOrder.getReceiver_district());
             }
+            originalOrder.setAddress(hdOrder.getReceiver_adress());
             //保存提货卡号
             originalOrder.setCardNo(hdOrder.getCard().get(0).getCard_no());
             originalOrderService.save(originalOrder);
@@ -125,6 +118,7 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
                 Product product = productService.getOne(Wrappers.<Product>lambdaQuery().eq(Product::getProductNo, hdOrderDetail.getOuter_sku_i()));
                 if (null != product) {
                     detail.setProductId(product.getProductId());
+                    detail.setProductType(product.getProductType());
                 }
                 detail.setProductName(hdOrderDetail.getTitle());
                 detail.setProductPrice(hdOrderDetail.getPrice());
@@ -138,7 +132,6 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
     }
 }

@@ -23,6 +23,38 @@ public interface IOrderProcessService {
      */
     Map<String, Set<Long>> combinedOriginOrder(List<OriginalOrder> originalOrderList);
 
-//    Result<?>()
+    /**
+     * 换货策略
+     * @param batchNo
+     * @return
+     */
+    Result<?> exchangeProductStrategy(Long batchNo);
 
+    /**
+     * 赠品策略
+     * @param batchNo
+     * @return
+     */
+    Result<?> giftProductStrategy(Long batchNo);
+
+    /**
+     * 店铺账号黑名单拦截
+     * @param batchNo
+     * @return
+     */
+    Result<?> shopBlackStrategy(Long batchNo);
+
+    /**
+     * 手机号黑名单拦截
+     * @param batchNo
+     * @return
+     */
+    Result<?> mobileStrategy(Long batchNo);
+
+    /**
+     * 地区黑名单拦截
+     * @param batchNo
+     * @return
+     */
+    Result<?> districtStrategy(Long batchNo);
 }

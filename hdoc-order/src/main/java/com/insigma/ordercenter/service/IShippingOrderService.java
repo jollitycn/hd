@@ -102,4 +102,6 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * @return
      */
     List<ShippingOrder> getShippingOrderByStatus();
+
+    List<Long> getShippingOrderByProductType(Long orderDetailId);
 }

@@ -34,10 +34,12 @@ public class Order implements Serializable {
     @TableId(value = "order_id", type = IdType.ID_WORKER)
     private Long orderId;
 
+    private Long batchNo;
+
     @ApiModelProperty(value = "订单编号")
     private String orderNo;
 
-    @ApiModelProperty(value = "订单状态（0：待审核，1：待出库，2：打单出库，3：已完成，4：冻结）")
+    @ApiModelProperty(value = "订单状态（0：待审核，1：待出库，2：打单出库，3：已完成，4：冻结，5：异常）")
     private Integer orderStatus;
 
     @ApiModelProperty(value = "下单时间")
@@ -63,9 +65,6 @@ public class Order implements Serializable {
 
     @ApiModelProperty(value = "运费")
     private BigDecimal fee;
-
-    @ApiModelProperty(value = "是否异常（0：否，1：是）")
-    private Integer isError;
 
     @ApiModelProperty(value = "异常原因")
     private String errorReason;
