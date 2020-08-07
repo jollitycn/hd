@@ -7,6 +7,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.base.BaseRequest;
 import com.insigma.ordercenter.entity.SysRole;
 import com.insigma.ordercenter.entity.vo.SysRoleVO;
+import com.insigma.ordercenter.entity.vo.UserRoleVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -25,4 +28,10 @@ public interface ISysRoleService extends IService<SysRole> {
      */
     IPage<SysRoleVO> queryByRoleId(IPage<SysRoleVO> page, BaseRequest request);
 
+    /**
+     * 获取用户角色信息
+     * @param userId
+     * @return
+     */
+    List<UserRoleVO> getUserRoleList(Long userId);
 }

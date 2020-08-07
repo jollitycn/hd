@@ -70,6 +70,7 @@ public class SysDictionary implements Serializable {
     private Long modifyId;
 
     @ApiModelProperty(value = "修改时间")
+    @JsonSerialize(using= ToStringSerializer.class)
     private LocalDateTime modifyTime;
 
     @ApiModelProperty(value = "最后修改人姓名")

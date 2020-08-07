@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.entity.SysRole;
 import com.insigma.ordercenter.entity.vo.SysRoleVO;
+import com.insigma.ordercenter.entity.vo.UserRoleVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -27,4 +28,10 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      */
     List<SysRoleVO> queryByRoleId(IPage<SysRoleVO> page, @Param("id")Long id);
 
+    /**
+     * 获取用户角色信息
+     * @param userId
+     * @return
+     */
+    List<UserRoleVO> getUserRoleList(@Param("userId")Long userId);
 }

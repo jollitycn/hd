@@ -60,6 +60,7 @@ public class SysRoleController extends BaseController{
         data.setCreateId(redisUser().getUserId());
         data.setCreateTime(LocalDateTime.now());
         boolean status = sysRoleService.save(data);
+
         if (status) {
             return Result.success();
         } else {

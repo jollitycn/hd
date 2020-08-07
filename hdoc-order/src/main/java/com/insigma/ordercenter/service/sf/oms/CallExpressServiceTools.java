@@ -84,27 +84,27 @@ public class CallExpressServiceTools {
 
         String request = "";
         switch (espServiceCode) {
-            case TRANSPORT:
-                request = transport();
-                break;
+////            case TRANSPORT:
+////                request = transport();
+//                break;
             case INBOUND:
                 request = inbound();
                 break;
             case OUTBOUND:
                 request = outbound();
                 break;
-            case OUTBOUND_CONFIRM:
-                request = outboundConfirm();
-                break;
-            case CANCEL_TRANSPORT:
-              //  request = expReceFilterOrderBsp();
-                break;
+//            case OUTBOUND_CONFIRM:
+//                request = outboundConfirm();
+//                break;
+//            case CANCEL_TRANSPORT:
+//              //  request = expReceFilterOrderBsp();
+//                break;
             case ROUTE_QUERY:
                 request = expReceSearchRoutes();
                 break;
-            case QUERY_WAYBILL:
-                request = expReceGetSubMailno();
-                break;
+//            case QUERY_WAYBILL:
+//                request = expReceGetSubMailno();
+//                break;
             case CANCEL_INBOUND:
                 request = cancelInbound();
                 break;
@@ -115,9 +115,9 @@ public class CallExpressServiceTools {
                 request = cancelOutbound();
                 break;
 
-            case COMMODITY_INFO:
-                request = cancelOutbound();
-                break;
+//            case COMMODITY_INFO:
+//                request = cancelOutbound();
+//                break;
             default:
                 break;
         }
@@ -126,118 +126,118 @@ public class CallExpressServiceTools {
     }
 
     private static String outboundConfirm() {
-        String request ="{\n" +
-                "\"actualShipDateTime\": 1559715069000,\n" +
-                "\"carrier\": \"CP\",\n" +
-                "\"carrierProduct\": \"SE0030\",\n" +
-                "\"companyCode\": \"SUBWAY886\",\n" +
-                "\"dataStatus\": \"900\",\n" +
-                "\"erpOrder\": \"3236745471812081\",\n" +
-                "\"outboundContainer\": [{\n" +
-                "\"containerNo\": \"101000042296013\",\n" +
-                "\"containerType\": \"0\",\n" +
-                "\"items\": [{\n" +
-                "\"actualQty\": 1.0,\n" +
-                "\"erpOrderLineNum\": \"1\",\n" +
-                "\"inventoryStatus\": \"10\",\n" +
-                "\"lot\": \"\",\n" +
-                "\"lotattdesc\": \";;2019-04-22;;;;;N;;;;;\",\n" +
-                "\"skuNo\": \"WMSTESTID3\",\n" +
-                "\"userDef1\": \"\",\n" +
-                "\"userDef11\": \"\",\n" +
-                "\"userDef2\": \"10\",\n" +
-                "\"userDef3\": \"1\",\n" +
-                "\"userDef4\": \"\",\n" +
-                "\"userDef5\": \"\",\n" +
-                "\"userDef6\": \"\",\n" +
-                "\"userDef7\": \"0\",\n" +
-                "\"userDef8\": \"1\",\n" +
-                "\"weight\": 2.0,\n" +
-                "\"weightUm\": \"KG\"\n" +
-                "}],\n" +
-                "\"userDef1\": \"\",\n" +
-                "\"userDef2\": \"\",\n" +
-                "\"userDef3\": \"\",\"userDef4\": \"\",\n" +
-                "\"userDef5\": \"\",\n" +
-                "\"userDef6\": \"\",\n" +
-                "\"userDef7\": \"0\",\n" +
-                "\"userDef8\": \"1\",\n" +
-                "\"weight\": 2.0,\n" +
-                "\"weightUm\": \"KG\"\n" +
-                "}],\n" +
-                "\"outboundDetail\": [{\n" +
-                "\"actualQty\": 1.0,\n" +
-                "\"erpOrderLineNum\": \"1\",\n" +
-                "\"skuNo\": \"WMSTESTID3\"\n" +
-                "}],\n" +
-                "\"returnTracking\": \"\",\n" +
-                "\"sfOrderNo\": \"OB412459453353034489-100\",\n" +
-                "\"transactionId\": \"203SO190605000009\",\n" +
-                "\"userDef1\": \"\",\n" +
-                "\"userDef2\": \"000001308000*1,\",\n" +
-                "\"userDef3\": \"\",\n" +
-                "\"userDef4\": \"\",\n" +
-                "\"userDef5\": \"\",\n" +
-                "\"userDef6\": \"\",\n" +
-                "\"userDef7\": \"0\",\n" +
-                "\"userDef8\": \"0\",\n" +
-                "\"warehouseCode\": \"010VB\",\n" +
-                "\"wayBillNo\": \"SF7001001199534\"\n" +
+        String request ="{" +
+                "\"actualShipDateTime\": 1559715069000," +
+                "\"carrier\": \"CP\"," +
+                "\"carrierProduct\": \"SE0030\"," +
+                "\"companyCode\": \"SUBWAY886\"," +
+                "\"dataStatus\": \"900\"," +
+                "\"erpOrder\": \"3236745471812081\"," +
+                "\"outboundContainer\": [{" +
+                "\"containerNo\": \"101000042296013\"," +
+                "\"containerType\": \"0\"," +
+                "\"items\": [{" +
+                "\"actualQty\": 1.0," +
+                "\"erpOrderLineNum\": \"1\"," +
+                "\"inventoryStatus\": \"10\"," +
+                "\"lot\": \"\"," +
+                "\"lotattdesc\": \";;2019-04-22;;;;;N;;;;;\"," +
+                "\"skuNo\": \"WMSTESTID3\"," +
+                "\"userDef1\": \"\"," +
+                "\"userDef11\": \"\"," +
+                "\"userDef2\": \"10\"," +
+                "\"userDef3\": \"1\"," +
+                "\"userDef4\": \"\"," +
+                "\"userDef5\": \"\"," +
+                "\"userDef6\": \"\"," +
+                "\"userDef7\": \"0\"," +
+                "\"userDef8\": \"1\"," +
+                "\"weight\": 2.0," +
+                "\"weightUm\": \"KG\"" +
+                "}]," +
+                "\"userDef1\": \"\"," +
+                "\"userDef2\": \"\"," +
+                "\"userDef3\": \"\",\"userDef4\": \"\"," +
+                "\"userDef5\": \"\"," +
+                "\"userDef6\": \"\"," +
+                "\"userDef7\": \"0\"," +
+                "\"userDef8\": \"1\"," +
+                "\"weight\": 2.0," +
+                "\"weightUm\": \"KG\"" +
+                "}]," +
+                "\"outboundDetail\": [{" +
+                "\"actualQty\": 1.0," +
+                "\"erpOrderLineNum\": \"1\"," +
+                "\"skuNo\": \"WMSTESTID3\"" +
+                "}]," +
+                "\"returnTracking\": \"\"," +
+                "\"sfOrderNo\": \"OB412459453353034489-100\"," +
+                "\"transactionId\": \"203SO190605000009\"," +
+                "\"userDef1\": \"\"," +
+                "\"userDef2\": \"000001308000*1,\"," +
+                "\"userDef3\": \"\"," +
+                "\"userDef4\": \"\"," +
+                "\"userDef5\": \"\"," +
+                "\"userDef6\": \"\"," +
+                "\"userDef7\": \"0\"," +
+                "\"userDef8\": \"0\"," +
+                "\"warehouseCode\": \"010VB\"," +
+                "\"wayBillNo\": \"SF7001001199534\"" +
                 "}";
         return request;
     }
 
     private static String transport() {
-String request= "{\n" +
-        "\"orderItems\": [{\n" +
-        "\"temperatureLevelName\": \"0至10\",\n" +
-        "\"remark\": \"这是备注\",\n" +
-        "\"skuName\": \"维生素C咀嚼片\",\n" +
-        "\"quantity\": \"50\",\n" +
-        "\"grossWeight\": \"12\",\n" +
-        "\"volume\": \"12\"\n" +
-        "}],\n" +
-        "\"erpOrder\": \"1233\",\n" +
-        "\"monthlyAccount\": \"\",\n" +
-        "\"consigneeProvinceName\": \"广东省\",\n" +
-        "\"paymentTypeCode\": \"PR_ACCOUNT\",\n" +
-        "\"shipperLocationName\": \"宝安M17大厦A栋07\",\n" +
-        "\"shipperProvinceName\": \"广东省\",\n" +
-        "\"shipperContactName\": \"奥特曼\",\n" +
-        "\"shipperCityName\": \"深圳市\",\n" +
-        "\"consigneeLocationName\": \"广东省深圳市南山区深圳南山深南大道58号\",\n" +
-        "\"extenSystemOrderNo\": \"A00000002\",\n" +
-        "\"shipperName\": \"M17星制药\",\n" +
-        "\"consigneeCityName\": \"深圳市\",\n" +
-        "\"remark\": \"这是备注\",\n" +
-        "\"consigneeName\": \"顺丰物流公司\",\n" +
-        "\"consigneeContactName\": \"李生\",\n" +
-        "\"consigneeContactTel\": \"13924222888\",\n" +
-        "\"consigneeDistrictName\": \"宝安区\",\n" +
-        "\"shipperContactTel\": \"13700000002\",\n" +
-        "\"shipperDistrictName\": \"福田区\",\n" +
-        "\"productCode\": \"SE0059\",\n" +
-        "\"temperatureLevelCode\": \"3\",\n" +
-        "\"sourceCode\": \"demo-sysrem\",\n" +
-        "\"orderTime\": \"2018-01-01 12:12:12\",\n" +
-        "\"transportType\": \"LAND\",\n" +
-        "\"orderServices\": [{\n" +
-        "\"serviceValue\": \"\",\n" +
-        "\"serviceCode\": \"VA0003\"\n" +
-        "},\n" +
-        "{\n" +
-        "\"serviceValue\": \"3000\",\n" +
-        "\"serviceCode\": \"VA0021\"\n" +
-        "},\n" +
-        "{\n" +
-        "\"serviceValue\": \"\",\n" +
-        "\"serviceCode\": \"VA0059\"\n" +
-        "},\n" +
-        "{\n" +
-        "\"serviceValue\": \"\",\n" +
-        "\"serviceCode\": \"VA0058\"\n" +
-        "}\n" +
-        "]\n" +
+String request= "{" +
+        "\"orderItems\": [{" +
+        "\"temperatureLevelName\": \"0至10\"," +
+        "\"remark\": \"这是备注\"," +
+        "\"skuName\": \"维生素C咀嚼片\"," +
+        "\"quantity\": \"50\"," +
+        "\"grossWeight\": \"12\"," +
+        "\"volume\": \"12\"" +
+        "}]," +
+        "\"erpOrder\": \"1233\"," +
+        "\"monthlyAccount\": \"\"," +
+        "\"consigneeProvinceName\": \"广东省\"," +
+        "\"paymentTypeCode\": \"PR_ACCOUNT\"," +
+        "\"shipperLocationName\": \"宝安M17大厦A栋07\"," +
+        "\"shipperProvinceName\": \"广东省\"," +
+        "\"shipperContactName\": \"奥特曼\"," +
+        "\"shipperCityName\": \"深圳市\"," +
+        "\"consigneeLocationName\": \"广东省深圳市南山区深圳南山深南大道58号\"," +
+        "\"extenSystemOrderNo\": \"A00000002\"," +
+        "\"shipperName\": \"M17星制药\"," +
+        "\"consigneeCityName\": \"深圳市\"," +
+        "\"remark\": \"这是备注\"," +
+        "\"consigneeName\": \"顺丰物流公司\"," +
+        "\"consigneeContactName\": \"李生\"," +
+        "\"consigneeContactTel\": \"13924222888\"," +
+        "\"consigneeDistrictName\": \"宝安区\"," +
+        "\"shipperContactTel\": \"13700000002\"," +
+        "\"shipperDistrictName\": \"福田区\"," +
+        "\"productCode\": \"SE0059\"," +
+        "\"temperatureLevelCode\": \"3\"," +
+        "\"sourceCode\": \"demo-sysrem\"," +
+        "\"orderTime\": \"2018-01-01 12:12:12\"," +
+        "\"transportType\": \"LAND\"," +
+        "\"orderServices\": [{" +
+        "\"serviceValue\": \"\"," +
+        "\"serviceCode\": \"VA0003\"" +
+        "}," +
+        "{" +
+        "\"serviceValue\": \"3000\"," +
+        "\"serviceCode\": \"VA0021\"" +
+        "}," +
+        "{" +
+        "\"serviceValue\": \"\"," +
+        "\"serviceCode\": \"VA0059\"" +
+        "}," +
+        "{" +
+        "\"serviceValue\": \"\"," +
+        "\"serviceCode\": \"VA0058\"" +
+        "}" +
+        "]" +
         "}";
 
         return request;
@@ -245,58 +245,58 @@ String request= "{\n" +
 
     private static String inbound() {
 //        {"code":"200","message":"操作成功","model":[{"code":"200","errMsg":null,"sfOrderNo":"IB569100677344501338-100","extenSystemOrderNo":"11000853401258","transactionId":null}],"success":true}
-        String request = "{\"supplierCode\": \"CARREFOUR\",\n" +
-                "\"warehouseCode\": \"P024CSB\",\n" +
-                "\"sfOrderType\": \"PI\",\n" +
-                "\"licensePlateNumber\": \"221\",\n" +
-                "\"orderTime\": \"2018-09-20 15:50:50\",\n" +
-                "\"distributionType\": \"Y\",\n" +
-                "\"tradePlatform\": \"JD\",\n" +
-                "\"erpOrder\": \""+System.currentTimeMillis()+"\",\n" +
-                "\"userDef1\": \"\",\n" +
-                "\"item\": [{\n" +
-                "\"lotatt02\": \"2018-09-20 15:50:50\",\n" +
-                "\"qtyUm\": \"EA\",\n" +
-                "\"lotatt03\": \"2018-09-20 15:50:50\",\n" +
-                "\"lotatt01\": \"2018-09-20 15:50:50\",\n" +
-                "\"usetItemDef4\": \"\",\n" +
-                "\"usetItemDef3\": \"\",\n" +
-                "\"usetItemDef2\": \"\",\n" +
-                "\"inventoryStatus\": \"10\",\n" +
-                "\"lotatt05\": \"1234\",\n" +
-                "\"usetItemDef1\": \"\",\n" +
-                "\"remark\": \"\",\n" +
-                "\"erpOrderLineNum\": \"123123\",\n" +
-                "\"lot\": \"123\",\n" +
-                "\"expirationTime\": 6,\n" +
-                "\"price\": 11,\n" +
-                "\"qty\": \"2616\",\n" +
-                "\"skuNo\": \"LF15050041001\",\n" +
-                "\"usetItemDef8\": \"\",\n" +
-                "\"usetItemDef7\": \"\",\n" +
-                "\"usetItemDef6\": \"\",\n" +
-                "\"usetItemDef5\": \"\"\n" +
-                "}],\n" +
-                "\"tradeOrder\": \"111\",\n" +
-                "\"originalNo\": \"\",\n" +
-                "\"userDef8\": \"\",\n" +
-                "\"userDef6\": \"\",\n" +
-                "\"requirement\": \"\",\n" +
-                "\"userDef7\": \"\",\n" +
-                "\"userDef4\": \"\",\n" +
-                "\"userDef5\": \"\",\n" +
-                "\"userDef2\": \"\",\n" +
-                "\"buyer\": \"\",\n" +
-                "\"driverCalls\": \"\",\n" +
-                "\"erpOrderType\": \"10\",\n" +
-                "\"userDef3\": \"\",\n" +
-                "\"buyerPhone\": \"\",\n" +
-                "\"driver\": \"\",\n" +
-                "\"expectDate\": \"2018-09-20 15:50:50\",\n" +
-                "\"customer\": {\n" +
-                "\"companyCode\": \"7550057640\",\n" +
-                "\"customerMonthlyCard\": \"7550057640\"\n" +
-                "}\n" +
+        String request = "{\"supplierCode\": \"CARREFOUR\"," +
+                "\"warehouseCode\": \"P024CSB\"," +
+                "\"sfOrderType\": \"PI\"," +
+                "\"licensePlateNumber\": \"221\"," +
+                "\"orderTime\": \"2018-09-20 15:50:50\"," +
+                "\"distributionType\": \"Y\"," +
+                "\"tradePlatform\": \"JD\"," +
+                "\"erpOrder\": \""+System.currentTimeMillis()+"\"," +
+                "\"userDef1\": \"\"," +
+                "\"item\": [{" +
+                "\"lotatt02\": \"2018-09-20 15:50:50\"," +
+                "\"qtyUm\": \"EA\"," +
+                "\"lotatt03\": \"2018-09-20 15:50:50\"," +
+                "\"lotatt01\": \"2018-09-20 15:50:50\"," +
+                "\"usetItemDef4\": \"\"," +
+                "\"usetItemDef3\": \"\"," +
+                "\"usetItemDef2\": \"\"," +
+                "\"inventoryStatus\": \"10\"," +
+                "\"lotatt05\": \"1234\"," +
+                "\"usetItemDef1\": \"\"," +
+                "\"remark\": \"\"," +
+                "\"erpOrderLineNum\": \"123123\"," +
+                "\"lot\": \"123\"," +
+                "\"expirationTime\": 6," +
+                "\"price\": 11," +
+                "\"qty\": \"2616\"," +
+                "\"skuNo\": \"LF15050041001\"," +
+                "\"usetItemDef8\": \"\"," +
+                "\"usetItemDef7\": \"\"," +
+                "\"usetItemDef6\": \"\"," +
+                "\"usetItemDef5\": \"\"" +
+                "}]," +
+                "\"tradeOrder\": \"111\"," +
+                "\"originalNo\": \"\"," +
+                "\"userDef8\": \"\"," +
+                "\"userDef6\": \"\"," +
+                "\"requirement\": \"\"," +
+                "\"userDef7\": \"\"," +
+                "\"userDef4\": \"\"," +
+                "\"userDef5\": \"\"," +
+                "\"userDef2\": \"\"," +
+                "\"buyer\": \"\"," +
+                "\"driverCalls\": \"\"," +
+                "\"erpOrderType\": \"10\"," +
+                "\"userDef3\": \"\"," +
+                "\"buyerPhone\": \"\"," +
+                "\"driver\": \"\"," +
+                "\"expectDate\": \"2018-09-20 15:50:50\"," +
+                "\"customer\": {" +
+                "\"companyCode\": \"7550057640\"," +
+                "\"customerMonthlyCard\": \"7550057640\"" +
+                "}" +
                 "}";
         return request;
     }
@@ -357,11 +357,11 @@ String request= "{\n" +
         String erpOrder = "200";
         String sfOrderNo = "接收成功";
         cancelInbounds.add(new CancelInbound(companyCode, warehouseCode, erpOrder, sfOrderNo));
-//        String request = "[{\n" +
-//                "\"companyCode\": \"200\",\n" +
-//                "\"warehouseCode\": \"200\",\n" +
-//                "\"erpOrder\": \"200\",\n" +
-//                "\"sfOrderNo\": \"接收成功\"\n" +
+//        String request = "[{" +
+//                "\"companyCode\": \"200\"," +
+//                "\"warehouseCode\": \"200\"," +
+//                "\"erpOrder\": \"200\"," +
+//                "\"sfOrderNo\": \"接收成功\"" +
 //                "}]";
         request = JSON.toJSONString(cancelInbounds);
         return request;
@@ -387,11 +387,11 @@ String request= "{\n" +
      //   cob.setReceiptId("00200703840108");
         dto.setCompanyCode("0208255482");
         dto.setWarehouserCode("010VB");
-        String request = "{\n" +
-                "\"erpOrder\": \"00200703840108\",\n" +
-                "\"receiptId\": \"200\",\n" +
-                "\"companyCode\": \"0208255482\",\n" +
-                "\"warehouserCode\": \"010VB\"\n" +
+        String request = "{" +
+                "\"erpOrder\": \"00200703840108\"," +
+                "\"receiptId\": \"200\"," +
+                "\"companyCode\": \"0208255482\"," +
+                "\"warehouserCode\": \"010VB\"" +
                 "}";
         request = JSON.toJSONString(dto);
         return request;

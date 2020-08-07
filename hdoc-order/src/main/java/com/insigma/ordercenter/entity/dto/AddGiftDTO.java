@@ -23,6 +23,6 @@ public class AddGiftDTO implements Serializable {
     @ApiModelProperty(value = "赠品策略id", required = true)
     private Long giftStrategyId;
 
-//    @ApiModelProperty(value = "赠品的数量", required = true)
-//    private Long giftNum;
+    @ApiModelProperty(value = "赠品的数量", required = true)
+    private Long giftNum;
 }

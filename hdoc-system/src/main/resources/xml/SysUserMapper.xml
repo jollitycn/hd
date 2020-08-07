@@ -15,6 +15,21 @@
         <if test="userAccount != null and userAccount != ''">
             and su.user_account like #{userAccount}
         </if>
+
+        <if test="userName != null and userName != ''">
+            and su.user_name like '%${userName}%'
+        </if>
+
+        <if test="roleId != null">
+           and su.user_id IN (
+            SELECT
+            b.user_id
+            FROM
+            t_user_role_relation b
+            WHERE
+            b.role_id = #{roleId}
+            )
+        </if>
         order by su.create_time desc
     </select>
 

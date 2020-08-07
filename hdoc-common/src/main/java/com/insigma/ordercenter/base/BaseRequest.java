@@ -26,4 +26,10 @@ public class BaseRequest {
     @ApiModelProperty(value = "搜索关键字")
     private String searchKey;
 
+    @ApiModelProperty(value = "真实姓名")
+    private String userName;
+
+    @ApiModelProperty(value = "角色id")
+    private Long roleId;
+
 }

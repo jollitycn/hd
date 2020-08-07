@@ -133,35 +133,35 @@ public  class  SFExpressRequest extends ExpressRequest {
 
         private void testRequest() throws Exception {
                 String reqURL = "http://bsp-oisp.sf-express.com/bsp-oisp/sfexpressService";
-                String reqXml = "<Request service = \"OrderService\" lang = \"zh-CN\" > \n" +
-                        "<Head>SLKJ2019</Head>\n" +
-                        "<Body>\n" +
-                        "  <Order \n" +
-                        "	orderid=\"SFKD-20160219000019\" \n" +
-                        "	j_company=\"深圳宝龙达信息技术股份有限公司\" \n" +
-                        "	j_contact=\"邓丽君\" \n" +
-                        "	j_tel=\"15323233432\" \n" +
-                        "	j_mobile=\"15322234342\" \n" +
-                        "	j_province=\"广东省\" \n" +
-                        "	j_city=\"深圳市\"\n" +
-                        "	j_county=\"南山区\"\n" +
-                        "	j_address=\"广东省深圳市南山区西丽镇塘朗同富裕工业城7栋\" \n" +
-                        "	d_contact=\"四海\" d_tel=\"15023434543\" \n" +
-                        "	d_mobile=\"15423456545\" \n" +
-                        "	d_province=\"广东省\" \n" +
-                        "	d_city=\"深圳市\" \n" +
-                        "	d_county=\"南山区\" \n" +
-                        "	d_address=\"科技园软件产业基地\" \n" +
-                        "	express_type=\"1\" \n" +
-                        "	pay_method=\"1\" \n" +
-                        "	custid=\"7551234567\" \n" +
-                        "	parcel_quantity=\"1\" \n" +
-                        "	is_docall=\"0\" \n" +
-                        "	sendstarttime=\"\"  \n" +
-                        "	remark=\"电子产品 笔记本+显卡\"\n" +
-                        "        is_unified_waybill_no=\"1\">\n" +
-                        "</Order>\n" +
-                        "</Body> \n" +
+                String reqXml = "<Request service = \"OrderService\" lang = \"zh-CN\" > " +
+                        "<Head>SLKJ2019</Head>" +
+                        "<Body>" +
+                        "  <Order " +
+                        "	orderid=\"SFKD-20160219000019\" " +
+                        "	j_company=\"深圳宝龙达信息技术股份有限公司\" " +
+                        "	j_contact=\"邓丽君\" " +
+                        "	j_tel=\"15323233432\" " +
+                        "	j_mobile=\"15322234342\" " +
+                        "	j_province=\"广东省\" " +
+                        "	j_city=\"深圳市\"" +
+                        "	j_county=\"南山区\"" +
+                        "	j_address=\"广东省深圳市南山区西丽镇塘朗同富裕工业城7栋\" " +
+                        "	d_contact=\"四海\" d_tel=\"15023434543\" " +
+                        "	d_mobile=\"15423456545\" " +
+                        "	d_province=\"广东省\" " +
+                        "	d_city=\"深圳市\" " +
+                        "	d_county=\"南山区\" " +
+                        "	d_address=\"科技园软件产业基地\" " +
+                        "	express_type=\"1\" " +
+                        "	pay_method=\"1\" " +
+                        "	custid=\"7551234567\" " +
+                        "	parcel_quantity=\"1\" " +
+                        "	is_docall=\"0\" " +
+                        "	sendstarttime=\"\"  " +
+                        "	remark=\"电子产品 笔记本+显卡\"" +
+                        "        is_unified_waybill_no=\"1\">" +
+                        "</Order>" +
+                        "</Body> " +
                         "</Request>";//接口请求对应得xml报文
 
                 String myReqXML = reqXml.replaceAll("SLKJ2019", clientCode);

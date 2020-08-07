@@ -6,12 +6,14 @@ import com.insigma.ordercenter.base.BaseRequest;
 import com.insigma.ordercenter.entity.Shop;
 import com.insigma.ordercenter.entity.Warehouse;
 import com.insigma.ordercenter.entity.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@ApiModel("ShopQueryResponse")
 public class ShopQueryResponse extends Shop {
 
     @ApiModelProperty(value = "创建人名称")

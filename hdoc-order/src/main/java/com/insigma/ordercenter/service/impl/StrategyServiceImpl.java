@@ -63,7 +63,7 @@ public class StrategyServiceImpl extends ServiceImpl<StrategyMapper, Strategy> i
                 result = null == strategy.getExpressTime() ? 0 : strategy.getExpressTime();
                 break;
             case 7:
-                result = productTypeStrategyService.listProductTypeStrategy(7L);
+                result = productTypeStrategyService.listProductTypeStrategy(req,7L);
                 break;
             case 8:
                 result = strategy.getPriority();
