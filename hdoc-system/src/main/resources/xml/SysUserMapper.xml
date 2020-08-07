@@ -21,7 +21,7 @@
         </if>
 
         <if test="roleId != null">
-           and a.user_id IN (
+           and su.user_id IN (
             SELECT
             b.user_id
             FROM
