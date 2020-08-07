@@ -20,8 +20,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class OrderApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(OrderApplication.class,args);
-
     }
 }
