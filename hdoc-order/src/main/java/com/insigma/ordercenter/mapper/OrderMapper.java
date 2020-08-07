@@ -32,7 +32,7 @@ public interface OrderMapper extends BaseMapper<Order> {
 //                                          @Param("mobilePhone") String mobilePhone);
 
     IPage<OrderListVO> queryOrderListPage(Page<OrderListVO> page,
-                                          OrderDTO orderDTO);
+                                          @Param("orderDTO")OrderDTO orderDTO);
 
     List<ExpressCompanyVO> queryExpressCompany(@Param("warehouseId")Long warehouseId);
 
