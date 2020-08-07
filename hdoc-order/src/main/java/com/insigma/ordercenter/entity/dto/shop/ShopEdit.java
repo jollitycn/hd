@@ -8,6 +8,7 @@ import com.insigma.ordercenter.entity.Shop;
 import com.insigma.ordercenter.entity.ShopWarehouse;
 import com.insigma.ordercenter.entity.vo.BaseVO;
 import com.insigma.ordercenter.utils.DataUtil;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@ApiModel("ShopEdit")
 public class ShopEdit extends BaseVO {
 
 

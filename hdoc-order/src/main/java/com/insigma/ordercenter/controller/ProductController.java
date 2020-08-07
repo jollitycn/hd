@@ -38,7 +38,7 @@ public class ProductController extends BaseController {
     @Autowired
     private IProductComboService productComboService;
 
-    @Resource
+    @Autowired
     private IWarehouseProductRelationService warehouseProductRelationService;
 
 

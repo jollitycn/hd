@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.insigma.ordercenter.base.BaseRequest;
 import com.insigma.ordercenter.entity.vo.BaseVO;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
+@ApiModel("ShopQueryRequest")
 public class ShopQueryRequest extends BaseVO {
 
     @ApiModelProperty(value = "店铺名称")
