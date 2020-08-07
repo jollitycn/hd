@@ -27,12 +27,14 @@ public class ShopWarehouseServiceImpl extends ServiceImpl<ShopWarehouseMapper, S
 
     public void update(Long shopId, List<String> warehouseIds) {
         shopWarehouseMapper.deleteByShopId(shopId);
-        for (String warehouseId :
-                warehouseIds) {
-            ShopWarehouse shopWarehouse = new ShopWarehouse();
-            shopWarehouse.setShopId(shopId);
-            shopWarehouse.setWarehouseId(Long.parseLong(warehouseId));
-            shopWarehouseMapper.insert(shopWarehouse);
+        if(warehouseIds!=null) {
+            for (String warehouseId :
+                    warehouseIds) {
+                ShopWarehouse shopWarehouse = new ShopWarehouse();
+                shopWarehouse.setShopId(shopId);
+                shopWarehouse.setWarehouseId(Long.parseLong(warehouseId));
+                shopWarehouseMapper.insert(shopWarehouse);
+            }
         }
     }
 

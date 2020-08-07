@@ -24,6 +24,7 @@ import com.insigma.ordercenter.service.IProductService;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
 import com.insigma.ordercenter.utils.StringUtil;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -42,7 +43,7 @@ import java.util.List;
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements IProductService {
 
-    @Resource
+    @Autowired
     private IWarehouseProductRelationService warehouseProductRelationService;
 
     @Resource
