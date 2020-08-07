@@ -58,7 +58,7 @@ public class OriginalOrderQuartz {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Scheduled(fixedDelay = 2*60*1000)
+//    @Scheduled(fixedDelay = 2*60*1000)
     public void originOrderDeal() {
         Long batchNo = IdWorker.getId();
         log.info("================= 原始订单处理任务 START ==============");

@@ -78,7 +78,7 @@ public class ShippingStrategyQuartz {
     @Autowired
     private IWarehouseProductRelationService wprService;
 
-    @Scheduled(fixedDelay = 2*60*1000)
+//    @Scheduled(fixedDelay = 2*60*1000)
     public boolean shippingOrderDeal() {
         //从缓存获取策略
         Object redisStrategy = redisUtil.get("strategyList");
