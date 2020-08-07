@@ -27,6 +27,9 @@ public class UpdateUserQuery extends BaseQuery {
     @ApiModelProperty(value = "联系电话")
     private String mobilePhone;
 
-    @ApiModelProperty(value = "选择角色")
-    private List<Long> roleIds;
+    @ApiModelProperty(value = "备注")
+    private String remark;
+
+//    @ApiModelProperty(value = "选择角色")
+//    private List<Long> roleIds;
 }

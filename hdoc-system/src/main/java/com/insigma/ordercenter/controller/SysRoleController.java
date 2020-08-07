@@ -55,7 +55,7 @@ public class SysRoleController extends BaseController{
         wrapper.eq("role_name", data.getRoleName());
         int count = sysRoleService.count(wrapper);
         if (count > 0) {
-            return Result.success(CodeMsg.ROLE_NAME_REPEAT);
+            return Result.error(CodeMsg.ROLE_NAME_REPEAT);
         }
         data.setCreateId(redisUser().getUserId());
         data.setCreateTime(LocalDateTime.now());
@@ -64,7 +64,7 @@ public class SysRoleController extends BaseController{
         if (status) {
             return Result.success();
         } else {
-            return Result.success(CodeMsg.DATA_INSERT_ERROR);
+            return Result.error(CodeMsg.DATA_INSERT_ERROR);
         }
     }
 

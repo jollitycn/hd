@@ -237,13 +237,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         wrapper.eq("user_id", userInfo.getUserId());
         userRoleRelationService.remove(wrapper);
 
-        //存储用户角色关联
-        for (Long roleId : userInfo.getRoleIds()) {
-            UserRoleRelation userRoleRelation = new UserRoleRelation();
-            userRoleRelation.setUserId(sysUser.getUserId());
-            userRoleRelation.setRoleId(roleId);
-            status = status && userRoleRelationService.save(userRoleRelation);
-        }
+//        //存储用户角色关联
+//        for (Long roleId : userInfo.getRoleIds()) {
+//            UserRoleRelation userRoleRelation = new UserRoleRelation();
+//            userRoleRelation.setUserId(sysUser.getUserId());
+//            userRoleRelation.setRoleId(roleId);
+//            status = status && userRoleRelationService.save(userRoleRelation);
+//        }
 
         return status;
     }

@@ -151,22 +151,23 @@ public class BestApi {
     /**
      * 运单查询
      */
-    public static void synTraceQuery() {
+    public static GetShippingOrderInfoRsp synTraceQuery( GetShippingOrderInfoReq infoReq) {
         Client client = new Client("http://183.129.172.49/ecapi/api/process", "FX-CS", "FXCS202005080001", "json");
-        GetShippingOrderInfoReq req = new GetShippingOrderInfoReq();
-        req.setCustomerCode("FXNN");
-        req.setWarehouseCode("QIMEN");
+//        GetShippingOrderInfoReq req = new GetShippingOrderInfoReq();
+//        req.setCustomerCode("FXNN");
+//        req.setWarehouseCode("QIMEN");
+//
+//        List<String> shippingOrderList = Lists.newArrayList();
+//        ShippingOrders shippingOrders = new ShippingOrders();
+//        shippingOrderList.add("PDD202007230008");
+//        shippingOrderList.add("PDD202007230007");
+//        shippingOrders.setShippingOrder(shippingOrderList);
+//        req.setShippingOrders(shippingOrders);
 
-        List<String> shippingOrderList = Lists.newArrayList();
-        ShippingOrders shippingOrders = new ShippingOrders();
-        shippingOrderList.add("PDD202007230008");
-        shippingOrderList.add("PDD202007230007");
-        shippingOrders.setShippingOrder(shippingOrderList);
-        req.setShippingOrders(shippingOrders);
-
-        log.info("入参GetShippingOrderInfoReq = {}", JSONUtil.toJsonStr(req));
-        GetShippingOrderInfoRsp executed = client.executed(req);
+        log.info("入参GetShippingOrderInfoReq = {}", JSONUtil.toJsonStr(infoReq));
+        GetShippingOrderInfoRsp executed = client.executed(infoReq);
         log.info("GetShippingOrderInfoRsp = {}", executed);
+        return executed;
     }
 
 

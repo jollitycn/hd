@@ -34,6 +34,9 @@ public class SysUserDetailVO extends BaseVO {
     @ApiModelProperty(value = "联系电话")
     private String mobilePhone;
 
+    @ApiModelProperty(value = "备注")
+    private String remark;
+
     @ApiModelProperty(value = "角色类型")
     private List<SysRoleListVO> roles;
 }

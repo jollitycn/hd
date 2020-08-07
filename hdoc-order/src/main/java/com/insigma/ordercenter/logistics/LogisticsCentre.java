@@ -6,16 +6,21 @@ import com.insigma.ordercenter.entity.dto.CommonConsigneeDTO;
 import com.insigma.ordercenter.entity.dto.CommonConsignorDTO;
 import com.insigma.ordercenter.entity.dto.CommonProductDTO;
 import com.insigma.ordercenter.logistics.best.BestApi;
+import com.insigma.ordercenter.logistics.best.sdk.getShippingOrderInfo.request.GetShippingOrderInfoReq;
+import com.insigma.ordercenter.logistics.best.sdk.getShippingOrderInfo.request.ShippingOrders;
+import com.insigma.ordercenter.logistics.best.sdk.getShippingOrderInfo.response.GetShippingOrderInfoRsp;
 import com.insigma.ordercenter.logistics.best.sdk.twSoNotify.request.*;
 import com.insigma.ordercenter.logistics.best.sdk.twSoNotify.response.TwSoNotifyRsp;
-import com.insigma.ordercenter.logistics.sf.qiao.CargoDetail;
-import com.insigma.ordercenter.logistics.sf.qiao.ContactInfo;
-import com.insigma.ordercenter.logistics.sf.qiao.Order;
-import com.insigma.ordercenter.logistics.sf.qiao.OrderFilterResponse;
+import com.insigma.ordercenter.logistics.sf.qiao.*;
+import com.insigma.ordercenter.service.IBestService;
+import com.insigma.ordercenter.service.IJingdongServer;
 import com.insigma.ordercenter.service.sf.qiao.APIResponse;
 import com.insigma.ordercenter.service.sf.qiao.EspServiceCode;
 import com.insigma.ordercenter.service.sf.qiao.QiaoAPIService;
-
+import com.insigma.ordercenter.utils.SpringContextUtils;
+import com.jd.open.api.sdk.request.etms.LdopReceiveTraceGetRequest;
+import com.jd.open.api.sdk.response.etms.LdopReceiveTraceGetResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,16 +32,24 @@ import java.util.List;
  **/
 public class LogisticsCentre {
 
+    private static IJingdongServer iJingdongServer;
+
+    private static IBestService iBestService;
+
+    static {
+        iJingdongServer = SpringContextUtils.getBean(IJingdongServer.class);
+        iBestService = SpringContextUtils.getBean(IBestService.class);
+    }
 
     /**
-     * 统一下单接口
-     * @param shippingOrderNo 发货单单号
-     * @param commonProduct 通用货物封装类
-     * @param commonConsignee 通用收件人封装类
-     * @param commonConsignor 通用发件人封装类
-     * @param logisticsType 1顺丰速运 2百世汇通 3宅急送 4京东
-     * @return
-     */
+         * 统一下单接口
+         * @param shippingOrderNo 发货单单号
+         * @param commonProduct 通用货物封装类
+         * @param commonConsignee 通用收件人封装类
+         * @param commonConsignor 通用发件人封装类
+         * @param logisticsType 1顺丰速运 2百世汇通 3宅急送 4京东
+         * @return
+         */
     public static Result generateLogistics(String shippingOrderNo,
                                            CommonProductDTO commonProduct,
                                            CommonConsigneeDTO commonConsignee ,
@@ -86,24 +99,108 @@ public class LogisticsCentre {
 
     /**
      * 取消物流订单接口
-     * @param shippingOrderId 发货单id
+     * @param expressNo 物流单号
+     * @param logisticsType 物流类型1顺丰速运 2百世汇通 3宅急送 4京东
      * @return
      */
-    public static Result cancelLogistics(Long shippingOrderId){
+    public static Result cancelLogistics(String expressNo,int logisticsType){
 
         //TODO
         return null;
     }
 
     /**
-     * 查询物流单接口
-     * @param shippingOrderId 发货单id
+     * 取消物流订单接口
+     * @param expressNo 物流单号
+     * @param logisticsType 物流类型1顺丰速运 2百世汇通 3宅急送 4京东
      * @return
      */
-    public static Result queryLogistics(Long shippingOrderId){
+    public static Result queryLogistics(String expressNo,int logisticsType){
+
+        // 匹配物流公司，查询不同物流公司的物流单接口
+        switch (logisticsType){
+            case 1:
+                // 组装参数
+                QuerySFRoute route = searchRoutesParam(expressNo);
+
+                // 执行顺丰查询物流单接口
+                try {
+                    APIResponse query = QiaoAPIService.query(EspServiceCode.EXP_RECE_SEARCH_ROUTES, route);
+
+                    // 返回结果
+                    return Result.success(query);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                break;
+
+            case 2:
+
+                // 组装参数
+                GetShippingOrderInfoReq infoReq = synTraceQueryParam(expressNo);
+
+               // 执行百世汇通查询物流单接口
+                GetShippingOrderInfoRsp infoRsp = iBestService.synTraceQuery(infoReq);
+
+                // 返回结果处理
+                return Result.success(infoRsp);
+
+               // break;
+            case 3:
+
+                break;
+
+
+            case 4:
+                // 组装参数
+                LdopReceiveTraceGetRequest getRequest = getParam(expressNo);
+
+                // 执行京东查询物流单接口
+                LdopReceiveTraceGetResponse response = iJingdongServer.get(getRequest);
+
+                // 返回结果处理
+                return Result.success(response);
+               // break;
+
+            default:
+
+                break;
+        }
+
+
 
         //TODO
         return null;
+    }
+
+    private static QuerySFRoute searchRoutesParam(String expressNo) {
+        QuerySFRoute route = new QuerySFRoute();
+        List<String> list = Lists.newArrayList();
+        list.add(expressNo);
+        route.setTrackingNumber(list);
+        return route;
+    }
+
+    private static LdopReceiveTraceGetRequest getParam(String shippingOrderNo) {
+        LdopReceiveTraceGetRequest request = new LdopReceiveTraceGetRequest();
+        request.setCustomerCode("020L2238");
+        request.setWaybillCode(shippingOrderNo);
+
+        return request;
+    }
+
+    private static GetShippingOrderInfoReq synTraceQueryParam(String shippingOrderNo) {
+        GetShippingOrderInfoReq infoReq = new GetShippingOrderInfoReq();
+        infoReq.setCustomerCode("FXNN");
+        infoReq.setWarehouseCode("QIMEN");
+
+        List<String> shippingOrderList = Lists.newArrayList();
+        ShippingOrders shippingOrders = new ShippingOrders();
+        shippingOrderList.add(shippingOrderNo);
+        shippingOrders.setShippingOrder(shippingOrderList);
+        infoReq.setShippingOrders(shippingOrders);
+        return infoReq;
     }
 
     /*
@@ -228,6 +325,12 @@ public class LogisticsCentre {
 
 
 //    public static void main(String[] args)throws Exception {
+//
+//        Result result = queryLogistics(1290198859296362498L);
+//
+//        System.out.println(result);
+//
+//    }
 //        Order sfParam=new Order();
 //        sfParam.setLanguage("zh-CN");
 //        sfParam.setOrderId("FH"+IdUtil.objectId());

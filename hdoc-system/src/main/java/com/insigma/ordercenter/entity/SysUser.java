@@ -49,6 +49,9 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "邮件地址")
     private String email;
 
+    @ApiModelProperty(value = "备注")
+    private String remark;
+
     @ApiModelProperty(value = "是否停用（0：正常，1：停用）")
     private Integer isStopped;
 

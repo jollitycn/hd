@@ -12,10 +12,12 @@ import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
 import com.insigma.ordercenter.entity.vo.LogisticsVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
+import com.insigma.ordercenter.logistics.LogisticsCentre;
 import com.insigma.ordercenter.service.IShippingOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -159,6 +161,17 @@ public class ShippingOrderController extends BaseController{
 
         return Result.success(result);
     }
+
+    @GetMapping("/test/{expressNo}/{logisticsType}")
+    @ApiOperation("物流查询")
+    public Result test(@PathVariable("expressNo") String expressNo,
+                       @PathVariable("logisticsType") int logisticsType) {
+
+        Result result = LogisticsCentre.queryLogistics(expressNo,logisticsType);
+
+        return Result.success(result);
+    }
+
 
     /**
      * 创建物流快递单 定时任务调用
