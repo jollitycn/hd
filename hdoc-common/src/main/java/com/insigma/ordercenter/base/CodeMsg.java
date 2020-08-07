@@ -49,6 +49,11 @@ public class CodeMsg {
     public static CodeMsg SHOP_NOT_EXIST = new CodeMsg(500139,"店铺不存在");
     public static CodeMsg STRATEGY_PARAM_NOT_EXIST = new CodeMsg(500140,"策略参数不存在");
     public static CodeMsg ROLE_USER = new CodeMsg(500141,"角色删除失败，该角色下绑定账号，不允许删除");
+    public static CodeMsg STRATEGY_BLACK_ACCOUNT = new CodeMsg(60001,"店铺账号黑名单拦截");
+    public static CodeMsg STRATEGY_BLACK_PHONE = new CodeMsg(60002,"店铺手机号黑名单拦截");
+    public static CodeMsg STRATEGY_BLACK_REGION = new CodeMsg(60003,"店铺地区黑名单拦截");
+    public static CodeMsg STRATEGY_ADDRESS_PARSE_ERROR = new CodeMsg(60003,"店铺地区黑名单拦截");
+
     public CodeMsg(int retCode, String message) {
         this.retCode = retCode;
         this.message = message;

@@ -59,7 +59,7 @@ public class Product implements Serializable {
     private Integer isDeleted;
 
     @ApiModelProperty(value = "商品类型")
-    private String productType;
+    private Long productType;
 
     @ApiModelProperty(value = "上架时间")
     private LocalDateTime putOnTime;

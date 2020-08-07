@@ -48,4 +48,15 @@
         LEFT JOIN t_order c ON c.order_id = a.order_id
         WHERE a.shipping_order_id=#{shippingOrderId}
     </select>
+
+    <select id="getShippingOrderIdByProductType" resultType="Long">
+        SELECT
+            shipping_order_id
+        FROM
+            t_shipping_order so
+        LEFT JOIN t_order_detail od ON so.order_id = od.order_id
+        WHERE 1=1 and
+            od.product_type = 4
+          and od.order_detail_id = #{orderDetailId}
+    </select>
 </mapper>

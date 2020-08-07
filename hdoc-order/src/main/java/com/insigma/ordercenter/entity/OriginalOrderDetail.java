@@ -62,6 +62,9 @@ public class OriginalOrderDetail implements Serializable {
     @ApiModelProperty(value = "小计")
     private BigDecimal totalPrice;
 
+    @ApiModelProperty(value = "商品分类 对应字典表id")
+    private Long productType;
+
     @ApiModelProperty(value = "商品编码")
     private String productNo;
 

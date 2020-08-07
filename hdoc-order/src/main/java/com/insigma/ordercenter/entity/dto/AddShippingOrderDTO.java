@@ -26,10 +26,10 @@ public class AddShippingOrderDTO {
     private Long shippingOrderId;
 
     @ApiModelProperty(value = "仓库ID ")
-    private Long warehouseId;
+    private Integer warehouseId;
 
     @ApiModelProperty(value = "物流公司ID")
-    private Long expressCompanyId;
+    private Integer expressCompanyId;
 
     @ApiModelProperty(value = "订单明细ID")
     private Long orderDetailId;
