@@ -14,6 +14,13 @@ import com.insigma.ordercenter.logistics.best.sdk.twSoNotify.response.TwSoNotify
 import com.insigma.ordercenter.logistics.sf.qiao.*;
 import com.insigma.ordercenter.service.IBestService;
 import com.insigma.ordercenter.service.IJingdongServer;
+import com.insigma.ordercenter.logistics.sf.qiao.CargoDetail;
+import com.insigma.ordercenter.logistics.sf.qiao.ContactInfo;
+import com.insigma.ordercenter.logistics.sf.qiao.Order;
+import com.insigma.ordercenter.logistics.sf.qiao.OrderFilterResponse;
+import com.insigma.ordercenter.logistics.zjs.ZjsApi;
+import com.insigma.ordercenter.logistics.zjs.express.ZjsRequestData;
+import com.insigma.ordercenter.logistics.zjs.express.ZjsReuslt;
 import com.insigma.ordercenter.service.sf.qiao.APIResponse;
 import com.insigma.ordercenter.service.sf.qiao.EspServiceCode;
 import com.insigma.ordercenter.service.sf.qiao.QiaoAPIService;
@@ -65,10 +72,10 @@ public class LogisticsCentre {
                 APIResponse apiresponse=QiaoAPIService.query(EspServiceCode.EXP_RECE_CREATE_ORDER,sfParam);
 
                 //格式化返回结果
-                OrderFilterResponse result=(OrderFilterResponse)apiresponse.getApiResultData();
-                if(result.isSuccess()){
+                OrderFilterResponse sfResult=(OrderFilterResponse)apiresponse.getApiResultData();
+                if(sfResult.isSuccess()){
                     //如果成功，返回顺丰订单号
-                    return Result.success(result.getMsgData().getWaybillNoInfoList().get(0).getWaybillNo());
+                    return Result.success(sfResult.getMsgData().getWaybillNoInfoList().get(0).getWaybillNo());
                 }else{
                     //将发货单置为异常状态，并记录异常原因
                     //Todo
@@ -85,9 +92,28 @@ public class LogisticsCentre {
                 //处理返回结果 TODO
 
                 break;
+            case 3:
+                //获取ZJS下单单号
+                String zjsOrder=ZjsApi.queryOrder();
+
+                //宅急送参数转换
+                ZjsRequestData zjsRequestData=transformationZjsParam(shippingOrderNo,commonProduct,commonConsignee,commonConsignor);
+                zjsRequestData.setMailNo(zjsOrder);
+
+                //宅急送下单
+                ZjsReuslt zjsReuslt=ZjsApi.createOrder(zjsRequestData);
+
+                //下单成功则回填单号
+                if(20000==zjsReuslt.getState()){
+                    return Result.success(zjsOrder);
+                }else{
+                    //TODO 下单异常处理
+                }
+
+
+                break;
             default:
 
-                //赞
 
                 break;
         }
@@ -324,6 +350,38 @@ public class LogisticsCentre {
     }
 
 
+    /**
+     * 宅急送参数转换
+     * @param shippingOrderNo
+     * @param commonProduct
+     * @param commonConsignee
+     * @param commonConsignor
+     * @return
+     */
+    private static ZjsRequestData transformationZjsParam(String shippingOrderNo,
+                                                         CommonProductDTO commonProduct,
+                                                         CommonConsigneeDTO commonConsignee ,
+                                                         CommonConsignorDTO commonConsignor){
+
+        ZjsRequestData zjsRequestData=new ZjsRequestData();
+        zjsRequestData.setClientFlag("test");
+        zjsRequestData.setOrderNo(shippingOrderNo);
+        zjsRequestData.setBusType("1");
+        zjsRequestData.setGoodsName(commonProduct.getProductName());
+        zjsRequestData.setGoodsNum(commonProduct.getUnitQuantity().toString());
+        zjsRequestData.setGoodsWeight(commonProduct.getShipWeight().toString());
+        zjsRequestData.setSendName(commonConsignor.getReceiveName());
+        zjsRequestData.setSendAddress(commonConsignor.getAddress());
+        zjsRequestData.setSendMobile(commonConsignor.getMobilePhone());
+        zjsRequestData.setReceiveName(commonConsignee.getReceiveName());
+        zjsRequestData.setReceivePro("广东省");
+        zjsRequestData.setReceiveCity("深圳市");
+        zjsRequestData.setReceiveDistrict("宝安区");
+        zjsRequestData.setReceiveAddress(commonConsignee.getAddress());
+        zjsRequestData.setReceiveMobile(commonConsignee.getMobilePhone());
+
+        return zjsRequestData;
+    }
 //    public static void main(String[] args)throws Exception {
 //
 //        Result result = queryLogistics(1290198859296362498L);
