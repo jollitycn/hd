@@ -23,7 +23,7 @@ import java.util.List;
  */
 public interface PeriodOrderMapper extends BaseMapper<PeriodOrder> {
 
-    IPage<PeriodOrderVO> queryPeriodOrderListPage(Page<PeriodOrderVO> page, PeriodOrderDTO periodOrderDTO);
+    IPage<PeriodOrderVO> queryPeriodOrderListPage(Page<PeriodOrderVO> page, @Param("periodOrderDTO")PeriodOrderDTO periodOrderDTO);
 
     List<PeriodOrderPayVO> getPeriodPayInfo(@Param("periodOrderId") Long periodOrderId);
 

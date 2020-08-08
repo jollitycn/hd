@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -76,6 +77,27 @@ public class AddShippingOrderDTO {
     @ApiModelProperty(value = "订单Id")
     private Long orderId;
 
+    @ApiModelProperty(value = "原始订单Id")
+    private Long originOrderId;
+
     @ApiModelProperty(value = "订单明细列表")
     private List<OrderDetail> orderDetails;
+
+    @ApiModelProperty(value = "物流单号")
+    private String expressNo;
+
+    @ApiModelProperty(value = "发货时间")
+    private LocalDateTime sendTime;
+
+    @ApiModelProperty(value = "运费")
+    private BigDecimal expressFee;
+
+    private String orderNo;
+
+    private Integer orderStatus;
+
+    private Long shopId;
+
+    private String companyName;
+
 }
