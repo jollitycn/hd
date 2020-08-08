@@ -15,6 +15,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,6 +31,7 @@ import java.util.*;
  */
 @Configuration
 @Slf4j
+@RestController
 public class OriginalOrderQuartz {
 
     @Autowired
@@ -59,13 +62,14 @@ public class OriginalOrderQuartz {
     private RedisUtil redisUtil;
 
 //    @Scheduled(fixedDelay = 2*60*1000)
+    @GetMapping("/ood")
     public void originOrderDeal() {
         Long batchNo = IdWorker.getId();
         log.info("================= 原始订单处理任务 START ==============");
         log.info("================= 预约商品规则 ===========");
         //获取最近2小时原始订单表
         List<OriginalOrder> list = originalOrderService.list(Wrappers.<OriginalOrder>lambdaQuery()
-                .eq(OriginalOrder::getOrderStatus, 0).ge(OriginalOrder::getOrderTime,LocalDateTime.now().minusHours(80L)));
+                .eq(OriginalOrder::getOrderStatus, 0).ge(OriginalOrder::getOrderTime,LocalDateTime.now().minusDays(5)));
         //生成订单实例
         for (OriginalOrder originalOrder : list) {
             Order order = new Order();
@@ -75,9 +79,10 @@ public class OriginalOrderQuartz {
             order.setIsPeriod(0);
             order.setMobilePhone(originalOrder.getMobilePhone());
             order.setOrderNo(originalOrder.getOrderNo());
-            order.setOrderStatus(0);
+            order.setOrderStatus(2);
             order.setShopId(originalOrder.getShopId());
             order.setTotalPrice(originalOrder.getTotalPrice());
+            order.setOriginOrderNo(originalOrder.getOriginalOrderNo());
             //保存下单人 收货人信息
             SendReceiveInfo sendReceiveInfo = new SendReceiveInfo();
             sendReceiveInfo.setAddress(originalOrder.getAddress());
@@ -201,7 +206,7 @@ public class OriginalOrderQuartz {
             log.info("================= 合单策略 END ==============");
         }
         Strategy changeProductStrategy = strategyList.get(OrderStrategyConstant.CHANGE_PRODUCT - 1);
-        if (changeProductStrategy.getIsStop() == 1) {
+        if (changeProductStrategy.getIsStop() == 0) {
             log.info("================= 换货策略 START ============");
             processService.exchangeProductStrategy(batchNo);
             log.info("================= 换货策略 END   ============");

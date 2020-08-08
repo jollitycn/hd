@@ -85,7 +85,7 @@ public class Order implements Serializable {
     private Integer isHandOrder;
 
     @ApiModelProperty(value = "原订单编号")
-    private Long originOrderId;
+    private String originOrderNo;
 
 
     public static final String ORDER_ID = "order_id";

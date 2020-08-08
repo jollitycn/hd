@@ -232,7 +232,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             messageDTO.setOrderId(orderId);
             messageDTO.setOrderNo(order.getOrderNo());
             messageDTO.setOrderStatus(order.getOrderStatus());
-            messageDTO.setOriginOrderId(order.getOriginOrderId());
+            messageDTO.setOriginOrderNo(order.getOriginOrderNo());
             messageDTO.setShopId(order.getShopId());
             messageDTO.setWarehouseId(ShippingOrderCancelVO.getWarehouseId());
             messageDTO.setStatus(ShippingOrderCancelVO.getStatus());

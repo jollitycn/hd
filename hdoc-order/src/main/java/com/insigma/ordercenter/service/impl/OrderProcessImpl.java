@@ -124,6 +124,7 @@ public class OrderProcessImpl implements IOrderProcessService {
                             OrderDetail orderDetail = new OrderDetail();
                             orderDetail.setProductId(gift.getProductId());
                             orderDetail.setAmount(gift.getGiftNum());
+                            orderDetail.setIsGift(1);
                             orderDetail.setProductName(giftProduct.getProductName());
                             orderDetail.setOrderId(order.getOrderId());
                             orderDetail.setProductPrice(giftProduct.getProductPrice());

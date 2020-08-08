@@ -55,8 +55,7 @@
         FROM
             t_shipping_order so
         LEFT JOIN t_order_detail od ON so.order_id = od.order_id
-        WHERE 1=1 and
-            od.product_type = 4
+        WHERE 1=1
           and od.order_detail_id = #{orderDetailId}
     </select>
 </mapper>

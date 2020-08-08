@@ -78,6 +78,7 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
             if (null == hdOrder.getCard() || hdOrder.getCard().size() ==0) {
+                log.warn("卡号为空!");
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
             //写入原始订单表
@@ -89,9 +90,15 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
             originalOrder.setOrderTime(hdOrder.getCreated());
             originalOrder.setCreateTime(LocalDateTime.now());
             originalOrder.setMobilePhone(hdOrder.getReceiver_mobile());
-            originalOrder.setOrderNo(orderService.generateOrderNo(1L));
+            Long shopId = 0L;
+            if (hdOrder.getXtwldm().equals("000001")) {
+                shopId = 2L;
+            } else {
+                shopId = 1L;
+            }
+            originalOrder.setOrderNo(orderService.generateOrderNo(shopId));
             originalOrder.setRemark(hdOrder.getBuyer_message());
-            originalOrder.setShopId(1L);
+            originalOrder.setShopId(shopId);
             if (StringUtils.isNotBlank(hdOrder.getR_state()) && StringUtils.isNotBlank(hdOrder.getR_city())
                     && StringUtils.isNotBlank(hdOrder.getR_district())) {
                 SysRegion province = regionService.detail(hdOrder.getR_state());

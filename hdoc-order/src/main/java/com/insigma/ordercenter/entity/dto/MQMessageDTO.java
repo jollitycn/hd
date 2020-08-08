@@ -21,7 +21,7 @@ public class MQMessageDTO {
 
     private Long shopId;
 
-    private Long originOrderId;
+    private String originOrderNo;
 
     private Long shippingOrderId;
 

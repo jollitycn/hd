@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @Slf4j
+@RestController
 public class ShippingStrategyQuartz {
 
     @Autowired
@@ -79,6 +82,7 @@ public class ShippingStrategyQuartz {
     private IWarehouseProductRelationService wprService;
 
 //    @Scheduled(fixedDelay = 2*60*1000)
+    @GetMapping("shippingQuartz")
     public boolean shippingOrderDeal() {
         //从缓存获取策略
         Object redisStrategy = redisUtil.get("strategyList");
@@ -109,7 +113,7 @@ public class ShippingStrategyQuartz {
                         List<OrderDetail> detailList = detailService.list(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, order.getOrderId()));
                         for (OrderDetail orderDetail : detailList) {
                             ShopProduct shopProduct = shopProductService.getOne(Wrappers.<ShopProduct>lambdaQuery().eq(ShopProduct::getShopId, order.getShopId()).eq(ShopProduct::getProductId, orderDetail.getProductId()));
-                            if (shopProduct.getNumber() <= 0) {
+                            if (null != shopProduct && shopProduct.getNumber() <= 0) {
                                 order.setIsHandOrder(1);
                                 order.setOrderStatus(1);
                                 order.setErrorReason("该店铺的商品库存已不足，设置为手动审单");
@@ -123,7 +127,7 @@ public class ShippingStrategyQuartz {
                     if (StringUtils.isNotBlank(sendReceiveInfo.getReceiveRemark())||StringUtils.isNotBlank(sendReceiveInfo.getSendRemark())) {
                         order.setIsHandOrder(1);
                         order.setOrderStatus(1);
-                        order.setErrorReason("该店铺策略为手动审单");
+                        order.setErrorReason("该订单有备注 为手动审单");
                         orderService.updateById(order);
                     }
                 }
@@ -153,6 +157,9 @@ public class ShippingStrategyQuartz {
                             if (!typeSet.contains(productType)) {
                                 ShippingOrder shippingOrder = new ShippingOrder();
                                 shippingOrder.setStatus(0);
+                                shippingOrder.setProvince(sendReceiveInfo.getProvince());
+                                shippingOrder.setLocationCity(sendReceiveInfo.getLocationCity());
+                                shippingOrder.setDistrict(sendReceiveInfo.getDistrict());
                                 shippingOrder.setAddress(sendReceiveInfo.getAddress());
                                 shippingOrder.setCreateId(1L);
                                 shippingOrder.setCreateTime(LocalDateTime.now());
@@ -176,12 +183,15 @@ public class ShippingStrategyQuartz {
                                         shippingOrderService.save(shippingOrder);
                                         dso.setShippingOrderId(shippingOrder.getShippingOrderId());
                                         detailShippingService.save(dso);
+
                                     }
                                 } else {
                                     shippingOrderService.save(shippingOrder);
                                     dso.setShippingOrderId(shippingOrder.getShippingOrderId());
                                     detailShippingService.save(dso);
                                 }
+                                order.setOrderStatus(4);
+                                orderService.updateById(order);
                                 typeSet.add(productType);
                             }  else {
                                 //通过订单详情id找到之前已经生成相应商品分类的发货单 然后将发货单绑定订单详情
@@ -189,7 +199,6 @@ public class ShippingStrategyQuartz {
                                 dso.setShippingOrderId(shippingOrderId.get(0));
                                 detailShippingService.save(dso);
                             }
-
                         } else {
                             break;
                         }
