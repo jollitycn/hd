@@ -139,6 +139,110 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return baseMapper.queryExpressCompany(warehouseId);
     }
 
+    public void sendMQMessage(Long orderId,List<AddShippingOrderDTO> shippingOrderDTOS){
+        //查询修改后的订单信息                List<AddShippingOrderDTO> addShippingOrderDTOS
+        Order order = orderService.getById(orderId);
+        Shop shop = shopService.getById(order.getShopId());
+
+        //组装需要发送消息的实体
+        shippingOrderDTOS.forEach(addShippingOrderDTO -> {
+            addShippingOrderDTO.setOrderId(order.getOrderId());
+            addShippingOrderDTO.setOriginOrderId(order.getOriginOrderId());
+            addShippingOrderDTO.setOrderNo(order.getOrderNo());
+            addShippingOrderDTO.setOrderStatus(order.getOrderStatus());
+        });
+
+        Message message = null;
+        Object obj = JSONArray.toJSON(shippingOrderDTOS);
+        String str = obj.toString();
+        try {
+            message = new Message("split_order",
+                    "store_card",
+                    str.getBytes(RemotingHelper.DEFAULT_CHARSET));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try {
+            producer.send(message, new SendCallback() {
+                @Override
+                public void onSuccess(SendResult sendResult) {
+                    System.out.println("消息发送成功");
+                }
+                @Override
+                public void onException(Throwable e) {
+                    e.printStackTrace();
+                    System.out.println("消息发送异常");
+                }
+            });
+        } catch (MQClientException e) {
+            e.printStackTrace();
+        } catch (RemotingException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO) {
+        if (addShippingOrderResultDTO.getAddShippingOrderDTOS().size() == 0) {
+            return Result.error(CodeMsg.DATA_INSERT_ERROR);
+        }
+        addShippingOrderResultDTO.getAddShippingOrderDTOS().forEach(addShippingOrderDTO -> {
+            ShippingOrder shippingOrder = new ShippingOrder();
+            shippingOrder.setWarehouseId(addShippingOrderDTO.getWarehouseId());
+            shippingOrder.setExpressCompanyId(addShippingOrderDTO.getExpressCompanyId());
+            shippingOrder.setCreateId(addShippingOrderDTO.getCreateId());
+            shippingOrder.setCreateTime(LocalDateTime.now());
+            shippingOrder.setIsDeleted(Constant.SYS_ZERO);
+            shippingOrder.setStatus(Constant.SYS_ZERO);
+            shippingOrder.setReceiveName(addShippingOrderDTO.getReceiveName());
+            shippingOrder.setMobilePhone(addShippingOrderDTO.getMobilePhone());
+            shippingOrder.setAddress(addShippingOrderDTO.getAddress());
+            shippingOrder.setIsCombined(Constant.SYS_ZERO);
+            shippingOrder.setShippingOrderNo(addShippingOrderDTO.getShippingOrderNo());
+            shippingOrder.setShippingOrderId(addShippingOrderDTO.getShippingOrderId());
+            shippingOrderService.save(shippingOrder);
+            DetailShippingOrderRelation detailShippingOrderRelation = new DetailShippingOrderRelation();
+            detailShippingOrderRelation.setOrderDetailId(addShippingOrderDTO.getOrderDetailId());
+            detailShippingOrderRelation.setShippingOrderId(shippingOrder.getShippingOrderId());
+            detailShippingOrderRelationService.save(detailShippingOrderRelation);
+
+            // 审单时，发送队列消息到卡夫卡，给储值卡系统消费(* 给原始订单Id,发货单信息)
+            Message message = null;
+            Object obj = JSONArray.toJSON(addShippingOrderDTO);
+            String str = obj.toString();
+            try {
+                message = new Message("split_order",
+                        "store_card",//以店铺编码来分类消息
+                        str.getBytes(RemotingHelper.DEFAULT_CHARSET));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                producer.send(message, new SendCallback() {
+                    @Override
+                    public void onSuccess(SendResult sendResult) {
+                        System.out.println("消息发送成功");
+                    }
+                    @Override
+                    public void onException(Throwable e) {
+                        e.printStackTrace();
+                        System.out.println("消息发送异常");
+                    }
+                });
+            } catch (MQClientException e) {
+                e.printStackTrace();
+            } catch (RemotingException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        return Result.success();
+    }
+
 
     @Override
     public Boolean shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO) {
@@ -156,7 +260,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if(null == updateOrderStatuDTO.getOrderId()){
             return false;
         }
-        List<ShippingOrderCancelVO> shippingOrderCancelVOS = orderMapper.cancelOrder(updateOrderStatuDTO.getOrderId());
+        List<AddShippingOrderDTO> shippingOrderCancelVOS=orderMapper.queryShippingOrderListByOrderId(updateOrderStatuDTO.getOrderId());
+
         shippingOrderCancelVOS.forEach(ShippingOrderCancelVO -> {
 
             //当有一个发货单为已发货状态，订单状态为已出库状态
@@ -218,117 +323,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
 
-    public void sendMQMessage(Long orderId,List<ShippingOrderCancelVO> shippingOrderCancelVOS){
-        //查询修改后的订单信息
-        Order order = orderService.getById(orderId);
-        Shop shop = shopService.getById(order.getShopId());
-
-        //组装需要发送消息的实体
-        List<MQMessageDTO> mqMessageDTO=new ArrayList<>();
-        shippingOrderCancelVOS.forEach(ShippingOrderCancelVO -> {
-            MQMessageDTO messageDTO=new MQMessageDTO();
-            messageDTO.setExpressCompanyId(ShippingOrderCancelVO.getExpressCompanyId());
-            messageDTO.setExpressNo(ShippingOrderCancelVO.getExpressNo());
-            messageDTO.setOrderId(orderId);
-            messageDTO.setOrderNo(order.getOrderNo());
-            messageDTO.setOrderStatus(order.getOrderStatus());
-            messageDTO.setOriginOrderId(order.getOriginOrderId());
-            messageDTO.setShopId(order.getShopId());
-            messageDTO.setWarehouseId(ShippingOrderCancelVO.getWarehouseId());
-            messageDTO.setStatus(ShippingOrderCancelVO.getStatus());
-            messageDTO.setShippingOrderId(ShippingOrderCancelVO.getShippingOrderId());
-            mqMessageDTO.add(messageDTO);
-        });
-
-        Message message = null;
-        Object obj = JSONArray.toJSON(mqMessageDTO);
-        String str = obj.toString();
-        try {
-            message = new Message("order_status",
-                    shop.getPlatformNo(),
-                    str.getBytes(RemotingHelper.DEFAULT_CHARSET));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        try {
-            producer.send(message, new SendCallback() {
-                @Override
-                public void onSuccess(SendResult sendResult) {
-                    System.out.println("消息发送成功");
-                }
-                @Override
-                public void onException(Throwable e) {
-                    e.printStackTrace();
-                    System.out.println("消息发送异常");
-                }
-            });
-        } catch (MQClientException e) {
-            e.printStackTrace();
-        } catch (RemotingException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
 
-    @Override
-    public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO) {
-        if (addShippingOrderResultDTO.getAddShippingOrderDTOS().size() == 0) {
-            return Result.error(CodeMsg.DATA_INSERT_ERROR);
-        }
-        addShippingOrderResultDTO.getAddShippingOrderDTOS().forEach(addShippingOrderDTO -> {
-            ShippingOrder shippingOrder = new ShippingOrder();
-            shippingOrder.setWarehouseId(addShippingOrderDTO.getWarehouseId());
-            shippingOrder.setExpressCompanyId(addShippingOrderDTO.getExpressCompanyId());
-            shippingOrder.setCreateId(addShippingOrderDTO.getCreateId());
-            shippingOrder.setCreateTime(LocalDateTime.now());
-            shippingOrder.setIsDeleted(Constant.SYS_ZERO);
-            shippingOrder.setStatus(Constant.SYS_ZERO);
-            shippingOrder.setReceiveName(addShippingOrderDTO.getReceiveName());
-            shippingOrder.setMobilePhone(addShippingOrderDTO.getMobilePhone());
-            shippingOrder.setAddress(addShippingOrderDTO.getAddress());
-            shippingOrder.setIsCombined(Constant.SYS_ZERO);
-            shippingOrder.setShippingOrderNo(addShippingOrderDTO.getShippingOrderNo());
-            shippingOrderService.save(shippingOrder);
-            DetailShippingOrderRelation detailShippingOrderRelation = new DetailShippingOrderRelation();
-            detailShippingOrderRelation.setOrderDetailId(addShippingOrderDTO.getOrderDetailId());
-            detailShippingOrderRelation.setShippingOrderId(shippingOrder.getShippingOrderId());
-            detailShippingOrderRelationService.save(detailShippingOrderRelation);
 
-            // 审单时，发送队列消息到卡夫卡，给储值卡系统消费(* 给原始订单Id,发货单信息)
-            Message message = null;
-            Object obj = JSONArray.toJSON(addShippingOrderDTO);
-            String str = obj.toString();
-            try {
-                message = new Message("split_order",
-                        addShippingOrderDTO.getPlatformNo(),//以店铺编码来分类消息
-                        str.getBytes(RemotingHelper.DEFAULT_CHARSET));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            try {
-                producer.send(message, new SendCallback() {
-                    @Override
-                    public void onSuccess(SendResult sendResult) {
-                        System.out.println("消息发送成功");
-                    }
-                    @Override
-                    public void onException(Throwable e) {
-                        e.printStackTrace();
-                        System.out.println("消息发送异常");
-                    }
-                });
-            } catch (MQClientException e) {
-                e.printStackTrace();
-            } catch (RemotingException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        return Result.success();
-    }
 
     @Override
     public Result cancelOrder(Long orderId) {

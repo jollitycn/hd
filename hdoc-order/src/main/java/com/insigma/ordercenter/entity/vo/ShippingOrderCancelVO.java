@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -71,5 +72,8 @@ public class ShippingOrderCancelVO extends BaseVO{
 
     @ApiModelProperty(value = "发货时间")
     private String sendTime;
+
+    @ApiModelProperty(value = "运费")
+    private BigDecimal expressFee;
 
 }

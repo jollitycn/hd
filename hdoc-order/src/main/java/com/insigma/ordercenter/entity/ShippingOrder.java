@@ -94,4 +94,6 @@ public class ShippingOrder implements Serializable {
     @ApiModelProperty(value = "订单ID")
     private Long orderId;
 
+    @ApiModelProperty(value = "原始订单Id")
+    private Long originOrderId;
 }

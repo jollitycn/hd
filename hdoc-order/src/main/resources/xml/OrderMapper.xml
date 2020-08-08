@@ -21,7 +21,8 @@
         sr.address,
         sr.location_city,
         sr.province,
-        sr.receive_remark
+        sr.receive_remark,
+        o.origin_order_id
         FROM
         t_order o
         LEFT JOIN t_shop sp ON o.shop_id = sp.shop_id
@@ -157,12 +158,45 @@
             so.is_combined,
             so.is_refuse,
             so.shipping_order_no,
-            so.send_time
+            so.send_time,
+            so.express_fee
         FROM
              t_shipping_order so
         WHERE
             so.order_id = #{orderId}
     </select>
+
+
+    <select id="queryShippingOrderListByOrderId" resultType="com.insigma.ordercenter.entity.dto.AddShippingOrderDTO">
+      SELECT
+            so.shipping_order_id,
+            so.warehouse_id,
+            so.express_company_id,
+            so.express_no,
+            so.create_id,
+            so.create_time,
+            so.modify_id,
+            so.modify_time,
+            so.is_deleted,
+            so.`status`,
+            so.receive_name,
+            so.mobile_phone,
+            so.request_time,
+            so.address,
+            so.receive_remark,
+            so.is_combined,
+            so.is_refuse,
+            so.shipping_order_no,
+            so.send_time,
+            so.express_fee,
+            ec.company_name
+        FROM
+            t_shipping_order so
+            LEFT JOIN t_express_company ec ON so.express_company_id = ec.express_company_id
+        WHERE
+            so.order_id = #{orderId}
+    </select>
+
 
 
     <!--查询订单和发货单列表，以及订单详细列表-->
@@ -210,7 +244,7 @@
         <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
         <result column="express_fee" jdbcType="DECIMAL" property="expressFee" />
         <result column="order_detail_id" jdbcType="BIGINT" property="orderDetailId" />
-        <collection column="{shippingOrderId=shipping_order_id}" property="orderDetailVOS" ofType="com.insigma.ordercenter.entity.vo.OrderDetailVO" select="queryOrderDetailList"/>
+        <collection column="{shippingOrderId=shipping_order_id}" property="orderDetailVOS" ofType="com.insigma.ordercenter.entity.vo.OrderDetailVO" select="queryOrderDetailLists"/>
     </resultMap>
 
 
@@ -285,7 +319,7 @@
             sor.order_id = #{orderId}
     </select>
 
-    <select id="queryOrderDetailList" resultMap="shippingOrderDetailMap">
+    <select id="queryOrderDetailLists" resultMap="shippingOrderDetailMap">
         SELECT
             od.order_detail_id,
             od.order_id,
