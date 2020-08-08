@@ -203,6 +203,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             shippingOrder.setIsCombined(Constant.SYS_ZERO);
             shippingOrder.setShippingOrderNo(addShippingOrderDTO.getShippingOrderNo());
             shippingOrder.setShippingOrderId(addShippingOrderDTO.getShippingOrderId());
+            shippingOrder.setOrderId(addShippingOrderDTO.getOrderId());
             shippingOrderService.save(shippingOrder);
             DetailShippingOrderRelation detailShippingOrderRelation = new DetailShippingOrderRelation();
             detailShippingOrderRelation.setOrderDetailId(addShippingOrderDTO.getOrderDetailId());

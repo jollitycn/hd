@@ -87,7 +87,7 @@ public class AddShippingOrderDTO {
     private String expressNo;
 
     @ApiModelProperty(value = "发货时间")
-    private String sendTime;
+    private LocalDateTime sendTime;
 
     @ApiModelProperty(value = "运费")
     private BigDecimal expressFee;
