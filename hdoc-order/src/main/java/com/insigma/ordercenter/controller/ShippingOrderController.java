@@ -5,11 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.LoginUser;
-import com.insigma.ordercenter.entity.ShippingOrder;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderProductDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
-import com.insigma.ordercenter.entity.vo.LogisticsVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
 import com.insigma.ordercenter.logistics.LogisticsCentre;
@@ -17,11 +15,8 @@ import com.insigma.ordercenter.service.IShippingOrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * <p>
@@ -63,10 +58,9 @@ public class ShippingOrderController extends BaseController{
     @ApiOperation("增加补货单")
     public Result increaseCargo(EditShippingOrderDTO editShippingOrderDTO) {
 
-        //TODO
         LoginUser loginUser=redisUser();
 
-        Boolean result = shippingOrderService.increaseCargo(editShippingOrderDTO);
+        Boolean result = shippingOrderService.increaseCargo(loginUser,editShippingOrderDTO);
 
         if(result){
             return Result.success();
@@ -80,7 +74,9 @@ public class ShippingOrderController extends BaseController{
     public Result changeAddress(@PathVariable Long shippingOrderId,
                                 EditShippingOrderDTO editShippingOrderDTO) {
 
-        Boolean result = shippingOrderService.changeAddress(shippingOrderId,editShippingOrderDTO);
+        LoginUser loginUser=redisUser();
+
+        Boolean result = shippingOrderService.changeAddress(loginUser,shippingOrderId,editShippingOrderDTO);
 
         if(result){
             return Result.success();
@@ -94,7 +90,9 @@ public class ShippingOrderController extends BaseController{
     public Result changeProduct(@PathVariable Long shippingOrderId,
                                 @RequestBody EditShippingOrderProductDTO editParameters) {
 
-        Boolean result = shippingOrderService.changeProduct(shippingOrderId,editParameters);
+        LoginUser loginUser=redisUser();
+
+        Boolean result = shippingOrderService.changeProduct(loginUser,shippingOrderId,editParameters);
 
         if(result){
             return Result.success();
@@ -108,7 +106,9 @@ public class ShippingOrderController extends BaseController{
     public Result changeWarehouse(@PathVariable Long shippingOrderId,
                                   EditShippingOrderDTO editShippingOrderDTO) {
 
-        Boolean result = shippingOrderService.changeWarehouse(shippingOrderId,editShippingOrderDTO);
+        LoginUser loginUser=redisUser();
+
+        Boolean result = shippingOrderService.changeWarehouse(loginUser,shippingOrderId,editShippingOrderDTO);
 
         if(result){
             return Result.success();
@@ -121,7 +121,9 @@ public class ShippingOrderController extends BaseController{
     @ApiOperation(value ="取消发货单")
     public Result cancel(@PathVariable Long shippingOrderId) {
 
-        Boolean result = shippingOrderService.cancel(shippingOrderId);
+        LoginUser loginUser=redisUser();
+
+        Boolean result = shippingOrderService.cancel(loginUser,shippingOrderId);
 
         if(result){
             return Result.success();
@@ -134,7 +136,10 @@ public class ShippingOrderController extends BaseController{
     @PutMapping("/frozen/{shippingOrderId}")
     @ApiOperation("冻结发货单")
     public Result frozen(@PathVariable Long shippingOrderId) {
-        Boolean result = shippingOrderService.frozen(shippingOrderId);
+
+        LoginUser loginUser=redisUser();
+
+        Boolean result = shippingOrderService.frozen(loginUser,shippingOrderId);
         if(result){
             return Result.success();
         }
@@ -156,10 +161,9 @@ public class ShippingOrderController extends BaseController{
     @ApiOperation("物流查询")
     public Result queryLogistics(@PathVariable Long shippingOrderId) {
 
-        //TODO
-        LogisticsVO result = shippingOrderService.queryLogistics(shippingOrderId);
+        Result result = shippingOrderService.queryLogistics(shippingOrderId);
 
-        return Result.success(result);
+        return result;
     }
 
     @GetMapping("/queryLogistics/{expressNo}/{logisticsType}")
@@ -180,26 +184,10 @@ public class ShippingOrderController extends BaseController{
     @GetMapping("/createLogisticsJob")
     public Result createLogisticsJob() {
 
-        //查询符合条件的发货单
-        List<ShippingOrder> shippingOrderList=shippingOrderService.getShippingOrderByStatus();
+        log.info("发货单定时物流下单接口调度成功");
 
-        //循环处理
-        for (ShippingOrder shippingOrder:shippingOrderList) {
+        boolean result=shippingOrderService.createLogisticsJob();
 
-
-            //调度对应物流下单
-//        LogisticsCentre.generateLogistics();
-
-
-        }
-
-
-        log.info("调度成功啦！！！！！！");
-        System.out.println("调度成功啦============");
-
-
-        //更新发货单状态
-
-        return Result.success();
+        return Result.success(result);
     }
 }

@@ -76,6 +76,7 @@ public class ProductComboServiceImpl extends ServiceImpl<ProductComboMapper, Pro
         //将该商品设置为组合商品
         Product product=productMapper.selectById(productId);
         product.setIsCombo(Constant.SYS_ONE);
+        productMapper.updateById(product);
 
         return this.saveBatch(insert);
     }

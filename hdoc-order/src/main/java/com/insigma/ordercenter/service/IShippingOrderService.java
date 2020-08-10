@@ -2,11 +2,12 @@ package com.insigma.ordercenter.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.ShippingOrder;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderDTO;
 import com.insigma.ordercenter.entity.dto.EditShippingOrderProductDTO;
 import com.insigma.ordercenter.entity.dto.ShippingOrderDTO;
-import com.insigma.ordercenter.entity.vo.LogisticsVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
 
@@ -32,9 +33,10 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
     /**
      * 增加补货单
      * @param editShippingOrderDTO
+     * @param loginUser
      * @return
      */
-    Boolean increaseCargo(EditShippingOrderDTO editShippingOrderDTO);
+    Boolean increaseCargo(LoginUser loginUser,EditShippingOrderDTO editShippingOrderDTO);
 
     /**
      * 更改发货单地址
@@ -42,7 +44,7 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * @param editShippingOrderDTO
      * @return
      */
-    Boolean changeAddress(Long shippingOrderId, EditShippingOrderDTO editShippingOrderDTO);
+    Boolean changeAddress(LoginUser loginUser,Long shippingOrderId, EditShippingOrderDTO editShippingOrderDTO);
 
     /**
      * 更改发货单商品
@@ -50,7 +52,7 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * @param editParameters
      * @return
      */
-    Boolean changeProduct(Long shippingOrderId, EditShippingOrderProductDTO editParameters);
+    Boolean changeProduct(LoginUser loginUser,Long shippingOrderId, EditShippingOrderProductDTO editParameters);
 
     /**
      * 更改发货单仓库
@@ -58,21 +60,22 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * @param editShippingOrderDTO
      * @return
      */
-    Boolean changeWarehouse(Long shippingOrderId, EditShippingOrderDTO editShippingOrderDTO);
+    Boolean changeWarehouse(LoginUser loginUser,Long shippingOrderId, EditShippingOrderDTO editShippingOrderDTO);
 
     /**
      * 取消发货单
      * @param shippingOrderId
+     * @param loginUser
      * @return
      */
-    Boolean cancel(Long shippingOrderId);
+    Boolean cancel(LoginUser loginUser,Long shippingOrderId);
 
     /**
      * 冻结发货单
      * @param shippingOrderId
      * @return
      */
-    Boolean frozen(Long shippingOrderId);
+    Boolean frozen(LoginUser loginUser,Long shippingOrderId);
 
     /**
      * 获取发货单明细
@@ -95,13 +98,14 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * @param shippingOrderId
      * @return
      */
-    LogisticsVO queryLogistics(Long shippingOrderId);
+    Result queryLogistics(Long shippingOrderId);
 
-    /**
-     *获取待出库的发货单
-     * @return
-     */
-    List<ShippingOrder> getShippingOrderByStatus();
 
     List<Long> getShippingOrderByProductType(Long orderDetailId);
+
+    /**
+     * 发货单物流下单
+     * @return
+     */
+    boolean createLogisticsJob();
 }
