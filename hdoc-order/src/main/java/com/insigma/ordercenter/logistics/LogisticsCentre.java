@@ -12,6 +12,11 @@ import com.insigma.ordercenter.logistics.sf.qiao.CargoDetail;
 import com.insigma.ordercenter.logistics.sf.qiao.ContactInfo;
 import com.insigma.ordercenter.logistics.sf.qiao.Order;
 import com.insigma.ordercenter.logistics.sf.qiao.OrderFilterResponse;
+import com.insigma.ordercenter.logistics.zjs.ZjsApi;
+import com.insigma.ordercenter.logistics.zjs.express.ZjsRequestData;
+import com.insigma.ordercenter.logistics.zjs.express.ZjsReuslt;
+import com.insigma.ordercenter.service.IExpressCancelService;
+import com.insigma.ordercenter.service.impl.ExpressCancelServiceImpl;
 import com.insigma.ordercenter.service.sf.qiao.APIResponse;
 import com.insigma.ordercenter.service.sf.qiao.EspServiceCode;
 import com.insigma.ordercenter.service.sf.qiao.QiaoAPIService;
@@ -52,10 +57,10 @@ public class LogisticsCentre {
                 APIResponse apiresponse=QiaoAPIService.query(EspServiceCode.EXP_RECE_CREATE_ORDER,sfParam);
 
                 //格式化返回结果
-                OrderFilterResponse result=(OrderFilterResponse)apiresponse.getApiResultData();
-                if(result.isSuccess()){
+                OrderFilterResponse sfResult=(OrderFilterResponse)apiresponse.getApiResultData();
+                if(sfResult.isSuccess()){
                     //如果成功，返回顺丰订单号
-                    return Result.success(result.getMsgData().getWaybillNoInfoList().get(0).getWaybillNo());
+                    return Result.success(sfResult.getMsgData().getWaybillNoInfoList().get(0).getWaybillNo());
                 }else{
                     //将发货单置为异常状态，并记录异常原因
                     //Todo
@@ -72,9 +77,28 @@ public class LogisticsCentre {
                 //处理返回结果 TODO
 
                 break;
+            case 3:
+                //获取ZJS下单单号
+                String zjsOrder=ZjsApi.queryOrder();
+
+                //宅急送参数转换
+                ZjsRequestData zjsRequestData=transformationZjsParam(shippingOrderNo,commonProduct,commonConsignee,commonConsignor);
+                zjsRequestData.setMailNo(zjsOrder);
+
+                //宅急送下单
+                ZjsReuslt zjsReuslt=ZjsApi.createOrder(zjsRequestData);
+
+                //下单成功则回填单号
+                if(20000==zjsReuslt.getState()){
+                    return Result.success(zjsOrder);
+                }else{
+                    //TODO 下单异常处理
+                }
+
+
+                break;
             default:
 
-                //赞
 
                 break;
         }
@@ -89,10 +113,10 @@ public class LogisticsCentre {
      * @param shippingOrderId 发货单id
      * @return
      */
-    public static Result cancelLogistics(Long shippingOrderId){
-
-        //TODO
-        return null;
+    public static Result cancelLogistics(Long shippingOrderId,int logisticsType) throws Exception {
+        //实现对快递单的取消功能
+        IExpressCancelService expressCancelService=new ExpressCancelServiceImpl();
+        return expressCancelService.cancelLogistics(shippingOrderId, logisticsType);
     }
 
     /**
@@ -227,49 +251,38 @@ public class LogisticsCentre {
     }
 
 
-//    public static void main(String[] args)throws Exception {
-//        Order sfParam=new Order();
-//        sfParam.setLanguage("zh-CN");
-//        sfParam.setOrderId("FH"+IdUtil.objectId());
-//
-//        //货物信息
-//        List<CargoDetail> cargoDetails=new ArrayList<>();
-//        CargoDetail cargoDetail=new CargoDetail();
-//        cargoDetail.setName("箱子");
-//        cargoDetail.setCount(3);
-//        cargoDetail.setUnit("个");
-//        cargoDetail.setWeight(2);
-//        cargoDetail.setAmount(100);
-//        cargoDetail.setCurrency("RMB");
-//        cargoDetail.setSourceArea("CHN");
-//        cargoDetails.add(cargoDetail);
-//        sfParam.setCargoDetails(cargoDetails);
-//
-//        //收寄双方信息
-//        List<ContactInfo> contactInfoList=new ArrayList<>();
-//        ContactInfo contactInfo1=new ContactInfo();
-//        contactInfo1.setContactType(1);
-//        contactInfo1.setContact("李四");
-//        contactInfo1.setTel("13112347891");
-//        contactInfo1.setCountry("44");
-//        contactInfo1.setAddress("广东省深圳市南山区南山街道长虹大厦1201");
-//        contactInfoList.add(contactInfo1);
-//
-//        ContactInfo contactInfo=new ContactInfo();
-//        contactInfo.setContactType(2);
-//        contactInfo.setContact("张三");
-//        contactInfo.setTel("13112347894");
-//        contactInfo.setCountry("44");
-//        contactInfo.setAddress("广东省深圳市南山区南山街道长虹大厦1101");
-//        contactInfoList.add(contactInfo);
-//        sfParam.setContactInfoList(contactInfoList);
-//
-//        sfParam.setExpressTypeId(1);
-//        sfParam.setPayMethod(1);
-//        APIResponse apiresponse=QiaoAPIService.query(EspServiceCode.EXP_RECE_CREATE_ORDER,sfParam);
-//
-//        System.out.println(apiresponse);
-//    }
+    /**
+     * 宅急送参数转换
+     * @param shippingOrderNo
+     * @param commonProduct
+     * @param commonConsignee
+     * @param commonConsignor
+     * @return
+     */
+    private static ZjsRequestData transformationZjsParam(String shippingOrderNo,
+                                                         CommonProductDTO commonProduct,
+                                                         CommonConsigneeDTO commonConsignee ,
+                                                         CommonConsignorDTO commonConsignor){
+
+        ZjsRequestData zjsRequestData=new ZjsRequestData();
+        zjsRequestData.setClientFlag("test");
+        zjsRequestData.setOrderNo(shippingOrderNo);
+        zjsRequestData.setBusType("1");
+        zjsRequestData.setGoodsName(commonProduct.getProductName());
+        zjsRequestData.setGoodsNum(commonProduct.getUnitQuantity().toString());
+        zjsRequestData.setGoodsWeight(commonProduct.getShipWeight().toString());
+        zjsRequestData.setSendName(commonConsignor.getReceiveName());
+        zjsRequestData.setSendAddress(commonConsignor.getAddress());
+        zjsRequestData.setSendMobile(commonConsignor.getMobilePhone());
+        zjsRequestData.setReceiveName(commonConsignee.getReceiveName());
+        zjsRequestData.setReceivePro("广东省");
+        zjsRequestData.setReceiveCity("深圳市");
+        zjsRequestData.setReceiveDistrict("宝安区");
+        zjsRequestData.setReceiveAddress(commonConsignee.getAddress());
+        zjsRequestData.setReceiveMobile(commonConsignee.getMobilePhone());
+
+        return zjsRequestData;
+    }
 
 
 }

@@ -274,8 +274,13 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
         return result;
     }
 
+    @Override
+    public List<Long> getShippingOrderByProductType(Long orderDetailId) {
+        return this.baseMapper.getShippingOrderIdByProductType(orderDetailId);
+    }
 
-/**
+
+    /**
      * 建立发货单操作日志
      * @param shippingOrderId
      * @param orderId

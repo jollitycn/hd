@@ -41,7 +41,7 @@ public class MQConsumerConfiguration {
         if (StringUtils.isEmpty(this.topics)) {
             throw new RocketMQException(RocketMQErrorEnum.PARAMM_NULL, "topics is null !!!", Boolean.valueOf(false));
         }
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("hdoc-order");
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("hdoc-stored-card");
         consumer.setNamesrvAddr(this.namesrvAddr);
         consumer.setConsumeThreadMin(this.consumeThreadMin);
         consumer.setConsumeThreadMax(this.consumeThreadMax);
@@ -53,7 +53,7 @@ public class MQConsumerConfiguration {
             String[] topicTagsArr = this.topics.split(";");
             for (String topicTags : topicTagsArr) {
                 String[] topicTag = topicTags.split("~");
-                consumer.subscribe("topic-order", "*");
+                consumer.subscribe("topic-order1", "*");
             }
             consumer.start();
             log.info("consumer is start !!! groupName:{},topics:{},namesrvAddr:{}", new Object[]{this.groupName, this.topics, this.namesrvAddr});

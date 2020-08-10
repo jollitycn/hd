@@ -2,16 +2,13 @@ package com.insigma.ordercenter.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.SysRegion;
 import com.insigma.ordercenter.service.ISysRegionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -69,6 +66,16 @@ public class SysRegionController extends BaseController {
     public SysRegion detail(@PathVariable Serializable regionId) {
         SysRegion region = this.sysRegionService.getById(regionId);
         return region;
+    }
+
+    @GetMapping("/name")
+    @ApiOperation("通过地区名字查找信息")
+    public SysRegion name(@RequestParam String name) {
+        List<SysRegion> list = sysRegionService.list(Wrappers.<SysRegion>lambdaQuery().eq(SysRegion::getName, name));
+        if (null != list && list.size()>0) {
+            return list.get(0);
+        }
+        return null;
     }
 
 }

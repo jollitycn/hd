@@ -42,7 +42,7 @@ public class PeriodOrderController extends BaseController {
     private IPeriodOrderService periodOrderService;
 
     @PostMapping("/list")
-    @ApiOperation(value = "预约订单列表", response = OrderListVO.class)
+    @ApiOperation(value = "预约订单列表")
     public Result<?> list(@RequestBody PeriodOrderDTO periodOrderDTO) {
 
         Page<PeriodOrderVO> page = new Page<>(periodOrderDTO.getPageNum(), periodOrderDTO.getPageSize());

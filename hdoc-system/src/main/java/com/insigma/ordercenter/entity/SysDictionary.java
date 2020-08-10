@@ -32,10 +32,10 @@ public class SysDictionary implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "dictionary_Id", type = IdType.ID_WORKER)
+    @TableId(value = "dictionary_Id", type = IdType.AUTO)
     @ApiModelProperty(value = "数字字典id")
     @JsonSerialize(using= ToStringSerializer.class)
-    private Long dictionaryId;
+    private Integer dictionaryId;
 
     @ApiModelProperty(value = "父id")
     @JsonSerialize(using= ToStringSerializer.class)

@@ -21,5 +21,5 @@ public class GiftNumDTO {
 
     @ApiModelProperty(value = "赠品的数量")
     @NotNull(message = "赠品的数量不能为空")
-    private Long giftNum;
+    private Integer giftNum;
 }
