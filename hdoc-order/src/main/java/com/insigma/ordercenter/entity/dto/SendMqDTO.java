@@ -18,9 +18,6 @@ public class SendMqDTO {
     @ApiModelProperty("发送电话号码集合")
     private List<String> phoneList;
 
-    @ApiModelProperty("发送内容")
-    private String content;
-
     @ApiModelProperty("短信发送账号")
     private String account;
 

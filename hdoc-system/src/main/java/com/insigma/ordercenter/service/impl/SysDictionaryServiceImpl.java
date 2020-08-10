@@ -76,7 +76,7 @@ public class SysDictionaryServiceImpl extends ServiceImpl<SysDictionaryMapper, S
         return result;
     }
 
-    private List<SysDictVO> listChildDict(Long parentId) {
+    private List<SysDictVO> listChildDict(Integer parentId) {
 
         QueryWrapper<SysDictionary> wrapper = new QueryWrapper<>();
         wrapper.eq("parent_id", parentId);

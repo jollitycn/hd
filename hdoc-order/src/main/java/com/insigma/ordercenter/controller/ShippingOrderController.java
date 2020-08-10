@@ -162,9 +162,9 @@ public class ShippingOrderController extends BaseController{
         return Result.success(result);
     }
 
-    @GetMapping("/test/{expressNo}/{logisticsType}")
+    @GetMapping("/queryLogistics/{expressNo}/{logisticsType}")
     @ApiOperation("物流查询")
-    public Result test(@PathVariable("expressNo") String expressNo,
+    public Result queryLogistics(@PathVariable("expressNo") String expressNo,
                        @PathVariable("logisticsType") int logisticsType) {
 
         Result result = LogisticsCentre.queryLogistics(expressNo,logisticsType);

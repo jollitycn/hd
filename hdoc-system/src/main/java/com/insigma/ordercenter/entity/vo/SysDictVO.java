@@ -22,7 +22,7 @@ public class SysDictVO extends BaseVO {
 
     @ApiModelProperty(value = "数字字典id")
     @JsonSerialize(using= ToStringSerializer.class)
-    private Long dictionaryId;
+    private Integer dictionaryId;
 
     @ApiModelProperty(value = "父id")
     @JsonSerialize(using= ToStringSerializer.class)
