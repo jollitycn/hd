@@ -96,4 +96,8 @@ public class WarehouseVo implements Serializable {
     @ApiModelProperty(value = "联系电话")
     private String managerName;
 
+
+    @ApiModelProperty("商品分类")
+    private Integer[] productTypes;
+
 }

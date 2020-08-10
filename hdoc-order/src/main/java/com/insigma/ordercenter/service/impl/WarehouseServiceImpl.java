@@ -110,6 +110,17 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
             region.setRegionId(regionId);
             warehouseRegionService.save(region);
         }
+        QueryWrapper<WarehouseType> warehouseTypeQueryWrapper = new QueryWrapper<>();
+        warehouseTypeQueryWrapper.eq(WarehouseType.WAREHOUSE_ID,warehouse.getWarehouseId());
+        typeService.remove(warehouseTypeQueryWrapper);
+        //重新添加仓库地区和管理员
+        Integer[] productTypes = warehouseDTO.getProductTypes();
+        for (Integer regionId : productTypes) {
+            WarehouseType region = new WarehouseType();
+            region.setWarehouseId(warehouse.getWarehouseId());
+            region.setProductType(regionId);
+            typeService.save(region);
+        }
 
         return Result.success(CodeMsg.SUCCESS);
     }
