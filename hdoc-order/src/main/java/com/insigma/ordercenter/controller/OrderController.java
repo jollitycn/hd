@@ -36,7 +36,7 @@ public class OrderController extends BaseController{
     private IOrderService orderService;
 
     @PostMapping("/orderList")
-    @ApiOperation(value = "订单列表", response = OrderListVO.class)
+    @ApiOperation(value = "订单列表")
     public Result<?> orderList(@RequestBody OrderDTO orderDTO) {
 
         Page<OrderListVO> page = new Page<>(orderDTO.getPageNum(), orderDTO.getPageSize());

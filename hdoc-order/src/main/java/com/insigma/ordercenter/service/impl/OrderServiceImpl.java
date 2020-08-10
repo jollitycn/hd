@@ -25,7 +25,6 @@ import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -140,6 +139,111 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return baseMapper.queryExpressCompany(warehouseId);
     }
 
+    public void sendMQMessage(Long orderId,List<AddShippingOrderDTO> shippingOrderDTOS){
+        //查询修改后的订单信息                List<AddShippingOrderDTO> addShippingOrderDTOS
+        Order order = orderService.getById(orderId);
+        Shop shop = shopService.getById(order.getShopId());
+
+        //组装需要发送消息的实体
+        shippingOrderDTOS.forEach(addShippingOrderDTO -> {
+            addShippingOrderDTO.setOrderId(order.getOrderId());
+            addShippingOrderDTO.setOriginOrderId(order.getOriginOrderId());
+            addShippingOrderDTO.setOrderNo(order.getOrderNo());
+            addShippingOrderDTO.setOrderStatus(order.getOrderStatus());
+        });
+
+        Message message = null;
+        Object obj = JSONArray.toJSON(shippingOrderDTOS);
+        String str = obj.toString();
+        try {
+            message = new Message("split_order",
+                    "store_card",
+                    str.getBytes(RemotingHelper.DEFAULT_CHARSET));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        try {
+            producer.send(message, new SendCallback() {
+                @Override
+                public void onSuccess(SendResult sendResult) {
+                    System.out.println("消息发送成功");
+                }
+                @Override
+                public void onException(Throwable e) {
+                    e.printStackTrace();
+                    System.out.println("消息发送异常");
+                }
+            });
+        } catch (MQClientException e) {
+            e.printStackTrace();
+        } catch (RemotingException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO) {
+        if (addShippingOrderResultDTO.getAddShippingOrderDTOS().size() == 0) {
+            return Result.error(CodeMsg.DATA_INSERT_ERROR);
+        }
+        addShippingOrderResultDTO.getAddShippingOrderDTOS().forEach(addShippingOrderDTO -> {
+            ShippingOrder shippingOrder = new ShippingOrder();
+            shippingOrder.setWarehouseId(addShippingOrderDTO.getWarehouseId());
+            shippingOrder.setExpressCompanyId(addShippingOrderDTO.getExpressCompanyId());
+            shippingOrder.setCreateId(addShippingOrderDTO.getCreateId());
+            shippingOrder.setCreateTime(LocalDateTime.now());
+            shippingOrder.setIsDeleted(Constant.SYS_ZERO);
+            shippingOrder.setStatus(Constant.SYS_ZERO);
+            shippingOrder.setReceiveName(addShippingOrderDTO.getReceiveName());
+            shippingOrder.setMobilePhone(addShippingOrderDTO.getMobilePhone());
+            shippingOrder.setAddress(addShippingOrderDTO.getAddress());
+            shippingOrder.setIsCombined(Constant.SYS_ZERO);
+            shippingOrder.setShippingOrderNo(addShippingOrderDTO.getShippingOrderNo());
+            shippingOrder.setShippingOrderId(addShippingOrderDTO.getShippingOrderId());
+            shippingOrder.setOrderId(addShippingOrderDTO.getOrderId());
+            shippingOrderService.save(shippingOrder);
+            DetailShippingOrderRelation detailShippingOrderRelation = new DetailShippingOrderRelation();
+            detailShippingOrderRelation.setOrderDetailId(addShippingOrderDTO.getOrderDetailId());
+            detailShippingOrderRelation.setShippingOrderId(shippingOrder.getShippingOrderId());
+            detailShippingOrderRelationService.save(detailShippingOrderRelation);
+
+            // 审单时，发送队列消息到卡夫卡，给储值卡系统消费(* 给原始订单Id,发货单信息)
+            Message message = null;
+            Object obj = JSONArray.toJSON(addShippingOrderDTO);
+            String str = obj.toString();
+            try {
+                message = new Message("split_order",
+                        "store_card",//以店铺编码来分类消息
+                        str.getBytes(RemotingHelper.DEFAULT_CHARSET));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                producer.send(message, new SendCallback() {
+                    @Override
+                    public void onSuccess(SendResult sendResult) {
+                        System.out.println("消息发送成功");
+                    }
+                    @Override
+                    public void onException(Throwable e) {
+                        e.printStackTrace();
+                        System.out.println("消息发送异常");
+                    }
+                });
+            } catch (MQClientException e) {
+                e.printStackTrace();
+            } catch (RemotingException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        return Result.success();
+    }
+
 
     @Override
     public Boolean shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO) {
@@ -157,7 +261,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if(null == updateOrderStatuDTO.getOrderId()){
             return false;
         }
-        List<ShippingOrderCancelVO> shippingOrderCancelVOS = orderMapper.cancelOrder(updateOrderStatuDTO.getOrderId());
+        List<AddShippingOrderDTO> shippingOrderCancelVOS=orderMapper.queryShippingOrderListByOrderId(updateOrderStatuDTO.getOrderId());
+
         shippingOrderCancelVOS.forEach(ShippingOrderCancelVO -> {
 
             //当有一个发货单为已发货状态，订单状态为已出库状态
@@ -219,117 +324,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
 
-    public void sendMQMessage(Long orderId,List<ShippingOrderCancelVO> shippingOrderCancelVOS){
-        //查询修改后的订单信息
-        Order order = orderService.getById(orderId);
-        Shop shop = shopService.getById(order.getShopId());
-
-        //组装需要发送消息的实体
-        List<MQMessageDTO> mqMessageDTO=new ArrayList<>();
-        shippingOrderCancelVOS.forEach(ShippingOrderCancelVO -> {
-            MQMessageDTO messageDTO=new MQMessageDTO();
-            messageDTO.setExpressCompanyId(ShippingOrderCancelVO.getExpressCompanyId());
-            messageDTO.setExpressNo(ShippingOrderCancelVO.getExpressNo());
-            messageDTO.setOrderId(orderId);
-            messageDTO.setOrderNo(order.getOrderNo());
-            messageDTO.setOrderStatus(order.getOrderStatus());
-            messageDTO.setOriginOrderId(order.getOriginOrderId());
-            messageDTO.setShopId(order.getShopId());
-            messageDTO.setWarehouseId(ShippingOrderCancelVO.getWarehouseId());
-            messageDTO.setStatus(ShippingOrderCancelVO.getStatus());
-            messageDTO.setShippingOrderId(ShippingOrderCancelVO.getShippingOrderId());
-            mqMessageDTO.add(messageDTO);
-        });
-
-        Message message = null;
-        Object obj = JSONArray.toJSON(mqMessageDTO);
-        String str = obj.toString();
-        try {
-            message = new Message("order_status",
-                    shop.getPlatformNo(),
-                    str.getBytes(RemotingHelper.DEFAULT_CHARSET));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        try {
-            producer.send(message, new SendCallback() {
-                @Override
-                public void onSuccess(SendResult sendResult) {
-                    System.out.println("消息发送成功");
-                }
-                @Override
-                public void onException(Throwable e) {
-                    e.printStackTrace();
-                    System.out.println("消息发送异常");
-                }
-            });
-        } catch (MQClientException e) {
-            e.printStackTrace();
-        } catch (RemotingException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
 
-    @Override
-    public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO) {
-        if (addShippingOrderResultDTO.getAddShippingOrderDTOS().size() == 0) {
-            return Result.error(CodeMsg.DATA_INSERT_ERROR);
-        }
-        addShippingOrderResultDTO.getAddShippingOrderDTOS().forEach(AddShippingOrderDTO -> {
-            ShippingOrder shippingOrder = new ShippingOrder();
-            shippingOrder.setWarehouseId(AddShippingOrderDTO.getWarehouseId());
-            shippingOrder.setExpressCompanyId(AddShippingOrderDTO.getExpressCompanyId());
-            shippingOrder.setCreateId(AddShippingOrderDTO.getCreateId());
-            shippingOrder.setCreateTime(LocalDateTime.now());
-            shippingOrder.setIsDeleted(Constant.SYS_ZERO);
-            shippingOrder.setStatus(Constant.SYS_ZERO);
-            shippingOrder.setReceiveName(AddShippingOrderDTO.getReceiveName());
-            shippingOrder.setMobilePhone(AddShippingOrderDTO.getMobilePhone());
-            shippingOrder.setAddress(AddShippingOrderDTO.getAddress());
-            shippingOrder.setIsCombined(Constant.SYS_ZERO);
-            shippingOrder.setShippingOrderNo(AddShippingOrderDTO.getShippingOrderNo());
-            shippingOrderService.save(shippingOrder);
-            DetailShippingOrderRelation detailShippingOrderRelation = new DetailShippingOrderRelation();
-            detailShippingOrderRelation.setOrderDetailId(AddShippingOrderDTO.getOrderDetailId());
-            detailShippingOrderRelation.setShippingOrderId(shippingOrder.getShippingOrderId());
-            detailShippingOrderRelationService.save(detailShippingOrderRelation);
 
-            // 审单时，发送队列消息到卡夫卡，给储值卡系统消费(* 给原始订单Id,发货单信息)
-            Message message = null;
-            Object obj = JSONArray.toJSON(AddShippingOrderDTO);
-            String str = obj.toString();
-            try {
-                message = new Message("split_order",
-                        AddShippingOrderDTO.getPlatformNo(),//以店铺编码来分类消息
-                        str.getBytes(RemotingHelper.DEFAULT_CHARSET));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            try {
-                producer.send(message, new SendCallback() {
-                    @Override
-                    public void onSuccess(SendResult sendResult) {
-                        System.out.println("消息发送成功");
-                    }
-                    @Override
-                    public void onException(Throwable e) {
-                        e.printStackTrace();
-                        System.out.println("消息发送异常");
-                    }
-                });
-            } catch (MQClientException e) {
-                e.printStackTrace();
-            } catch (RemotingException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        return Result.success();
-    }
 
     @Override
     public Result cancelOrder(Long orderId) {
@@ -389,6 +386,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (null != shop) {
             platformNo = shop.getPlatformNo();
         }
+
+        String orderNo = getSerializeNo(platformNo) ;
+        return orderNo;
+    }
+
+    @Override
+    public String getSerializeNo(String code) {
         String timestamp = DateUtils.formatLocalDateTimeToString(LocalDateTime.now(), DateUtils.TIME_PATTERN_MILLISECOND);
         String randomNum = String.valueOf(RandomUtils.nextInt(999));
         if (randomNum.length() == 1) {
@@ -396,15 +400,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         } else if (randomNum.length() == 2) {
             randomNum = "0" + randomNum;
         }
-        String orderNo = platformNo + "00" + timestamp + randomNum;
-        return orderNo;
+        String serialNo = code + timestamp + randomNum;
+        return serialNo;
     }
+
 
     public static void main(String[] args) {
         for (int i = 0; i < 100; i++) {
-            Integer s = RandomUtils.nextInt(999);
-            System.out.println(s);
+//            System.out.println(getSerializeNo("FH"));
         }
+
     }
 
     @Override

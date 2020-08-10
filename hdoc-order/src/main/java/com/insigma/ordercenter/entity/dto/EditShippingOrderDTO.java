@@ -31,10 +31,10 @@ public class EditShippingOrderDTO {
     private String address;
 
     @ApiModelProperty(value = "仓库id")
-    private Long warehouseId;
+    private Integer warehouseId;
 
     @ApiModelProperty(value = "物流公司id")
-    private Long expressCompanyId;
+    private Integer expressCompanyId;
 
     @ApiModelProperty(value = "更改原因")
     private String changeReason;

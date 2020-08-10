@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.entity.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.insigma.ordercenter.entity.OriginalOrder;
+import com.insigma.ordercenter.entity.dto.AddShippingOrderDTO;
 import com.insigma.ordercenter.entity.dto.OrderDTO;
 import com.insigma.ordercenter.entity.vo.*;
 import org.apache.ibatis.annotations.Param;
@@ -32,7 +33,7 @@ public interface OrderMapper extends BaseMapper<Order> {
 //                                          @Param("mobilePhone") String mobilePhone);
 
     IPage<OrderListVO> queryOrderListPage(Page<OrderListVO> page,
-                                          OrderDTO orderDTO);
+                                          @Param("orderDTO")OrderDTO orderDTO);
 
     List<ExpressCompanyVO> queryExpressCompany(@Param("warehouseId")Long warehouseId);
 
@@ -41,6 +42,9 @@ public interface OrderMapper extends BaseMapper<Order> {
 
 
     List<ShippingOrderCancelVO> cancelOrder(@Param("orderId") Long orderId);
+
+
+    List<AddShippingOrderDTO> queryShippingOrderListByOrderId(@Param("orderId") Long orderId);
 
 
     OrderListVO queryOrderById(@Param("orderId")Long orderId);

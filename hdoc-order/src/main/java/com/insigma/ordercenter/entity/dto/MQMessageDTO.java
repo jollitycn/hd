@@ -3,6 +3,10 @@ package com.insigma.ordercenter.entity.dto;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 /**
  * @author AH
  * @program hdoc-parent
@@ -21,9 +25,11 @@ public class MQMessageDTO {
 
     private Long shopId;
 
-    private Long originOrderId;
+    private String originOrderNo;
 
     private Long shippingOrderId;
+
+    private String shippingOrderNo;
 
     private Long warehouseId;
 
@@ -31,6 +37,11 @@ public class MQMessageDTO {
 
     private String expressNo;
 
+    private String companyName;
+
     private Integer status;
 
+    private LocalDateTime sendTime;
+
+    private BigDecimal expressFee;
 }

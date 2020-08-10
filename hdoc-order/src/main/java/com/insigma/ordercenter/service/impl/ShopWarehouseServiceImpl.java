@@ -31,7 +31,7 @@ public class ShopWarehouseServiceImpl extends ServiceImpl<ShopWarehouseMapper, S
                 warehouseIds) {
             ShopWarehouse shopWarehouse = new ShopWarehouse();
             shopWarehouse.setShopId(shopId);
-            shopWarehouse.setWarehouseId(Long.parseLong(warehouseId));
+            shopWarehouse.setWarehouseId(Integer.parseInt(warehouseId));
             shopWarehouseMapper.insert(shopWarehouse);
         }
     }

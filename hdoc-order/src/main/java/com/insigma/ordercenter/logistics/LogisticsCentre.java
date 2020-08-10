@@ -21,6 +21,8 @@ import com.insigma.ordercenter.logistics.sf.qiao.OrderFilterResponse;
 import com.insigma.ordercenter.logistics.zjs.ZjsApi;
 import com.insigma.ordercenter.logistics.zjs.express.ZjsRequestData;
 import com.insigma.ordercenter.logistics.zjs.express.ZjsReuslt;
+import com.insigma.ordercenter.service.IExpressCancelService;
+import com.insigma.ordercenter.service.impl.ExpressCancelServiceImpl;
 import com.insigma.ordercenter.service.sf.qiao.APIResponse;
 import com.insigma.ordercenter.service.sf.qiao.EspServiceCode;
 import com.insigma.ordercenter.service.sf.qiao.QiaoAPIService;
@@ -133,6 +135,10 @@ public class LogisticsCentre {
 
         //TODO
         return null;
+    public static Result cancelLogistics(Long shippingOrderId,int logisticsType) throws Exception {
+        //实现对快递单的取消功能
+        IExpressCancelService expressCancelService=new ExpressCancelServiceImpl();
+        return expressCancelService.cancelLogistics(shippingOrderId, logisticsType);
     }
 
     /**

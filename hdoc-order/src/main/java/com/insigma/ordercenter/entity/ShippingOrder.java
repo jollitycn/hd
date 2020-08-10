@@ -35,10 +35,10 @@ public class ShippingOrder implements Serializable {
     private Long shippingOrderId;
 
     @ApiModelProperty(value = "仓库ID ")
-    private Long warehouseId;
+    private Integer warehouseId;
 
     @ApiModelProperty(value = "物流公司ID")
-    private Long expressCompanyId;
+    private Integer expressCompanyId;
 
     @ApiModelProperty(value = "物流单号")
     private String expressNo;
@@ -91,7 +91,18 @@ public class ShippingOrder implements Serializable {
     @ApiModelProperty(value = "运费")
     private BigDecimal expressFee;
 
+    @ApiModelProperty("省份")
+    private String province;
+
+    @ApiModelProperty("所在城市")
+    private String locationCity;
+
+    @ApiModelProperty("所在区县")
+    private String district;
+
     @ApiModelProperty(value = "订单ID")
     private Long orderId;
 
+    @ApiModelProperty(value = "原始订单Id")
+    private Long originOrderId;
 }

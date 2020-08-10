@@ -7,6 +7,13 @@ import com.jd.open.api.sdk.request.ECLP.*;
 import com.jd.open.api.sdk.request.etms.LdopReceiveTraceGetRequest;
 import com.jd.open.api.sdk.response.ECLP.*;
 import com.jd.open.api.sdk.response.etms.LdopReceiveTraceGetResponse;
+import com.insigma.ordercenter.service.IJingdongServer;
+import com.jd.open.api.sdk.DefaultJdClient;
+import com.jd.open.api.sdk.JdClient;
+import com.jd.open.api.sdk.request.ECLP.*;
+import com.jd.open.api.sdk.request.etms.LdopReceiveTraceGetRequest;
+import com.jd.open.api.sdk.response.ECLP.*;
+import com.jd.open.api.sdk.response.etms.LdopReceiveTraceGetResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

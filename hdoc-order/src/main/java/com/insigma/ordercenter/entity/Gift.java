@@ -39,7 +39,7 @@ public class Gift implements Serializable {
     private Long productId;
 
     @ApiModelProperty(value = "赠品的数量")
-    private Long giftNum;
+    private Integer giftNum;
 
 
     public static final String GIFT_ID = "gift_id";
