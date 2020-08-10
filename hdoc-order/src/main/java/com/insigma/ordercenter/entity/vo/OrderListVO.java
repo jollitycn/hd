@@ -103,7 +103,7 @@ public class OrderListVO extends BaseVO {
     private Integer splitOrder;
 
     @ApiModelProperty(value = "原单号")
-    private String originOrderId;
+    private String originOrderNo;
 
     @ApiModelProperty(value = "运费")
     private BigDecimal fee;
