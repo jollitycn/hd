@@ -45,9 +45,12 @@ public class LogisticsCentre {
 
     private static IBestService iBestService;
 
+    private static IExpressCancelService expressCancelService;
+
     static {
         iJingdongServer = SpringContextUtils.getBean(IJingdongServer.class);
         iBestService = SpringContextUtils.getBean(IBestService.class);
+        expressCancelService = SpringContextUtils.getBean(IExpressCancelService.class);
     }
 
     /**
@@ -133,7 +136,6 @@ public class LogisticsCentre {
      */
     public static Result cancelLogistics(Long shippingOrderId,int logisticsType) throws Exception {
         //实现对快递单的取消功能
-        IExpressCancelService expressCancelService=new ExpressCancelServiceImpl();
         return expressCancelService.cancelLogistics(shippingOrderId, logisticsType);
     }
 
