@@ -127,14 +127,10 @@ public class LogisticsCentre {
 
     /**
      * 取消物流订单接口
-     * @param expressNo 物流单号
+     * @param shippingOrderId 物流单号
      * @param logisticsType 物流类型1顺丰速运 2百世汇通 3宅急送 4京东
      * @return
      */
-    public static Result cancelLogistics(String expressNo,int logisticsType){
-
-        //TODO
-        return null;
     public static Result cancelLogistics(Long shippingOrderId,int logisticsType) throws Exception {
         //实现对快递单的取消功能
         IExpressCancelService expressCancelService=new ExpressCancelServiceImpl();
@@ -142,7 +138,7 @@ public class LogisticsCentre {
     }
 
     /**
-     * 取消物流订单接口
+     * 查询物流订单接口
      * @param expressNo 物流单号
      * @param logisticsType 物流类型1顺丰速运 2百世汇通 3宅急送 4京东
      * @return
