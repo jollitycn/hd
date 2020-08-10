@@ -30,6 +30,9 @@ update t_shop set   url_address = #{urlAddress}, request_time = #{requestTime} ,
   <if test=" request.shopName != null and request.shopName != ''">
         AND s.shop_name = #{request.shopName}
     </if>
+        <if test=" request.platformNo != null and request.platformNo != ''">
+            AND s.platform_no = #{request.platformNo}
+        </if>
     </select>
 
     <!--  -->

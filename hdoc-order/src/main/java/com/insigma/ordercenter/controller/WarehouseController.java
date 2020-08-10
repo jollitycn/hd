@@ -7,10 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
-import com.insigma.ordercenter.entity.SysRegion;
-import com.insigma.ordercenter.entity.Warehouse;
-import com.insigma.ordercenter.entity.WarehouseProductRelation;
-import com.insigma.ordercenter.entity.WarehouseRegion;
+import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.entity.dto.WarehouseDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductPageQuery;
@@ -19,6 +16,7 @@ import com.insigma.ordercenter.feign.RegionService;
 import com.insigma.ordercenter.service.IWarehouseManagerService;
 import com.insigma.ordercenter.service.IWarehouseRegionService;
 import com.insigma.ordercenter.service.IWarehouseService;
+import com.insigma.ordercenter.service.IWarehouseTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -44,6 +42,8 @@ import java.util.List;
 @Api(tags = {"仓库接口"})
 public class WarehouseController extends BaseController {
 
+    @Autowired
+    private IWarehouseTypeService typeService;
     @Autowired
     private IWarehouseService warehouseService;
 
@@ -116,6 +116,14 @@ public class WarehouseController extends BaseController {
                 regions.add(region);
             });
             warehouseVo.setRegions(regions);
+
+            List<WarehouseType> warehouseTypes = typeService.list(Wrappers.<WarehouseType>lambdaQuery().eq(WarehouseType::getWarehouseId, warehouseVo.getWarehouseId()));
+          List<Integer > pts = new ArrayList<>();
+            warehouseTypes.forEach(warehouseType -> {
+                pts.add(warehouseType.getProductType());
+            });
+            Integer[] ptsArr = new Integer[pts.size()];
+            warehouseVo.setProductTypes(pts.toArray(ptsArr));
             return Result.success(warehouseVo);
         }
         return Result.success();

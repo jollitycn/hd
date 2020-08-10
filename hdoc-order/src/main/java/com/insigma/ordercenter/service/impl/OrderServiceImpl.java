@@ -147,7 +147,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //组装需要发送消息的实体
         shippingOrderDTOS.forEach(addShippingOrderDTO -> {
             addShippingOrderDTO.setOrderId(order.getOrderId());
-            addShippingOrderDTO.setOriginOrderId(order.getOriginOrderId());
+            addShippingOrderDTO.setOriginOrderNo(order.getOriginOrderNo());
             addShippingOrderDTO.setOrderNo(order.getOrderNo());
             addShippingOrderDTO.setOrderStatus(order.getOrderStatus());
         });

@@ -22,7 +22,7 @@
         sr.location_city,
         sr.province,
         sr.receive_remark,
-        o.origin_order_id
+        o.origin_order_no
         FROM
         t_order o
         LEFT JOIN t_shop sp ON o.shop_id = sp.shop_id
@@ -210,7 +210,7 @@
         <result column="mobile_phone" property="mobilePhoneOrder" jdbcType="VARCHAR" />
         <result column="total_price" property="totalPrice" jdbcType="DECIMAL" />
         <result column="is_combined" property="isCombined" jdbcType="TINYINT" />
-        <result column="origin_order_id" property="originOrderId" jdbcType="VARCHAR" />
+        <result column="origin_order_no" property="originOrderNo" jdbcType="VARCHAR" />
         <result column="fee" property="fee" jdbcType="DECIMAL" />
         <result column="error_reason" property="errorReason" jdbcType="VARCHAR" />
         <result column="is_period" property="isPeriod" jdbcType="TINYINT" />
