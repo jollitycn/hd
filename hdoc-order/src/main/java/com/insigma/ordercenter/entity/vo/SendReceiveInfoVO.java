@@ -29,6 +29,9 @@ public class SendReceiveInfoVO extends BaseVO{
     @ApiModelProperty(value = "订单编号")
     private String orderNo;
 
+    @ApiModelProperty(value = "0：新建保存，1：编辑/提交保存")
+    private Integer saveStatus;
+
     @ApiModelProperty(value = "订单状态（0：待审核，1：待出库，2：打单出库，3：已完成，4：冻结）")
     private Integer orderStatus;
 
@@ -110,6 +113,9 @@ public class SendReceiveInfoVO extends BaseVO{
     private String mobilePhone;
 
     @ApiModelProperty(value = "要求收货时间")
+    @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime requestTime;
 
     @ApiModelProperty(value = "收货人地址")

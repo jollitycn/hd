@@ -10,6 +10,7 @@
         sp.platform_name,
         sp.shop_id,
         sp.platform_no,
+        sp.shop_name,
         o.create_time,
         o.review_time,
         ( SELECT MIN( tso.send_time ) FROM t_shipping_order tso WHERE tso.shipping_order_id = so.shipping_order_id ) send_time,
@@ -316,7 +317,7 @@
             t_shipping_order so
             left join t_express_company ec on so.express_company_id=ec.express_company_id
         WHERE
-            sor.order_id = #{orderId}
+            so.order_id = #{orderId}
     </select>
 
     <select id="queryOrderDetailLists" resultMap="shippingOrderDetailMap">

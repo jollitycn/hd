@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -79,42 +78,89 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public Result addOrder(SendReceiveInfoVO sendReceiveInfoVO) {
         try {
-            //手动新增订单时，生成订单号
-            String orderId = generateOrderNo(sendReceiveInfoVO.getShopId());
-            //新增订单表信息
-            Order order = new Order();
-            order.setOrderNo(orderId);
-            order.setCreateTime(LocalDateTime.now());
-            order.setConsumerName(sendReceiveInfoVO.getConsumerName());
-            order.setShopId(sendReceiveInfoVO.getShopId());
-            order.setIsCombined(Constant.SYS_ZERO);
-            order.setIsHandOrder(Constant.SYS_ONE);
-            order.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
-            order.setOrderStatus(Constant.SYS_ZERO);
-            orderService.save(order);
+            if(sendReceiveInfoVO.getSaveStatus()==0){
 
-            //新增订单收发件人信息
-            OrderSendReceive sendReceiveInfo = new OrderSendReceive();
-            sendReceiveInfo.setOrderId(order.getOrderId());
-            sendReceiveInfo.setSendName(sendReceiveInfoVO.getSendName());
-            sendReceiveInfo.setSendRemark(sendReceiveInfoVO.getSendRemark());
-            sendReceiveInfo.setOrderTime(LocalDateTime.now());
-            sendReceiveInfo.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
-            sendReceiveInfo.setAddress(sendReceiveInfoVO.getAddress());
-            sendReceiveInfo.setReceiveRemark(sendReceiveInfoVO.getReceiveRemark());
-            sendReceiveInfo.setOrderReason(sendReceiveInfoVO.getOrderReason());
-            sendReceiveInfo.setLocationCity(sendReceiveInfoVO.getLocationCity());
-            sendReceiveInfo.setProvince(sendReceiveInfoVO.getProvince());
-            sendReceiveInfo.setLoginName(sendReceiveInfoVO.getLoginName());
-            orderSendReceiveService.save(sendReceiveInfo);
+                //手动新增订单时，生成订单号
+                String orderId = generateOrderNo(sendReceiveInfoVO.getShopId());
+                //新增订单表信息
+                Order order = new Order();
+                order.setOrderNo(orderId);
+                order.setCreateTime(LocalDateTime.now());
+                order.setConsumerName(sendReceiveInfoVO.getConsumerName());
+                order.setShopId(sendReceiveInfoVO.getShopId());
+                order.setIsCombined(Constant.SYS_ZERO);
+                order.setIsHandOrder(Constant.SYS_ONE);
+                order.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
+                order.setConsumerName(sendReceiveInfoVO.getConsumerName());
+                orderService.save(order);
 
-            //新增订单明细信息
-            if (null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size() > 0) {
-                sendReceiveInfoVO.getOrderDetails().forEach(OrderDetail -> {
-                    OrderDetail.setOrderId(order.getOrderId());
-                    orderDetailService.save(OrderDetail);
-                });
+                //新增订单收发件人信息
+                OrderSendReceive sendReceiveInfo = new OrderSendReceive();
+                sendReceiveInfo.setOrderId(order.getOrderId());
+                sendReceiveInfo.setSendName(sendReceiveInfoVO.getSendName());
+                sendReceiveInfo.setSendRemark(sendReceiveInfoVO.getSendRemark());
+                sendReceiveInfo.setOrderTime(LocalDateTime.now());
+                sendReceiveInfo.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
+                sendReceiveInfo.setAddress(sendReceiveInfoVO.getAddress());
+
+                sendReceiveInfo.setReceiveRemark(sendReceiveInfoVO.getReceiveRemark());
+                sendReceiveInfo.setOrderReason(sendReceiveInfoVO.getOrderReason());
+                sendReceiveInfo.setLocationCity(sendReceiveInfoVO.getLocationCity());
+                sendReceiveInfo.setProvince(sendReceiveInfoVO.getProvince());
+                sendReceiveInfo.setLoginName(sendReceiveInfoVO.getLoginName());
+                sendReceiveInfo.setRequestTime(sendReceiveInfoVO.getRequestTime());
+                sendReceiveInfo.setSendRemark(sendReceiveInfoVO.getSendRemark());
+                orderSendReceiveService.save(sendReceiveInfo);
+
+                //新增订单明细信息
+                if (null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size() > 0) {
+                    sendReceiveInfoVO.getOrderDetails().forEach(OrderDetail -> {
+                        OrderDetail.setOrderId(order.getOrderId());
+                        orderDetailService.save(OrderDetail);
+                    });
+                }
+            }else{
+                //删除原有的商品明细列表
+                if (null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size() > 0) {
+                    orderDetailService.removeById(sendReceiveInfoVO.getOrderId());
+                }
+                //修改订单表信息
+                Order order = new Order();
+                order.setOrderId(sendReceiveInfoVO.getOrderId());
+                order.setConsumerName(sendReceiveInfoVO.getConsumerName());
+                order.setShopId(sendReceiveInfoVO.getShopId());
+                order.setIsCombined(Constant.SYS_ZERO);
+                order.setIsHandOrder(Constant.SYS_ONE);
+                order.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
+                orderService.updateById(order);
+
+                //修改订单收发件人信息
+                OrderSendReceive sendReceiveInfo = new OrderSendReceive();
+                sendReceiveInfo.setSendReceiveInfoId(sendReceiveInfoVO.getSendReceiveInfoId());
+                sendReceiveInfo.setOrderId(order.getOrderId());
+                sendReceiveInfo.setSendName(sendReceiveInfoVO.getSendName());
+                sendReceiveInfo.setSendRemark(sendReceiveInfoVO.getSendRemark());
+                sendReceiveInfo.setOrderTime(LocalDateTime.now());
+                sendReceiveInfo.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
+                sendReceiveInfo.setAddress(sendReceiveInfoVO.getAddress());
+
+                sendReceiveInfo.setReceiveRemark(sendReceiveInfoVO.getReceiveRemark());
+                sendReceiveInfo.setOrderReason(sendReceiveInfoVO.getOrderReason());
+                sendReceiveInfo.setLocationCity(sendReceiveInfoVO.getLocationCity());
+                sendReceiveInfo.setProvince(sendReceiveInfoVO.getProvince());
+                sendReceiveInfo.setLoginName(sendReceiveInfoVO.getLoginName());
+                orderSendReceiveService.updateById(sendReceiveInfo);
+
+                //修改订单明细信息，先删除之前的，再保存
+
+                if (null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size() > 0) {
+                    sendReceiveInfoVO.getOrderDetails().forEach(orderDetail -> {
+                        orderDetail.setOrderId(order.getOrderId());
+                        orderDetailService.save(orderDetail);
+                    });
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error(CodeMsg.DATA_INSERT_ERROR);
@@ -250,7 +296,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //提供修改订单的接口，在发货单状态改变的时候，调用修改订单状态接口
         //发货单状态（0：待出库，1：待取货，2：已发货，3：冻结，4：取消 5：拒收 6:异常 7：已完成）
         //订单状态：订单状态（0：新建状态，1：手动审核状态，2：待审核状态，3：审核异常状态，4：待出库状态，
-        //      5：已出库状态，6：冻结状态，7：发货异常状态，8：已完成状态，9：取消状态）
+        //      5：已出库状态，6：冻结状态，7：发货异常状态，8：已完成状态，9：取消状态，10：已退货状态）
         //取消
         AtomicReference<Boolean> flag = new AtomicReference<>(true);
         AtomicReference<Integer> count = new AtomicReference<>(0);
@@ -322,10 +368,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         return true;
     }
-
-
-
-
 
 
     @Override

@@ -1,7 +1,5 @@
 package com.insigma.ordercenter.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -89,6 +87,9 @@ public class OrderListVO extends BaseVO {
 
     @ApiModelProperty(value = "店铺ID")
     private Long shopId;
+
+    @ApiModelProperty(value = "店铺名称")
+    private Long shopName;
 
     @ApiModelProperty(value = "店铺编码")
     private String platformNo;

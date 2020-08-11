@@ -35,8 +35,15 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
 
     @Override
     public Boolean addOrderDerail(AddOrderDetailVO addOrderDetailVO) {
+        //先删除
+        if(null != addOrderDetailVO.getOrderDetails() && addOrderDetailVO.getOrderDetails().size()>0){
+            addOrderDetailVO.getOrderDetails().forEach(orderDetail -> {
+                orderDetailService.removeById(orderDetail.getOrderDetailId());
+            });
+        }
+        //再保存
         if (null!=addOrderDetailVO.getOrderDetails() && addOrderDetailVO.getOrderDetails().size()>0){
-            orderDetailService.saveOrUpdateBatch(addOrderDetailVO.getOrderDetails());
+            orderDetailService.saveBatch(addOrderDetailVO.getOrderDetails());
             return true;
         }
        return false;
