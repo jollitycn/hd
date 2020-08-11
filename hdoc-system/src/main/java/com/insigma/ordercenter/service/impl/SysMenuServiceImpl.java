@@ -2,6 +2,7 @@ package com.insigma.ordercenter.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.insigma.ordercenter.entity.*;
@@ -47,12 +48,23 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     @Resource
     private IRoleButtonService roleButtonService;
 
+    @Resource
+    private ISysButtonService iSysButtonService;
+
     @Override
     public List<SysMenuVO> getAllMenuList() {
         List<SysMenuVO> sysMenus = baseMapper.queryAllMenu("0");
         sysMenus.forEach(SysMenuVO -> {
             ;
             List<SysMenuVO> sysMenuList = baseMapper.queryAllMenu(SysMenuVO.getMenuId().toString());
+
+            // 获取菜单按钮列表
+            for (SysMenuVO sysMenuVO : sysMenuList) {
+                List<SysButton> buttons = this.iSysButtonService.list(Wrappers.<SysButton>lambdaQuery()
+                        .eq(SysButton::getMenuId, sysMenuVO.getMenuId()));
+                sysMenuVO.setButtons(buttons);
+            }
+
             SysMenuVO.setMenuVOList(sysMenuList);
         });
         return sysMenus;

@@ -12,7 +12,7 @@ import lombok.Data;
 public class GiftListVO {
 
     @ApiModelProperty("赠品id")
-    private Long giftId;
+    private String giftId;
 
     @ApiModelProperty("赠品的数量")
     private String giftNum;

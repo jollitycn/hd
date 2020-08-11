@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.entity.vo;
 
+import com.insigma.ordercenter.entity.SysButton;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -50,6 +51,8 @@ public class SysMenuVO extends BaseVO {
 
     @ApiModelProperty(value = "是否删除（0：未删除，1：已删除）")
     private Integer isDeleted;
+
+    private List<SysButton> buttons;
 
     private List<SysMenuVO> menuVOList;
 
