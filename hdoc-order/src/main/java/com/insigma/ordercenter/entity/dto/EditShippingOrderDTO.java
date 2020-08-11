@@ -12,10 +12,13 @@ import lombok.Data;
 @Data
 public class EditShippingOrderDTO {
 
+    @ApiModelProperty(value = "发货单号")
+    private Long shippingOrderId;
+
     @ApiModelProperty(value = "订单号")
     private String orderNo;
 
-    @ApiModelProperty(value = "状态（0：待出库，1：待取货，2：已发货，3：冻结，4：冻结）")
+    @ApiModelProperty(value = "状态（0：待出库，1：待取货，2：已发货，3：冻结，4：取消 5：拒收 6:异常 7：已完成 8:新建）")
     private Integer status;
 
     @ApiModelProperty(value = "收货人姓名")

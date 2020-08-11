@@ -5,6 +5,7 @@ import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.dto.CommonConsigneeDTO;
 import com.insigma.ordercenter.entity.dto.CommonConsignorDTO;
 import com.insigma.ordercenter.entity.dto.CommonProductDTO;
+import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.logistics.best.BestApi;
 import com.insigma.ordercenter.logistics.best.sdk.getShippingOrderInfo.request.GetShippingOrderInfoReq;
 import com.insigma.ordercenter.logistics.best.sdk.getShippingOrderInfo.request.ShippingOrders;
@@ -12,23 +13,19 @@ import com.insigma.ordercenter.logistics.best.sdk.getShippingOrderInfo.response.
 import com.insigma.ordercenter.logistics.best.sdk.twSoNotify.request.*;
 import com.insigma.ordercenter.logistics.best.sdk.twSoNotify.response.TwSoNotifyRsp;
 import com.insigma.ordercenter.logistics.sf.qiao.*;
-import com.insigma.ordercenter.service.IBestService;
-import com.insigma.ordercenter.service.IJingdongServer;
-import com.insigma.ordercenter.logistics.sf.qiao.CargoDetail;
-import com.insigma.ordercenter.logistics.sf.qiao.ContactInfo;
-import com.insigma.ordercenter.logistics.sf.qiao.Order;
-import com.insigma.ordercenter.logistics.sf.qiao.OrderFilterResponse;
 import com.insigma.ordercenter.logistics.zjs.ZjsApi;
 import com.insigma.ordercenter.logistics.zjs.express.ZjsRequestData;
 import com.insigma.ordercenter.logistics.zjs.express.ZjsReuslt;
+import com.insigma.ordercenter.service.IBestService;
 import com.insigma.ordercenter.service.IExpressCancelService;
-import com.insigma.ordercenter.service.impl.ExpressCancelServiceImpl;
+import com.insigma.ordercenter.service.IJingdongServer;
 import com.insigma.ordercenter.service.sf.qiao.APIResponse;
 import com.insigma.ordercenter.service.sf.qiao.EspServiceCode;
 import com.insigma.ordercenter.service.sf.qiao.QiaoAPIService;
 import com.insigma.ordercenter.utils.SpringContextUtils;
 import com.jd.open.api.sdk.request.etms.LdopReceiveTraceGetRequest;
 import com.jd.open.api.sdk.response.etms.LdopReceiveTraceGetResponse;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -262,15 +259,18 @@ public class LogisticsCentre {
 
         //货物信息
         List<CargoDetail> cargoDetails=new ArrayList<>();
-        CargoDetail cargoDetail=new CargoDetail();
-        cargoDetail.setName(commonProduct.getProductName());
-        cargoDetail.setCount(commonProduct.getUnitQuantity());
-        cargoDetail.setUnit(commonProduct.getUnit());
-        cargoDetail.setWeight(commonProduct.getShipWeight());
-        cargoDetail.setAmount(commonProduct.getProductPrice().doubleValue());
-        cargoDetail.setCurrency("RMB");
-        cargoDetail.setSourceArea("CHN");
-        cargoDetails.add(cargoDetail);
+        List<ProductDetailVO>productDetailVOList= commonProduct.getProductList();
+        for (ProductDetailVO productDetailVO:productDetailVOList) {
+            CargoDetail cargoDetail=new CargoDetail();
+            cargoDetail.setName(productDetailVO.getProductName());
+            cargoDetail.setCount(productDetailVO.getUnitQuantity());
+            cargoDetail.setUnit(productDetailVO.getUnit());
+            cargoDetail.setWeight(productDetailVO.getShipWeight());
+            cargoDetail.setAmount(productDetailVO.getProductPrice().doubleValue());
+            cargoDetail.setCurrency("RMB");
+            cargoDetail.setSourceArea("CHN");
+            cargoDetails.add(cargoDetail);
+        }
         sfParam.setCargoDetails(cargoDetails);
 
         //寄件人信息
@@ -332,6 +332,7 @@ public class LogisticsCentre {
         //收件人信息
         Receiver receiver = new Receiver();
         receiver.setName(commonConsignee.getReceiveName());
+        //TODO 收件人省市区
         receiver.setProvince("江西省");
         receiver.setCity("赣州市");
         receiver.setDistrict("章贡区");
@@ -341,13 +342,16 @@ public class LogisticsCentre {
         //货物信息
         ItemList itemList = new ItemList();
         List<Item> items = Lists.newArrayList();
-        Item item = new Item();
-        item.setLineNo(1);
-        item.setItemSkuCode(commonProduct.getProductSku());
-        item.setItemName(commonProduct.getProductName());
-        item.setItemQuantity(commonProduct.getUnitQuantity());
-        items.add(item);
-        itemList.setItem(items);
+        List<ProductDetailVO>productDetailVOList= commonProduct.getProductList();
+        for (ProductDetailVO productDetailVO:productDetailVOList) {
+            Item item = new Item();
+            item.setLineNo(productDetailVO.getProductId().intValue());
+            item.setItemSkuCode(productDetailVO.getProductSku());
+            item.setItemName(productDetailVO.getProductName());
+            item.setItemQuantity(productDetailVO.getUnitQuantity());
+            items.add(item);
+            itemList.setItem(items);
+        }
         req.setItemList(itemList);
 
         return req;

@@ -95,6 +95,35 @@
             t_order_detail a
         WHERE a.order_id=#{orderId}
     </select>
+
+
     <select id="getProductListByshippingOrderId"
-            resultType="com.insigma.ordercenter.entity.dto.CommonProductDTO"></select>
+            resultType="com.insigma.ordercenter.entity.vo.ProductDetailVO">
+    SELECT
+        a.order_detail_id,
+        a.order_id,
+        a.product_id,
+        a.product_sku,
+        a.product_name,
+        a.product_type,
+        a.product_price,
+        a.product_specs,
+        a.unit,
+        a.amount AS unitQuantity,
+        a.total_price AS productPrice,
+        a.is_gift,
+        c.ship_weight
+        FROM
+            t_order_detail a
+        LEFT JOIN t_product c ON a.product_id=c.product_id
+        WHERE
+            a.order_id IN (
+                SELECT
+                    b.order_id
+                FROM
+                    t_shipping_order_operation b
+                WHERE
+                    b.shipping_order_id = 1286205644413874178
+            )
+    </select>
 </mapper>

@@ -55,7 +55,7 @@ public class ShippingOrderController extends BaseController{
     }
 
     @PostMapping("/increaseCargo")
-    @ApiOperation("增加补货单")
+    @ApiOperation("新建补货单")
     public Result increaseCargo(EditShippingOrderDTO editShippingOrderDTO) {
 
         LoginUser loginUser=redisUser();
@@ -67,6 +67,20 @@ public class ShippingOrderController extends BaseController{
         }
 
         return Result.error(CodeMsg.DATA_INSERT_ERROR);
+    }
+
+    @PutMapping("/saveIncreaseCargo/{shippingOrderId}")
+    @ApiOperation("保存补货单")
+    public Result saveIncreaseCargo(@PathVariable Long shippingOrderId) {
+
+        LoginUser loginUser=redisUser();
+
+        Boolean result = shippingOrderService.saveIncreaseCargo(loginUser,shippingOrderId);
+        if(result){
+            return Result.success();
+        }
+
+        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
     }
 
     @PutMapping("/changeAddress/{shippingOrderId}")

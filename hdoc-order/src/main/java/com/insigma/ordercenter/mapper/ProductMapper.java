@@ -3,7 +3,6 @@ package com.insigma.ordercenter.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.entity.Product;
-import com.insigma.ordercenter.entity.dto.CommonProductDTO;
 import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ProductListPageVO;
 import com.insigma.ordercenter.entity.vo.ShippingProductVO;
@@ -33,5 +32,5 @@ public interface ProductMapper extends BaseMapper<Product> {
 
     List<ShippingProductVO> getShippingOrderProductList(@Param("orderId")Long orderId);
 
-    CommonProductDTO getProductListByshippingOrderId(Long shippingOrderId);
+    List<ProductDetailVO> getProductListByshippingOrderId(Long shippingOrderId);
 }

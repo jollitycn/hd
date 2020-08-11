@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -10,6 +11,7 @@ import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.entity.dto.*;
 import com.insigma.ordercenter.entity.vo.EditOrderProductDTO;
+import com.insigma.ordercenter.entity.vo.ProductDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
 import com.insigma.ordercenter.logistics.LogisticsCentre;
@@ -44,6 +46,12 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
     @Resource
     private OrderDetailMapper orderDetailMapper;
 
+    @Resource
+    private ShopMapper shopMapper;
+
+    @Resource
+    private OrderMapper orderMapper;
+
     @Override
     public IPage<ShippingOrderVO> getShippingOrderList(ShippingOrderDTO shippingOrderDTO) {
 
@@ -60,24 +68,24 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
     @Override
     public Boolean increaseCargo(LoginUser loginUser,EditShippingOrderDTO editShippingOrderDTO) {
 
+        Long shippingOrderId=editShippingOrderDTO.getShippingOrderId();
         //写入发货单对象
         ShippingOrder shippingOrder = new ShippingOrder();
+        if(null!=shippingOrderId){
+            shippingOrder=getById(shippingOrderId);
+            this.createLog(shippingOrderId,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"编辑了补货单:"+shippingOrder.getShippingOrderNo());
+        }else{
+            //生成发货单id ObjectId是MongoDB数据库的一种唯一ID生成策略，是UUID version1的变种
+            shippingOrder.setShippingOrderNo("FH"+IdUtil.objectId().toLowerCase());
+            shippingOrder.setCreateTime(LocalDateTime.now());
+            this.createLog(null,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"新增了补货单:"+shippingOrder.getShippingOrderNo());
+        }
+        BeanUtil.copyProperties(editShippingOrderDTO,shippingOrder);
 
-        shippingOrder.setAddress(editShippingOrderDTO.getAddress());
-        shippingOrder.setReceiveName(editShippingOrderDTO.getReceiveName());
-        shippingOrder.setReceiveRemark(editShippingOrderDTO.getReceiveRemark());
-        shippingOrder.setMobilePhone(editShippingOrderDTO.getMobilePhone());
-        shippingOrder.setWarehouseId(editShippingOrderDTO.getWarehouseId());
-        shippingOrder.setExpressCompanyId(editShippingOrderDTO.getExpressCompanyId());
-        //生成发货单id ObjectId是MongoDB数据库的一种唯一ID生成策略，是UUID version1的变种
-        shippingOrder.setShippingOrderNo("FH"+IdUtil.objectId());
-        shippingOrder.setCreateTime(LocalDateTime.now());
+        //设置为新建状态
+        shippingOrder.setStatus(Constant.SYS_EIGHT);
 
-
-        this.createLog(null,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"新增了补货单:"+shippingOrder.getShippingOrderNo());
-
-
-        return this.save(shippingOrder);
+        return shippingOrderId==null?this.save(shippingOrder):this.updateById(shippingOrder);
     }
 
     /**
@@ -276,6 +284,7 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
 
     @Override
     public boolean createLogisticsJob() {
+
         //查询符合条件的发货单
         QueryWrapper queryWrapper=new QueryWrapper();
         queryWrapper.eq("status",Constant.SYS_ZERO);
@@ -286,14 +295,26 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
             for (ShippingOrder shippingOrder:shippingOrderList) {
 
                 //查询商品
-                CommonProductDTO commonProduct=productMapper.getProductListByshippingOrderId(shippingOrder.getShippingOrderId());
+                List<ProductDetailVO> productDetailVOList=productMapper.getProductListByshippingOrderId(shippingOrder.getShippingOrderId());
+                CommonProductDTO commonProduct=new CommonProductDTO();
+                commonProduct.setProductList(productDetailVOList);
 
-                //TODO
-
+                //设置收件人
                 CommonConsigneeDTO commonConsignee =new CommonConsigneeDTO();
+                commonConsignee.setReceiveName(shippingOrder.getReceiveName());
+                commonConsignee.setMobilePhone(shippingOrder.getMobilePhone());
+                commonConsignee.setAddress(shippingOrder.getAddress());
+
+                //查询发件人
                 CommonConsignorDTO commonConsignor=new CommonConsignorDTO();
+                Order order=orderMapper.selectById(shippingOrder.getOrderId());
+                Shop shop=shopMapper.selectById(order.getShopId());
+                commonConsignor.setAddress(shop.getSAddr());
+                commonConsignor.setMobilePhone(shop.getCPhone());
+                commonConsignor.setReceiveName(shop.getCName());
+
+                //TODO 物流类型
                 int logisticsType=1;
-                productMapper.getProductDetail(1L);
                 try {
                 //调度对应物流下单
                 LogisticsCentre.generateLogistics(shippingOrder.getShippingOrderNo(),commonProduct,commonConsignee,commonConsignor,logisticsType);
@@ -304,6 +325,26 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
             }
 
         return false;
+    }
+
+    /**
+     * 保存补货单
+     *
+     * @param loginUser
+     * @param shippingOrderId
+     * @return
+     */
+    @Override
+    public Boolean saveIncreaseCargo(LoginUser loginUser, Long shippingOrderId) {
+        //获取发货单对象
+        ShippingOrder shippingOrder=this.getById(shippingOrderId);
+
+        //修改状态为待出库
+        shippingOrder.setStatus(Constant.SYS_ZERO);
+
+        this.createLog(shippingOrderId,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"保存了发货单:"+shippingOrder.getShippingOrderNo());
+
+        return this.updateById(shippingOrder);
     }
 
 

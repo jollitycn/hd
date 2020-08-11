@@ -108,4 +108,12 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * @return
      */
     boolean createLogisticsJob();
+
+    /**
+     * 保存补货单
+     * @param loginUser
+     * @param shippingOrderId
+     * @return
+     */
+    Boolean saveIncreaseCargo(LoginUser loginUser, Long shippingOrderId);
 }
