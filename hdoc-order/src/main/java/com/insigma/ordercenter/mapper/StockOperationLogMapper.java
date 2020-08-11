@@ -5,7 +5,6 @@ import com.insigma.ordercenter.entity.StockOperationLog;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.insigma.ordercenter.entity.dto.StockOperationLogPage;
 import com.insigma.ordercenter.entity.dto.StockOperationLogPageQuery;
-import com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse;
 
 import java.util.List;
 

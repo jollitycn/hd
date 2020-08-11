@@ -6,13 +6,10 @@
 package com.insigma.ordercenter.service.sf.oms;
 
 import com.alibaba.fastjson.JSON;
-import com.insigma.ordercenter.logistics.sf.qiao.*;
-import com.insigma.ordercenter.service.sf.qiao.EspServiceCode;
 import com.insigma.ordercenter.util.HttpClientUtil;
 import com.insigma.ordercenter.util.VerifyCodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import springfox.documentation.spring.web.json.Json;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

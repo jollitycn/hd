@@ -4,7 +4,6 @@ import com.insigma.ordercenter.logistics.sf.oms.AESCipher;
 import com.insigma.ordercenter.logistics.sf.oms.HmacSha512CoderFactory;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.UUID;

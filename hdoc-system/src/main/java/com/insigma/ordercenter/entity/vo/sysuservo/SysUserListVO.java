@@ -3,7 +3,6 @@ package com.insigma.ordercenter.entity.vo.sysuservo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.vo.BaseVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -8,7 +8,6 @@ import com.insigma.ordercenter.entity.dto.WarehouseDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductPage;
 import com.insigma.ordercenter.entity.dto.WarehouseProductPageQuery;
-import com.insigma.ordercenter.entity.dto.shop.ShopQueryResponse;
 import com.insigma.ordercenter.entity.vo.WarehouseVo;
 import org.apache.ibatis.annotations.Param;
 

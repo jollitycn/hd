@@ -107,7 +107,7 @@ public class OMSAPIService {
 					+ "&appToken=" + request.getAppToken()
 					+ "&userToken=" + request.getUserToken()
 			+ "&v="+request.getV();
-			String response = post(    url , json);
+			String response = post(url ,json);
 
 			System.out.println("远程接口:"+url);
 			System.out.println("远程body:"+json);
@@ -194,7 +194,7 @@ public class OMSAPIService {
 		return result;
 	}
 
-	public static void main(String[] args) throws Exception {
+//	public static void main(String[] args) throws Exception {
 //		String source = "{\r\n" +
 //				"	\"orderItems\": [{\r\n" +
 ////				"		\"monthlyAccount\": \"7550612539\",\r\n" +
@@ -276,7 +276,7 @@ public class OMSAPIService {
 		// sf.oms.Demo2.demo(OMSServiceCode.OUTBOUND_CONFIRM);
 		//sf.oms.Demo2.demo(OMSServiceCode.CANCEL_OUTBOUND);
 
-	}
+//	}
 
 }
 

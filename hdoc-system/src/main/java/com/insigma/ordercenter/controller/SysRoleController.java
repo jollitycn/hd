@@ -14,7 +14,6 @@ import com.insigma.ordercenter.entity.vo.SysRoleVO;
 import com.insigma.ordercenter.service.ISysRoleService;
 import com.insigma.ordercenter.service.ISysUserService;
 import com.insigma.ordercenter.service.IUserRoleRelationService;
-import com.insigma.ordercenter.service.IUserShopRelationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

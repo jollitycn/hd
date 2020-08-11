@@ -2,8 +2,6 @@ package com.insigma.ordercenter.entity.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,15 +21,12 @@ import java.math.BigDecimal;
 public class OrderDetailVO extends BaseVO{
 
     @ApiModelProperty(value = "订单明细ID")
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long orderDetailId;
 
     @ApiModelProperty(value = "订单ID ")
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long orderId;
 
     @ApiModelProperty(value = "商品ID")
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long productId;
 
     @ApiModelProperty(value = "商品sku")

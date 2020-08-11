@@ -1,7 +1,5 @@
 package com.insigma.ordercenter.gateway.filter;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.google.gson.Gson;
 import com.insigma.ordercenter.gateway.res.JwtResponse;
 import com.insigma.ordercenter.gateway.res.RedisKeyEnum;

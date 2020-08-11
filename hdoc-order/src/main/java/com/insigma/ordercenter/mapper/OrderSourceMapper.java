@@ -6,7 +6,6 @@ import com.insigma.ordercenter.entity.OrderSource;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.insigma.ordercenter.entity.vo.OrderSourceListVO;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * <p>
