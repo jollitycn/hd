@@ -95,4 +95,6 @@
             t_order_detail a
         WHERE a.order_id=#{orderId}
     </select>
+    <select id="getProductListByshippingOrderId"
+            resultType="com.insigma.ordercenter.entity.dto.CommonProductDTO"></select>
 </mapper>
