@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -180,29 +181,50 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     private void updateShopProduct(WarehouseProductRelation whp, WarehouseProductRelation productStock) {
         //更新所有仓库的库存信息
         List<ShopProduct> shopProducts = shopProductService.getByProductId(productStock.getProductId());
-        int totalRatio = 0;
-        for (ShopProduct shopProduct :
-                shopProducts) {
-            totalRatio += shopProduct.getRatio();
-        }
-        if (totalRatio <= 0) {
-            return;
-        }
-        int totalQuantity = 0;
-        for (ShopProduct shopProduct :
-                shopProducts) {
-            double ratio = 0.0 * totalRatio / shopProduct.getRatio();
-            long newQuantity = Math.round(whp.getQuantity() * ratio);
-            Long newNumber = shopProduct.getNumber() + newQuantity;
-            shopProduct.setNumber(newNumber.intValue());
-            totalQuantity += newQuantity;
-        }
-        int remainNumber = whp.getQuantity() - totalQuantity;
-        if (remainNumber > 0) {
-            ShopProduct sp = shopProducts.get(shopProducts.size() - 1);
-            sp.setNumber(sp.getNumber() + remainNumber);
-        }
+        if (dealSP(whp, shopProducts)) return;
         shopProductService.saveOrUpdateBatch(shopProducts);
+    }
+
+    private boolean dealSP ( WarehouseProductRelation whp, List<ShopProduct> sps ) {
+        if (checkSPS(sps)) return true;
+        int tr = 0;
+        Iterator it = sps.iterator();
+        while (it.hasNext())  tr += ((ShopProduct) it.next()).getRatio();
+        if (tr <= 0) return true;
+        int tq = getTq(whp, sps, tr);
+        int rn = whp.getQuantity() - tq;
+        if (rn > 0 && sps.size() > 0) sRn(sps.get(sps.size() - 1), rn);
+        return false;
+    }
+
+    private boolean checkSPS ( List<ShopProduct> sps ) {
+        if (sps == null) return true;
+        return false;
+    }
+
+    private void sRn ( ShopProduct sp, int rn ) {
+        sp.setNumber(sp.getNumber() + rn);
+    }
+
+    private int getTq ( WarehouseProductRelation whp, List<ShopProduct> sps, int tr ) {
+        int tq = 0 ;
+        for (ShopProduct sp : sps) {
+            long nq = setNb(whp, tr, sp);
+            tq += nq;
+        }
+        return tq;
+    }
+
+    private long setNb ( WarehouseProductRelation whp, int tr, ShopProduct sp ) {
+        long nq = getNq(whp, tr, sp);
+        Long nn = sp.getNumber() + nq;
+        sp.setNumber(nn.intValue());
+        return nq;
+    }
+
+    private long getNq ( WarehouseProductRelation whp, int tr, ShopProduct sp ) {
+        double ratio = 0.0 * tr / sp.getRatio();
+        return Math.round(whp.getQuantity() * ratio);
     }
 
     @Override
