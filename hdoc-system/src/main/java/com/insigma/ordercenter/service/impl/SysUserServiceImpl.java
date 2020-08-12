@@ -226,14 +226,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public boolean updateUserInfo(LoginUser loginUser, UpdateUserQuery userInfo) {
+    public Integer updateUserInfo(LoginUser loginUser, UpdateUserQuery userInfo) {
 
         // 检验手机号是否重复
         Integer integer = this.baseMapper.selectCount(Wrappers.<SysUser>lambdaQuery()
                 .eq(SysUser::getMobilePhone, userInfo.getMobilePhone())
                 .notIn(SysUser::getUserId, userInfo.getUserId()));
         if(0 != integer){
-            throw new JSONException(CodeMsg.MOBILE_USED.getMessage());
+           return 0;
         }
 
         SysUser sysUser = getById(userInfo.getUserId());
@@ -255,7 +255,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 //            status = status && userRoleRelationService.save(userRoleRelation);
 //        }
 
-        return status;
+        if(status){
+            return 1;
+        }
+        return 2;
     }
 
     @Override
