@@ -89,7 +89,7 @@ public class OrderListVO extends BaseVO {
     private Long shopId;
 
     @ApiModelProperty(value = "店铺名称")
-    private Long shopName;
+    private String shopName;
 
     @ApiModelProperty(value = "店铺编码")
     private String platformNo;

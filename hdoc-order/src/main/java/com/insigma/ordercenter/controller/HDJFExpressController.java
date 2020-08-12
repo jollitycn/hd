@@ -1,7 +1,6 @@
 package com.insigma.ordercenter.controller;
 
 import com.insigma.ordercenter.base.Result;
-import com.insigma.ordercenter.logistics.sf.qiao.QuerySFRoute;
 import com.insigma.ordercenter.service.IHDJFService;
 import com.insigma.ordercenter.service.impl.ZtoRequest;
 import hdjf.EdbTradeAdd;
