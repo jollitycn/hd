@@ -313,8 +313,9 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
                 commonConsignor.setMobilePhone(shop.getCPhone());
                 commonConsignor.setReceiveName(shop.getCName());
 
-                //TODO 物流类型
-                int logisticsType=1;
+                //获取物流类型
+                int logisticsType=shippingOrder.getExpressCompanyId();
+
                 try {
                 //调度对应物流下单
                 LogisticsCentre.generateLogistics(shippingOrder.getShippingOrderNo(),commonProduct,commonConsignee,commonConsignor,logisticsType);

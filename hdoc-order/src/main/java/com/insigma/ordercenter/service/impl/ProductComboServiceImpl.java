@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.Product;
@@ -43,15 +44,29 @@ public class ProductComboServiceImpl extends ServiceImpl<ProductComboMapper, Pro
 
     /**
      * 删除商品组合列表
-     *
      * @param productComboId
      * @return
      */
     @Override
     public boolean deleteCombo(Long productComboId) {
+
+        //移除组合商品
+        boolean result=removeById(productComboId);
+
+        //如果是最后一个商品，则将此商品置为单品
         ProductCombo productCombo=this.getById(productComboId);
-        productCombo.setIsDeleted(Constant.SYS_ONE);
-        return this.updateById(productCombo);
+        Long productId=productCombo.getParentProductId();
+        QueryWrapper queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq(ProductCombo.PARENT_PRODUCT_ID,productId);
+        int check=count(queryWrapper);
+        if(Constant.SYS_ZERO>=check){
+            Product product=new Product();
+            product.setProductId(productId);
+            product.setIsCombo(Constant.SYS_ZERO);
+            productMapper.updateById(product);
+        }
+
+        return result;
     }
 
     /**
