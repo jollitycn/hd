@@ -19,4 +19,8 @@ public interface OrderSourceMapper extends BaseMapper<OrderSource> {
 
     IPage<OrderSourceListVO> getOrderSourceList(Page<OrderSourceListVO> page,
                                                @Param("orderSource") OrderSource orderSource);
+
+    OrderSource checkDuplById (  @Param("orderSource") OrderSource orderSource );
+
+    OrderSource checkDupl (  @Param("orderSource") OrderSource orderSource );
 }

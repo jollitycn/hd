@@ -10,6 +10,7 @@ import com.insigma.ordercenter.entity.dto.OrderSourceDTO;
 import com.insigma.ordercenter.entity.dto.OrderSourceEditDTO;
 import com.insigma.ordercenter.entity.vo.OrderSourceListVO;
 import com.insigma.ordercenter.service.IOrderSourceService;
+import com.insigma.ordercenter.service.impl.MyException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,12 @@ public class OrderSourceController extends BaseController {
     @ApiOperation(value = "新增货主")
     public Result<?> add(OrderSourceAddDTO orderSourceAddDTO) {
 
-        boolean status = orderSourceService.add(orderSourceAddDTO, redisUser());
+        boolean status = false;
+        try {
+            status = orderSourceService.add(orderSourceAddDTO, redisUser());
+        } catch (MyException e) {
+            return Result.error(e.getCodeMsg());
+        }
 
         if (status) {
             return Result.success();
@@ -62,7 +68,12 @@ public class OrderSourceController extends BaseController {
     @ApiOperation(value = "编辑货主")
     public Result<?> edit(OrderSourceEditDTO orderSourceEditDTO) {
 
-        boolean status = orderSourceService.edit(orderSourceEditDTO);
+        boolean status = false;
+        try {
+            status = orderSourceService.edit(orderSourceEditDTO);
+        } catch (MyException e) {
+            return Result.error(e.getCodeMsg());
+        }
 
         if (status) {
             return Result.success();

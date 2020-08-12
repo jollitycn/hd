@@ -53,6 +53,7 @@ public class CodeMsg {
     public static CodeMsg STRATEGY_BLACK_PHONE = new CodeMsg(60002,"店铺手机号黑名单拦截");
     public static CodeMsg STRATEGY_BLACK_REGION = new CodeMsg(60003,"店铺地区黑名单拦截");
     public static CodeMsg STRATEGY_ADDRESS_PARSE_ERROR = new CodeMsg(60003,"店铺地区黑名单拦截");
+    public static CodeMsg ORDER_SOURCE_DUPL = new CodeMsg(60004,"货主名称和货主编码不能重复");
 
     public CodeMsg(int retCode, String message) {
         this.retCode = retCode;

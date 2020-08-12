@@ -9,6 +9,7 @@ import com.insigma.ordercenter.entity.dto.OrderSourceAddDTO;
 import com.insigma.ordercenter.entity.dto.OrderSourceDTO;
 import com.insigma.ordercenter.entity.dto.OrderSourceEditDTO;
 import com.insigma.ordercenter.entity.vo.OrderSourceListVO;
+import com.insigma.ordercenter.service.impl.MyException;
 
 /**
  * <p>
@@ -22,9 +23,9 @@ public interface IOrderSourceService extends IService<OrderSource> {
 
     IPage<OrderSourceListVO> getOrderSourceList(Page<OrderSourceListVO> page, OrderSourceDTO orderSourceDTO);
 
-    boolean add(OrderSourceAddDTO orderSourceAddDTO, LoginUser loginUser);
+    boolean add(OrderSourceAddDTO orderSourceAddDTO, LoginUser loginUser) throws MyException;
 
-    boolean edit(OrderSourceEditDTO orderSourceEditDTO);
+    boolean edit(OrderSourceEditDTO orderSourceEditDTO) throws MyException;
 
     boolean delete(Long orderSourceId);
 

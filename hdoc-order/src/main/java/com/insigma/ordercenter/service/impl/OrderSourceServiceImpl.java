@@ -2,6 +2,7 @@ package com.insigma.ordercenter.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.OrderSource;
@@ -51,21 +52,33 @@ public class OrderSourceServiceImpl extends ServiceImpl<OrderSourceMapper, Order
     }
 
     @Override
-    public boolean add(OrderSourceAddDTO orderSourceAddDTO, LoginUser loginUser) {
+    public boolean add(OrderSourceAddDTO orderSourceAddDTO, LoginUser loginUser) throws MyException {
 
         OrderSource orderSource = new OrderSource();
         BeanUtils.copyProperties(orderSourceAddDTO, orderSource);
         orderSource.setCreateId(loginUser.getUserId());
         orderSource.setCreateTime(LocalDateTime.now());
+
+        if(checkDupl(orderSource)){throw new MyException(CodeMsg.ORDER_SOURCE_DUPL);}
         return save(orderSource);
     }
 
-    @Override
-    public boolean edit(OrderSourceEditDTO orderSourceEditDTO) {
+    private boolean checkDupl ( OrderSource orderSource ) {
+        OrderSource  os = null;
+        if(orderSource.getOrderSourceId()!=null){
+            os =  baseMapper.checkDuplById(orderSource);
+        }else{
+            os =  baseMapper.checkDupl(orderSource);
+        }
+        return os !=null;
+    }
 
+    @Override
+    public boolean edit(OrderSourceEditDTO orderSourceEditDTO) throws MyException {
         OrderSource orderSource = getById(orderSourceEditDTO.getOrderSourceId());
 
         if (orderSource != null) {
+            if(checkDupl(orderSource)){throw new MyException(CodeMsg.ORDER_SOURCE_DUPL);}
             orderSource.setSourceName(orderSourceEditDTO.getSourceName());
             orderSource.setSourceNo(orderSourceEditDTO.getSourceNo());
             orderSource.setRemark(orderSourceEditDTO.getRemark());

@@ -2,6 +2,80 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.OrderSourceMapper">
 
+    <select id="checkDupl" resultType="com.insigma.ordercenter.entity.OrderSource">
+        SELECT
+        os.order_source_id,
+        os.source_no,
+        os.source_name,
+        os.create_time,
+        os.remark,
+        os.is_stop,
+        os.create_id,
+        su.user_name as createName
+        FROM
+        t_order_source os
+        LEFT JOIN sys_user su ON os.create_id = su.user_id
+        WHERE
+        os.is_deleted = 0
+        <if test="orderSource.sourceName != null and orderSource.sourceName != ''">
+            AND os.source_name like #{orderSource.sourceName}
+        </if>
+        <if test="orderSource.sourceNo != null and orderSource.sourceNo != ''">
+            AND os.source_no like #{orderSource.sourceNo}
+        </if>
+    </select>
+    <select id="checkDuplById" resultType="com.insigma.ordercenter.entity.OrderSource">
+        SELECT
+        os.order_source_id,
+        os.source_no,
+        os.source_name,
+        os.create_time,
+        os.remark,
+        os.is_stop,
+        os.create_id,
+        su.user_name as createName
+        FROM
+        t_order_source os
+        LEFT JOIN sys_user su ON os.create_id = su.user_id
+        WHERE
+        os.is_deleted = 0
+        <if test="orderSource.sourceName != null and orderSource.sourceName != ''">
+            AND os.source_name like #{orderSource.sourceName}
+        </if>
+        <if test="orderSource.sourceNo != null and orderSource.sourceNo != ''">
+            AND os.source_no like #{orderSource.sourceNo}
+        </if>
+        <if test="orderSource.orderSourceId !=  null and orderSource.orderSourceId != ''">
+            AND os.order_source_id = #{orderSource.orderSourceId}
+        </if>
+
+    </select>
+    <select id="getOrderSourceList" resultType="com.insigma.ordercenter.entity.vo.OrderSourceListVO">
+        SELECT
+        os.order_source_id,
+        os.source_no,
+        os.source_name,
+        os.create_time,
+        os.remark,
+        os.is_stop,
+        os.create_id,
+        su.user_name as createName
+        FROM
+        t_order_source os
+        LEFT JOIN sys_user su ON os.create_id = su.user_id
+        WHERE
+        os.is_deleted = 0
+        <if test="orderSource.sourceName != null and orderSource.sourceName != ''">
+            AND os.source_name like #{orderSource.sourceName}
+        </if>
+        <if test="orderSource.sourceNo != null and orderSource.sourceNo != ''">
+            AND os.source_no like #{orderSource.sourceNo}
+        </if>
+        <if test="orderSource.isStop != null">
+            AND os.is_stop = #{orderSource.isStop}
+        </if>
+
+    </select>
     <select id="getOrderSourceList" resultType="com.insigma.ordercenter.entity.vo.OrderSourceListVO">
         SELECT
             os.order_source_id,
