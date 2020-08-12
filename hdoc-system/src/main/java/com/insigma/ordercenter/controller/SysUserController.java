@@ -91,11 +91,14 @@ public class SysUserController extends BaseController {
     @ApiOperation("更新用户信息")
     public Result<?> update(@RequestBody UpdateUserQuery userInfo) {
 
-        boolean status = sysUserService.updateUserInfo(redisUser(), userInfo);
+        Integer status = sysUserService.updateUserInfo(redisUser(), userInfo);
 
-        if (status) {
+        // 0：手机号已注册，1.成功，2.失败
+        if (0 == status) {
+            return Result.error(CodeMsg.MOBILE_USED);
+        } else if(1 == status){
             return Result.success();
-        } else {
+        }else {
             return Result.error(CodeMsg.DATA_UPDATE_ERROR);
         }
     }

@@ -92,6 +92,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 order.setIsHandOrder(Constant.SYS_ONE);
                 order.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
                 order.setConsumerName(sendReceiveInfoVO.getConsumerName());
+                order.setOrderStatus(sendReceiveInfoVO.getOrderStatus());
                 orderService.save(order);
 
                 //新增订单收发件人信息
@@ -122,7 +123,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             }else{
                 //删除原有的商品明细列表
                 if (null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size() > 0) {
-                    orderDetailService.removeById(sendReceiveInfoVO.getOrderId());
+                    QueryWrapper<OrderDetail> orderDetailQueryWrapper=new QueryWrapper<>();
+                    orderDetailQueryWrapper.eq("order_id",sendReceiveInfoVO.getOrderId());
+                    orderDetailService.remove(orderDetailQueryWrapper);
                 }
                 //修改订单表信息
                 Order order = new Order();
@@ -132,6 +135,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 order.setIsCombined(Constant.SYS_ZERO);
                 order.setIsHandOrder(Constant.SYS_ONE);
                 order.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
+                order.setOrderStatus(sendReceiveInfoVO.getOrderStatus());
                 orderService.updateById(order);
 
                 //修改订单收发件人信息

@@ -369,7 +369,7 @@ public class StrategyController extends BaseController {
         queryWrapper.eq(Gift.GIFT_STRATEGY_ID,giftStrategyId);
         boolean remove1 = this.iGiftService.remove(queryWrapper);
 
-        if(b && remove && remove1){
+        if(b && remove){
             return Result.success();
         }
         throw new JSONException(CodeMsg.DATA_DELETE_ERROR.getMessage());

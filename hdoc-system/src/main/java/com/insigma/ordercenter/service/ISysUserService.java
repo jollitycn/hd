@@ -44,7 +44,7 @@ public interface ISysUserService extends IService<SysUser> {
     boolean addSysUser(CreateUserQuery user, LoginUser loginUser);
 
 
-    boolean updateUserInfo(LoginUser loginUser, UpdateUserQuery userInfo);
+    Integer updateUserInfo(LoginUser loginUser, UpdateUserQuery userInfo);
 
     SysUserDetailVO getSysUserDetail(Long userId);
 

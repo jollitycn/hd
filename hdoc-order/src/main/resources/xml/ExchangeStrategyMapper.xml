@@ -13,8 +13,10 @@
             es.end_date,
             es.old_product_id,
             pd.product_name AS oldProductName,
+            pd.product_no AS oldProductNo,
             es.new_product_id,
             pdt.product_name AS newProductName,
+            pdt.product_no AS newProductNo,
             es.is_stop
         FROM
             t_exchange_strategy es

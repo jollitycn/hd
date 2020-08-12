@@ -1,7 +1,9 @@
 package com.insigma.ordercenter.service.impl;
 
+import cn.hutool.json.JSONException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
@@ -224,7 +226,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public boolean updateUserInfo(LoginUser loginUser, UpdateUserQuery userInfo) {
+    public Integer updateUserInfo(LoginUser loginUser, UpdateUserQuery userInfo) {
+
+        // 检验手机号是否重复
+        Integer integer = this.baseMapper.selectCount(Wrappers.<SysUser>lambdaQuery()
+                .eq(SysUser::getMobilePhone, userInfo.getMobilePhone())
+                .notIn(SysUser::getUserId, userInfo.getUserId()));
+        if(0 != integer){
+           return 0;
+        }
 
         SysUser sysUser = getById(userInfo.getUserId());
         sysUser.setUserName(userInfo.getUserName());
@@ -245,7 +255,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 //            status = status && userRoleRelationService.save(userRoleRelation);
 //        }
 
-        return status;
+        if(status){
+            return 1;
+        }
+        return 2;
     }
 
     @Override
