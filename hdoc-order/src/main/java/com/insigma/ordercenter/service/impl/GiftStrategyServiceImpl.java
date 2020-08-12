@@ -148,6 +148,8 @@ public class GiftStrategyServiceImpl extends ServiceImpl<GiftStrategyMapper, Gif
         List<String> strings = shopList.stream().map(ShopListVO::getShopName).collect(Collectors.toList());
         infoVO.setShopName(String.join(",",strings));
 
+        infoVO.setShopIdList(shopList);
+
         // 查找赠品信息
         List<GiftListVO> giftList = this.baseMapper.getGiftList(giftStrategyId);
         infoVO.setGiftListVOS(giftList);
