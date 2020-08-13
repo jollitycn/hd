@@ -83,13 +83,13 @@ public class ShippingStrategyQuartz {
 
 //    @Scheduled(fixedDelay = 2*60*1000)
     @GetMapping("shippingQuartz")
-    public boolean shippingOrderDeal() {
+    public void shippingOrderDeal() {
         //从缓存获取策略
         Object redisStrategy = redisUtil.get("strategyList");
         List<Strategy> strategyList = JsonUtil.jsonToList(JsonUtil.beanToJson(redisStrategy),Strategy.class);
         if (null == strategyList || strategyList.size() == 0) {
             log.error("未获取到策略，无法进行处理");
-            return false;
+            return ;
         }
         Strategy strategy = strategyList.get(OrderStrategyConstant.AUTO_SHIPPING - 1);
         Strategy remarkStrategy = strategyList.get(OrderStrategyConstant.REMARK - 1);
@@ -183,13 +183,14 @@ public class ShippingStrategyQuartz {
                                         shippingOrderService.save(shippingOrder);
                                         dso.setShippingOrderId(shippingOrder.getShippingOrderId());
                                         detailShippingService.save(dso);
-
                                     }
                                 } else {
+                                    //否则直接绑定发货单和订单详情
                                     shippingOrderService.save(shippingOrder);
                                     dso.setShippingOrderId(shippingOrder.getShippingOrderId());
                                     detailShippingService.save(dso);
                                 }
+                                //订单状态更新为待出库
                                 order.setOrderStatus(4);
                                 orderService.updateById(order);
                                 typeSet.add(productType);
@@ -206,7 +207,6 @@ public class ShippingStrategyQuartz {
                 }
             }
         }
-        return false;
     }
     public Integer orderMatchWarehouse(Order order,OrderDetail detail) {
         //根据订单中的店铺去查找对应的仓库
@@ -217,6 +217,7 @@ public class ShippingStrategyQuartz {
             SendReceiveInfo sendReceiveInfo = sendReceiveInfoService.getOne(Wrappers.<SendReceiveInfo>lambdaQuery().eq(SendReceiveInfo::getOrderId, order.getOrderId()));
             for (WarehouseRegion wr : regionList) {
                 Integer regionId = wr.getRegionId();
+                //查询仓库区域是否和收货人地址一致 主要判断省份
                 SysRegion region = regionService.detail(regionId);
                 if (region.getName().equals(sendReceiveInfo.getProvince())) {
                     //根据当前商品查询仓库 按优先级排序

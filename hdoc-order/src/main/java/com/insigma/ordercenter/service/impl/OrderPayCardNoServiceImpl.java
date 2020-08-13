@@ -1,8 +1,8 @@
 package com.insigma.ordercenter.service.impl;
 
-import com.insigma.ordercenter.entity.OrderPayRelation;
+import com.insigma.ordercenter.entity.OrderPayCardNo;
 import com.insigma.ordercenter.mapper.OrderPayRelationMapper;
-import com.insigma.ordercenter.service.IOrderPayRelationService;
+import com.insigma.ordercenter.service.IOrderPayCardNoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2020-07-27
  */
 @Service
-public class OrderPayRelationServiceImpl extends ServiceImpl<OrderPayRelationMapper, OrderPayRelation> implements IOrderPayRelationService {
+public class OrderPayCardNoServiceImpl extends ServiceImpl<OrderPayRelationMapper, OrderPayCardNo> implements IOrderPayCardNoService {
 
 }

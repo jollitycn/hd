@@ -8,10 +8,15 @@ import com.dangdang.ddframe.job.lite.config.LiteJobConfiguration;
 import com.dangdang.ddframe.job.lite.spring.api.SpringJobScheduler;
 import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
 import com.insigma.ordercenter.scheduler.CreateLogisticsJob;
+import com.insigma.ordercenter.scheduler.OrderShippingJob;
+import com.insigma.ordercenter.scheduler.OriginalOrderJob;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.annotation.Order;
 
 /**
  * @program: demo
@@ -39,7 +44,41 @@ public class MyJobConfig {
 //        return new MySimpleJob();
 //    }
 
+    /**
+     * 原始订单定时处理
+     * @param cron
+     * @param shardingTotalCount
+     * @param shardingItemParameters
+     * @return
+     */
+    @Bean(initMethod = "init")
+    @Qualifier(value = "originalOrderJob")
+    public JobScheduler originalOrderJob(
+            @Value("${originalOrderJob.cron}") final String cron,
+            @Value("${originalOrderJob.shardingTotalCount}") final int shardingTotalCount,
+            @Value("${originalOrderJob.shardingItemParameters}") final String shardingItemParameters) {
 
+        return new SpringJobScheduler(new OriginalOrderJob(), regCenter, getLiteJobConfiguration(CreateLogisticsJob.class,
+                cron, shardingTotalCount, shardingItemParameters, "TEST！！！"));
+    }
+
+    /**
+     * 订单转发货单
+     * @param cron
+     * @param shardingTotalCount
+     * @param shardingItemParameters
+     * @return
+     */
+    @Bean(initMethod = "init")
+    @Qualifier(value = "shippingOrderJob")
+    public JobScheduler shippingOrderJob(
+            @Value("${shippingOrderJob.cron}") final String cron,
+            @Value("${shippingOrderJob.shardingTotalCount}") final int shardingTotalCount,
+            @Value("${shippingOrderJob.shardingItemParameters}") final String shardingItemParameters) {
+
+        return new SpringJobScheduler(new OrderShippingJob(), regCenter, getLiteJobConfiguration(CreateLogisticsJob.class,
+                cron, shardingTotalCount, shardingItemParameters, "TEST！！！"));
+    }
 
     /**
      * 年假发放(每个月查询年假发放规则（每月1号是否自动计算本年可休年假）)

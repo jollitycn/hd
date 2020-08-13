@@ -38,14 +38,20 @@ public class OrderPay implements Serializable {
     @TableId(value = "order_pay_id", type = IdType.ID_WORKER)
     private Long orderPayId;
 
-    @ApiModelProperty(value = "支付类型")
-    private String payType;
+    @ApiModelProperty("订单编号")
+    private Long orderId;
+
+    @ApiModelProperty("原始订单编号")
+    private Long originalOrderId;
+
+    @ApiModelProperty(value = "支付类型(1、卡兑换 提货卡支付；2、卡兑换 在线支付,3、储值卡 积分支付,4、储值卡 混合支付)")
+    private Integer payType;
 
     @ApiModelProperty(value = "支付金额")
     private BigDecimal payMoney;
 
     @ApiModelProperty(value = "支付时间")
-    private LocalDateTime payDatetime;
+    private String payDatetime;
 
     @ApiModelProperty(value = "支付卡号")
     private String payCardNo;

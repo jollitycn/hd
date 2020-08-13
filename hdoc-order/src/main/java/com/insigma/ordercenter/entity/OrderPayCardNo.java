@@ -21,27 +21,20 @@ package com.insigma.ordercenter.entity;
     @Data
         @EqualsAndHashCode(callSuper = false)
     @Accessors(chain = true)
-    @TableName("t_order_pay_relation")
+    @TableName("t_order_pay_cardno")
     @ApiModel(value="OrderPayRelation对象", description="")
-    public class OrderPayRelation implements Serializable {
+    public class OrderPayCardNo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-            @ApiModelProperty(value = "订单支付关联Id")
-            @TableId(value = "order_pay_relation_id", type = IdType.ID_WORKER)
-    private Long orderPayRelationId;
+    @ApiModelProperty(value = "提货卡号")
+    private String cardNo;
 
-            @ApiModelProperty(value = "订单Id")
-    private Long orderId;
-
-            @ApiModelProperty(value = "订单支付Id")
+    @ApiModelProperty(value = "订单支付Id")
     private Long orderPayId;
 
+    public static final String ORDER_ID = "order_id";
 
-        public static final String ORDER_PAY_RELATION_ID = "order_pay_relation_id";
-
-        public static final String ORDER_ID = "order_id";
-
-        public static final String ORDER_PAY_ID = "order_pay_id";
+    public static final String ORDER_PAY_ID = "order_pay_id";
 
 }

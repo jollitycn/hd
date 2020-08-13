@@ -1,23 +1,16 @@
 package com.insigma.ordercenter.mq;
 
-import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.entity.hd.HdOrder;
+import com.insigma.ordercenter.entity.hd.HdOrderCard;
 import com.insigma.ordercenter.entity.hd.HdOrderDetail;
+import com.insigma.ordercenter.entity.hd.HdOrderPayType;
 import com.insigma.ordercenter.feign.RegionService;
-import com.insigma.ordercenter.service.IOrderService;
-import com.insigma.ordercenter.service.IOriginalOrderDetailService;
-import com.insigma.ordercenter.service.IOriginalOrderService;
-import com.insigma.ordercenter.service.IProductService;
-import com.insigma.ordercenter.utils.DateUtils;
+import com.insigma.ordercenter.service.*;
 import com.insigma.ordercenter.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
@@ -27,11 +20,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 @Component
 @Slf4j
@@ -53,6 +43,12 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
 
     @Autowired
     private RegionService regionService;
+
+    @Autowired
+    private IOrderPayService orderPayService;
+
+    @Autowired
+    private IOrderPayCardNoService cardNoService;
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -84,6 +80,7 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
             //写入原始订单表
             OriginalOrder originalOrder = new OriginalOrder();
             originalOrder.setAddress(hdOrder.getReceiver_adress());
+            originalOrder.setTotalPrice(hdOrder.getTrade_payment());
             originalOrder.setConsumerName(hdOrder.getReceiver_name());
             originalOrder.setOrderStatus(0);
             originalOrder.setOriginalOrderNo(hdOrder.getTid());
@@ -135,10 +132,63 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
                 detail.setDivideOrderFee(hdOrderDetail.getDivide_order_fee());
                 originalOrderDetailService.save(detail);
             }
+            OrderPay orderPay = new OrderPay();
+            orderPay.setOriginalOrderId(originalOrder.getOriginalOrderId());
+            HdOrderPayType payType = hdOrder.getPayType();
+            //储值卡积分
+            if (payType.getPay_type().equals("C")) {
+                orderPay.setPayType(3);
+            } else if (payType.getPay_type().equals("M")) {
+                orderPay.setPayType(4);
+            //卡兑换支付方式
+            } else if (payType.getPay_type().equals("AA")) {
+                orderPay.setPayType(1);
+            } else if (payType.getPay_type().equals("99")) {
+                orderPay.setPayType(2);
+            }
+            orderPay.setPayMoney(payType.getPay_fee());
+            orderPay.setPayDatetime(hdOrder.getPay_time());
+            orderPayService.save(orderPay);
+            List<HdOrderCard>  cards = hdOrder.getCard();
+            for (HdOrderCard card : cards) {
+                OrderPayCardNo orderPayCardNo = new OrderPayCardNo();
+                orderPayCardNo.setOrderPayId(orderPay.getOrderPayId());
+                orderPayCardNo.setCardNo(card.getCard_no());
+                cardNoService.save(orderPayCardNo);
+            }
             System.out.println(hdOrder);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+    }
+
+    /**
+     * 给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+     * 示例 1:
+     * 输入: "abcaab"
+     * 输出: 3
+     * 解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+     * <p>
+     * 示例 2:
+     * 输入: "bbbbb"
+     * 输出: 1
+     * 解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+     * <p>
+     * 示例 3:
+     * 输入: "pwwkew"
+     * 输出: 3
+     * 解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+     * 请注意，你的答案必须是 子串 的长度，"pwke" 是一
+     * 个子序列，不是子串。
+     */
+
+    public static void main(String[] args) {
+        String str = "abcaab";
+        char[] chars = str.toCharArray();
+        for (char a : chars) {
+
+
+        }
     }
 }

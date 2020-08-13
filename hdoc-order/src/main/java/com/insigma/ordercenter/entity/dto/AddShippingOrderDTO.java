@@ -77,7 +77,7 @@ public class AddShippingOrderDTO {
     @ApiModelProperty(value = "订单Id")
     private Long orderId;
 
-    @ApiModelProperty(value = "原始订单Id")
+    @ApiModelProperty(value = "原始订单编号")
     private String originOrderNo;
 
     @ApiModelProperty(value = "订单明细列表")

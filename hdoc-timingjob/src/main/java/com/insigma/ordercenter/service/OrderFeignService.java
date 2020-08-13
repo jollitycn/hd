@@ -13,4 +13,16 @@ public interface OrderFeignService {
     @GetMapping("/order/shipping-order/createLogisticsJob")
     void createLogisticsJob();
 
+    /**
+     * 处理原始订单
+     */
+    @GetMapping("order/ood")
+    void originalOrderDeal();
+
+    /**
+     * 订单转成发货单
+     */
+    @GetMapping("shippingQuartz")
+    void shippingOrderDeal();
+
 }
