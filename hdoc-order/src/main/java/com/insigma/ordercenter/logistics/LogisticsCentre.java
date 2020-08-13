@@ -1,6 +1,7 @@
 package com.insigma.ordercenter.logistics;
 
 import com.google.common.collect.Lists;
+import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.dto.CommonConsigneeDTO;
 import com.insigma.ordercenter.entity.dto.CommonConsignorDTO;
@@ -80,10 +81,10 @@ public class LogisticsCentre {
                     return Result.success(sfResult.getMsgData().getWaybillNoInfoList().get(0).getWaybillNo());
                 }else{
                     //将发货单置为异常状态，并记录异常原因
-                    //Todo
+                    return Result.error(CodeMsg.CREATE_LOGISTICS_ERROR,sfResult.getErrorMsg());
                 }
 
-                break;
+//                break;
             case 2:
                 //转换参数
                 TwSoNotifyReq twSoNotifyReq=transformationBestParam(shippingOrderNo,commonProduct,commonConsignee,commonConsignor);
@@ -109,11 +110,12 @@ public class LogisticsCentre {
                 if(20000==zjsReuslt.getState()){
                     return Result.success(zjsOrder);
                 }else{
-                    //TODO 下单异常处理
+                    //下单异常处理
+                    return Result.error(CodeMsg.CREATE_LOGISTICS_ERROR,zjsReuslt.getReason());
                 }
 
 
-                break;
+//                break;
             default:
 
 

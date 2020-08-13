@@ -50,11 +50,12 @@ public class ProductComboServiceImpl extends ServiceImpl<ProductComboMapper, Pro
     @Override
     public boolean deleteCombo(Long productComboId) {
 
+        ProductCombo productCombo=getById(productComboId);
+
         //移除组合商品
         boolean result=removeById(productComboId);
 
         //如果是最后一个商品，则将此商品置为单品
-        ProductCombo productCombo=this.getById(productComboId);
         Long productId=productCombo.getParentProductId();
         QueryWrapper queryWrapper=new QueryWrapper<>();
         queryWrapper.eq(ProductCombo.PARENT_PRODUCT_ID,productId);
