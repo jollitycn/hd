@@ -1,6 +1,5 @@
 package com.insigma.ordercenter.feign;
 
-import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.SysRegion;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,5 +15,6 @@ public interface RegionService {
     public SysRegion detail(@PathVariable(value ="id") Serializable id);
 
     @GetMapping("/system/sys-region/name")
-    public SysRegion name(@RequestParam(value = "name") String name) ;
+    public SysRegion name(@RequestParam(value = "name") String name);
+
 }

@@ -36,10 +36,8 @@ public class OrderDetailController extends BaseController {
     @GetMapping("/orderDerailList/{orderId}")
     @ApiOperation(value = "订单详情列表",response = OrderDetail.class)
     public Result<?> orderDerailList(@Valid @PathVariable Long orderId) {
-        QueryWrapper<OrderDetail> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("order_id",orderId);
-        List<OrderDetail> list = orderDetailService.list(queryWrapper);
-        return Result.success(list);
+        List<OrderDetailVO> orderDetailVOS = orderDetailService.orderDerailList(orderId);
+        return Result.success(orderDetailVOS);
     }
 
 

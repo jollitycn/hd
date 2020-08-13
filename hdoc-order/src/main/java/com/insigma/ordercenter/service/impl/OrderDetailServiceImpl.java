@@ -35,6 +35,11 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
     }
 
     @Override
+    public List<OrderDetailVO> orderDerailList(Long orderId) {
+        return orderDetailMapper.orderDerailList(orderId);
+    }
+
+    @Override
     public Boolean addOrderDerail(AddOrderDetailVO addOrderDetailVO) {
         //先删除
         if(null != addOrderDetailVO.getOrderDetails() && addOrderDetailVO.getOrderDetails().size()>0){

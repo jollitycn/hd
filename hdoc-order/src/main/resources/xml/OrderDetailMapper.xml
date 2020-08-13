@@ -23,4 +23,25 @@
         od.order_id = #{orderId}
     </select>
 
+    <select id="orderDerailList" resultType="com.insigma.ordercenter.entity.vo.OrderDetailVO">
+        SELECT
+            od.order_detail_id,
+            od.order_id,
+            od.product_id,
+            od.product_sku,
+            od.product_name,
+            od.product_price,
+            od.product_specs,
+            sd.data_value as unit,
+            od.amount,
+            od.total_price,
+            od.is_gift,
+            ( SELECT sum( pr.quantity ) FROM t_warehouse_product_relation pr WHERE pr.product_id = p.product_id ) quantity
+        FROM
+            t_order_detail od
+            LEFT JOIN t_product p ON od.product_id = p.product_id
+            left join sys_dictionary sd on od.unit=sd.data_code
+        WHERE
+            od.order_id = #{orderId}
+    </select>
 </mapper>

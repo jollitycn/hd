@@ -58,7 +58,8 @@ public class OrderController extends BaseController{
     @PutMapping("/updateOrderStatu")
     @ApiOperation(value = "修改订单状态")
     public Result<?> updateOrderStatu(UpdateOrderStatuDTO updateOrderStatuDTO) {
-        Boolean aBoolean = orderService.updateOrderStatu(updateOrderStatuDTO);
+        LoginUser loginUser = redisUser();
+        Boolean aBoolean = orderService.updateOrderStatu(updateOrderStatuDTO,loginUser);
         if(aBoolean){
             return Result.success();
         }else{
@@ -69,7 +70,8 @@ public class OrderController extends BaseController{
     @PutMapping("/shippingOrderStatuChange")
     @ApiOperation(value = "发货单状态改变回调接口")
     public Result<?> shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO) {
-        Boolean aBoolean = orderService.shippingOrderStatuChange(updateOrderStatuDTO);
+        LoginUser loginUser = redisUser();
+        Boolean aBoolean = orderService.shippingOrderStatuChange(updateOrderStatuDTO,loginUser);
         if(aBoolean){
             return Result.success();
         }else{
@@ -105,7 +107,8 @@ public class OrderController extends BaseController{
         //取消订单，1、根据订单号，查询所有的发货单列表
         //判断发货单是否有冻结状态的发货单，有，则订单状态改为冻结；如果全是取消状态，则可以取消
         //发货单是拒收、异常、冻结状态，那么订单就是冻结状态
-        return  orderService.cancelOrder(orderId);
+        LoginUser loginUser = redisUser();
+        return  orderService.cancelOrder(orderId,loginUser);
     }
 
     @GetMapping("/queryOrderById/{orderId}")

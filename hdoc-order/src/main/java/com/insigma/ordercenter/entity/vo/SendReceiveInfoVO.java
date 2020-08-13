@@ -142,6 +142,9 @@ public class SendReceiveInfoVO extends BaseVO{
     @ApiModelProperty(value = "登录名")
     private String loginName;
 
+    @ApiModelProperty(value = "邮政编码")
+    private String postalCode;
+
     @ApiModelProperty(value = "订单商品列表")
     private List<OrderDetail> orderDetails;
 

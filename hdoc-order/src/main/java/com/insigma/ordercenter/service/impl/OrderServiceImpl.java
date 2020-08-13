@@ -115,6 +115,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 sendReceiveInfo.setLoginName(sendReceiveInfoVO.getLoginName());
                 sendReceiveInfo.setRequestTime(sendReceiveInfoVO.getRequestTime());
                 sendReceiveInfo.setSendRemark(sendReceiveInfoVO.getSendRemark());
+                sendReceiveInfo.setPostalCode(sendReceiveInfoVO.getPostalCode());
+                sendReceiveInfo.setReceiveName(sendReceiveInfoVO.getReceiveName());
                 orderSendReceiveService.save(sendReceiveInfo);
 
                 //新增订单明细信息
@@ -128,7 +130,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 OrderOperationLog orderOperationLog=new OrderOperationLog();
                 orderOperationLog.setContent("新增订单，状态："+sendReceiveInfoVO.getOrderStatus());
                 orderOperationLog.setOrderId(order.getOrderId());
-                orderOperationLogService.save(orderOperationLog);
+                orderOperationLogService.addOrderOperationLog(orderOperationLog,loginUser);
             }else{
                 //删除原有的商品明细列表
                 if (null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size() > 0) {
@@ -177,7 +179,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 OrderOperationLog orderOperationLog=new OrderOperationLog();
                 orderOperationLog.setContent("修改订单：状态"+sendReceiveInfoVO.getOrderStatus());
                 orderOperationLog.setOrderId(order.getOrderId());
-                orderOperationLogService.save(orderOperationLog);
+                orderOperationLogService.addOrderOperationLog(orderOperationLog,loginUser);
             }
 
         } catch (Exception e) {
@@ -188,7 +190,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public Boolean updateOrderStatu(UpdateOrderStatuDTO updateOrderStatuDTO) {
+    public Boolean updateOrderStatu(UpdateOrderStatuDTO updateOrderStatuDTO,LoginUser loginUser) {
         OrderDetail orderDetail = new OrderDetail();
         BeanUtils.copyProperties(updateOrderStatuDTO, orderDetail);
 
@@ -196,7 +198,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         OrderOperationLog orderOperationLog=new OrderOperationLog();
         orderOperationLog.setContent("修改订单：状态"+updateOrderStatuDTO.getOrderStatus());
         orderOperationLog.setOrderId(updateOrderStatuDTO.getOrderId());
-        orderOperationLogService.save(orderOperationLog);
+        orderOperationLogService.addOrderOperationLog(orderOperationLog,loginUser);
 
         return orderDetailService.updateById(orderDetail);
     }
@@ -318,11 +320,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
     @Override
-    public Boolean shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO) {
+    public Boolean shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO,LoginUser loginUser) {
         //提供修改订单的接口，在发货单状态改变的时候，调用修改订单状态接口
         //发货单状态（0：待出库，1：待取货，2：已发货，3：冻结，4：取消 5：拒收 6:异常 7：已完成）
         //订单状态：订单状态（0：新建状态，1：手动审核状态，2：待审核状态，3：审核异常状态，4：待出库状态，
         //      5：已出库状态，6：冻结状态，7：发货异常状态，8：已完成状态，9：取消状态，10：已退货状态）
+        OrderOperationLog orderOperationLog=new OrderOperationLog();
         //取消
         AtomicReference<Boolean> flag = new AtomicReference<>(true);
         AtomicReference<Integer> count = new AtomicReference<>(0);
@@ -338,36 +341,37 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         shippingOrderCancelVOS.forEach(ShippingOrderCancelVO -> {
 
             //当有一个发货单为已发货状态，订单状态为已出库状态
-            if(ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FIVE){
+            if(ShippingOrderCancelVO.getStatus() == OrderStatus.SENDOUT){
                 UpdateOrderStatuDTO orderStatuDTO = new UpdateOrderStatuDTO();
                 orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
-                //订单状态 2 为已发货
-                orderStatuDTO.setOrderStatus(OrderStatus.UNCHECKED);
-                orderService.updateOrderStatu(orderStatuDTO);
+                orderStatuDTO.setOrderStatus(OrderStatus.OUT_OF_WAREHOUSE);
+                orderOperationLog.setContent("修改订单：状态"+OrderStatus.OUT_OF_WAREHOUSE);
+                orderService.updateOrderStatu(orderStatuDTO,loginUser);
                 return;
             }
 
             //当有一个发货单为拒收时，订单状态为冻结
             //异常时，订单状态不变
             //冻结时，是由订单状态引起的，发货单状态冻结
-            if(ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FIVE ){
+            if(ShippingOrderCancelVO.getStatus() == OrderStatus.REJECTION ){
                 UpdateOrderStatuDTO orderStatuDTO = new UpdateOrderStatuDTO();
                 orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
                 //订单状态 6 为冻结
                 orderStatuDTO.setOrderStatus(OrderStatus.FROZEN);
-                orderService.updateOrderStatu(orderStatuDTO);
+                orderOperationLog.setContent("修改订单：状态"+OrderStatus.FROZEN);
+                orderService.updateOrderStatu(orderStatuDTO,loginUser);
                 return;
             }
 
             //当所有的发货单为已完成状态，订单状态为已完成
-            if(ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FOUR){
+            if(ShippingOrderCancelVO.getStatus() == OrderStatus.DONE){
                 slag.set(false);
             }else {
                 completeCount.getAndSet(completeCount.get() + 1);
             }
 
             //当所有的发货单为取消时，订单状态为取消
-            if(ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FOUR){
+            if(ShippingOrderCancelVO.getStatus() == OrderStatus.CALLOFF){
                 flag.set(false);
             }else {
                 count.getAndSet(count.get() + 1);
@@ -378,7 +382,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
             //订单状态 9 为取消
             orderStatuDTO.setOrderStatus(OrderStatus.CANCELED);
-            orderService.updateOrderStatu(orderStatuDTO);
+            orderOperationLog.setContent("修改订单：状态"+OrderStatus.CANCELED);
+            orderService.updateOrderStatu(orderStatuDTO,loginUser);
         }
 
         if (slag.get() && shippingOrderCancelVOS.size() == completeCount.get()) {
@@ -386,29 +391,37 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
             //订单状态 8 为已完成
             orderStatuDTO.setOrderStatus(OrderStatus.FINISHED);
-            orderService.updateOrderStatu(orderStatuDTO);
+            orderOperationLog.setContent("修改订单：状态"+OrderStatus.FINISHED);
+            orderService.updateOrderStatu(orderStatuDTO,loginUser);
         }
 
         //第二步：发送MQ消息
         this.sendMQMessage(updateOrderStatuDTO.getOrderId(),shippingOrderCancelVOS);
 
+        //第三步：添加订单状态修改日志
+        //添加修改订单日志
+        orderOperationLog.setOrderId(updateOrderStatuDTO.getOrderId());
+        orderOperationLogService.addOrderOperationLog(orderOperationLog,loginUser);
         return true;
     }
 
 
     @Override
-    public Result cancelOrder(Long orderId) {
+    public Result cancelOrder(Long orderId,LoginUser loginUser) {
+        //添加修改订单日志
+        OrderOperationLog orderOperationLog=new OrderOperationLog();
         AtomicReference<Boolean> flag = new AtomicReference<>(true);
         AtomicReference<Integer> count = new AtomicReference<>(0);
         List<ShippingOrderCancelVO> shippingOrderCancelVOS = orderMapper.cancelOrder(orderId);
         shippingOrderCancelVOS.forEach(ShippingOrderCancelVO -> {
             if (null != ShippingOrderCancelVO && ShippingOrderCancelVO.getStatus() != null) {
                 //发货单状态，3：冻结；5：拒收；6：异常
-                if (ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_THREE || ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FIVE || ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_SIX) {
+                if (ShippingOrderCancelVO.getStatus() == OrderStatus.FREEZE || ShippingOrderCancelVO.getStatus() == OrderStatus.REJECTION || ShippingOrderCancelVO.getStatus() == OrderStatus.ABNORMAL) {
                     UpdateOrderStatuDTO updateOrderStatuDTO = new UpdateOrderStatuDTO();
                     updateOrderStatuDTO.setOrderId(orderId);
                     updateOrderStatuDTO.setOrderStatus(OrderStatus.FROZEN);
-                    orderService.updateOrderStatu(updateOrderStatuDTO);
+                    orderOperationLog.setContent("修改订单：状态"+OrderStatus.FROZEN);
+                    orderService.updateOrderStatu(updateOrderStatuDTO,loginUser);
                     flag.set(false);
                 } else {
                     count.getAndSet(count.get() + 1);
@@ -418,10 +431,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (flag.get() && shippingOrderCancelVOS.size() == count.get()) {
             UpdateOrderStatuDTO updateOrderStatuDTO = new UpdateOrderStatuDTO();
             updateOrderStatuDTO.setOrderId(orderId);
-            //订单状态 5 为取消
-            updateOrderStatuDTO.setOrderStatus(OrderStatus.OUT_OF_WAREHOUSE);
-            orderService.updateOrderStatu(updateOrderStatuDTO);
+            updateOrderStatuDTO.setOrderStatus(OrderStatus.CANCELED);
+            orderOperationLog.setContent("修改订单：状态"+OrderStatus.CANCELED);
+            orderService.updateOrderStatu(updateOrderStatuDTO,loginUser);
         }
+        orderOperationLog.setOrderId(orderId);
+        orderOperationLogService.addOrderOperationLog(orderOperationLog,loginUser);
         // TODO 发货单那边提供接口，返回是否能取消成功，否则订单状态为冻结
         return Result.success();
     }

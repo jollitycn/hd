@@ -87,6 +87,9 @@ public class OrderSendReceive implements Serializable {
     @ApiModelProperty(value = "登录名")
     private String loginName;
 
+    @ApiModelProperty(value = "收货人邮编")
+    private String postalCode;
+
 
     public static final String SEND_RECEIVE_INFO_ID = "send_receive_info_id";
 
