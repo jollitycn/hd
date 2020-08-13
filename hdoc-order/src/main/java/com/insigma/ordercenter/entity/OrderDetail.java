@@ -1,13 +1,8 @@
 package com.insigma.ordercenter.entity;
 
-import java.math.BigDecimal;
-
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-
-import java.io.Serializable;
-
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
@@ -15,6 +10,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * <p>
@@ -73,6 +71,8 @@ public class OrderDetail implements Serializable {
     @ApiModelProperty(value = "是否是赠品（0：否，1：是）")
     private Integer isGift;
 
+    @ApiModelProperty(value = "是否是补货商品 0否 1是")
+    private Integer isSupplement;
 
     public static final String ORDER_DETAIL_ID = "order_detail_id";
 
@@ -95,5 +95,7 @@ public class OrderDetail implements Serializable {
     public static final String TOTAL_PRICE = "total_price";
 
     public static final String IS_GIFT = "is_gift";
+
+    public static final String IS_SUPPLEMENT = "is_supplement";
 
 }

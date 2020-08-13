@@ -7,16 +7,16 @@ public interface OrderStatus {
      * 订单状态（0：新建状态，1：手动审核状态，2：待审核状态，3：审核异常状态，4：待出库状态，
      * 5：已出库状态，6：冻结状态，7：发货异常状态，8：已完成状态，9：取消状态）
      */
-    int ORDER_ZERO = 0;
-    int ORDER_ONE = 1;
-    int ORDER_TWO = 2;
-    int ORDER_THREE = 3;
-    int ORDER_FOUR =4;
-    int ORDER_FIVE =5;
-    int ORDER_SIX =6;
-    int ORDER_SEVEN =7;
-    int ORDER_EIGHT =8;
-    int ORDER_NINE =9;
+    int CREATED = 0;
+    int HANDLE = 1;
+    int UNCHECKED = 2;
+    int CHECK_ERROR = 3;
+    int WAIT_FOR_WAREHOUSE =4;
+    int OUT_OF_WAREHOUSE =5;
+    int FROZEN = 6;
+    int SHIPPING_ERROR =7;
+    int FINISHED =8;
+    int CANCELED =9;
 
     /**
      * 发货单状态
