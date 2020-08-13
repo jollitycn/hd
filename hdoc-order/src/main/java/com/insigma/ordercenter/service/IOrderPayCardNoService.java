@@ -1,6 +1,6 @@
 package com.insigma.ordercenter.service;
 
-import com.insigma.ordercenter.entity.OrderPayRelation;
+import com.insigma.ordercenter.entity.OrderPayCardNo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author AH
  * @since 2020-07-27
  */
-public interface IOrderPayRelationService extends IService<OrderPayRelation> {
+public interface IOrderPayCardNoService extends IService<OrderPayCardNo> {
 
 }

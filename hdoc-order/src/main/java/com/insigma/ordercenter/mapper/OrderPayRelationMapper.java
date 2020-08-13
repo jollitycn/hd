@@ -1,6 +1,6 @@
 package com.insigma.ordercenter.mapper;
 
-import com.insigma.ordercenter.entity.OrderPayRelation;
+import com.insigma.ordercenter.entity.OrderPayCardNo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author AH
  * @since 2020-07-27
  */
-public interface OrderPayRelationMapper extends BaseMapper<OrderPayRelation> {
+public interface OrderPayRelationMapper extends BaseMapper<OrderPayCardNo> {
 
 }

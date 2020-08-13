@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,10 +60,14 @@ public class OriginalOrderQuartz {
     private IOrderProcessService processService;
 
     @Autowired
+    private IOrderPayService orderPayService;
+
+    @Autowired
     private RedisUtil redisUtil;
 
 //    @Scheduled(fixedDelay = 2*60*1000)
     @GetMapping("/ood")
+    @Transactional(rollbackFor = RuntimeException.class)
     public void originOrderDeal() {
         Long batchNo = IdWorker.getId();
         log.info("================= 原始订单处理任务 START ==============");
@@ -264,6 +269,5 @@ public class OriginalOrderQuartz {
             }
             log.info("================= 地址无法解析拦截  END =============");
         }
-
     }
 }
