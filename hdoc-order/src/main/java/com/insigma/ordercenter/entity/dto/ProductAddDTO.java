@@ -50,7 +50,7 @@ public class ProductAddDTO {
     private Integer unitQuantity;
 
     @ApiModelProperty(value = "商品类型")
-    private String productType;
+    private Long productType;
 
     @ApiModelProperty(value = "副标题")
     private String subTitle;

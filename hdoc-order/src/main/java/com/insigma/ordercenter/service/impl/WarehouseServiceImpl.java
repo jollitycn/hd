@@ -76,7 +76,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         for (Integer productType : productTypes) {
             WarehouseType warehouseType = new WarehouseType();
             warehouseType.setProductType(productType);
-            warehouseType.setWarehouseId(wareHouseDTO.getWarehouseId());
+            warehouseType.setWarehouseId(warehouse.getWarehouseId());
             typeService.save(warehouseType);
         }
 
