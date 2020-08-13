@@ -1,13 +1,19 @@
 package com.insigma.ordercenter.entity.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.insigma.ordercenter.utils.DataUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -44,6 +50,9 @@ public class ProductDetailVO extends BaseVO {
 
     @ApiModelProperty(value = "商品类型")
     private String productType;
+
+    @ApiModelProperty(value = "商品物流类型")
+    private String shipType;
 
     @ApiModelProperty(value = "副标题")
     private String subTitle;
@@ -98,7 +107,10 @@ public class ProductDetailVO extends BaseVO {
     private Integer cycle;
 
     @ApiModelProperty(value = "预约发货指定时间-yyyy-MM-DD")
-    private String reserveTime;
+    @JsonFormat(pattern = DataUtil.formatter_yyyyMMdd, timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime reserveTime;
 
     @ApiModelProperty(value = "预约每次发送数量")
     private Integer sendNumber;

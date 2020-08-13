@@ -22,6 +22,7 @@ import com.insigma.ordercenter.mapper.ShopProductMapper;
 import com.insigma.ordercenter.mapper.TagMapper;
 import com.insigma.ordercenter.service.IProductService;
 import com.insigma.ordercenter.service.IWarehouseProductRelationService;
+import com.insigma.ordercenter.utils.DateUtils;
 import com.insigma.ordercenter.utils.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -98,7 +98,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             product.setIsPutOn(Constant.SYS_ONE);
             product.setCreateTime(LocalDateTime.now());
 
-            return this.save(product);
         }else{
             //编辑商品
             product = getById(productId);
@@ -115,9 +114,13 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         Integer isReserve=productAddDTO.getIsReserve();
         Integer cycle=productAddDTO.getCycle();
         if(Constant.SYS_ONE==isReserve.intValue()&&Constant.SYS_FOUR==cycle.intValue()){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            product.setReserveTime(LocalDateTime.parse(productAddDTO.getReserveTime(),formatter));
+            LocalDateTime reserveTime =DateUtils.stringToLocalDateTime(productAddDTO.getReserveTime()+" 00:00:00",DateUtils.TIME_PATTERN);
+            product.setReserveTime(reserveTime);
         }
+
+        //保存或者删除
+        boolean result=productId==null?save(product):updateById(product);
+
 
         //写入商品标签
         List<String> tagCodeList=productAddDTO.getTagList();
@@ -130,8 +133,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             }
         }
 
-        //保存或者删除
-        return productId==null?this.save(product):this.updateById(product);
+        return result;
     }
 
 
@@ -235,6 +237,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
         return false;
     }
+
+
 
 
 }

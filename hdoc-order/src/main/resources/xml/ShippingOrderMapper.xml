@@ -36,17 +36,22 @@
 
 
     <select id="getShippingDetail" resultType="com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO">
-        SELECT
+       	SELECT
             a.shipping_order_id,
             a.order_id,
             c.order_no,
-            a.receive_name,
-            a.mobile_phone,
-            a.address,
+		    c.is_hand_order,
+			d.receive_name,
+			d.mobile_phone,
+		    d.province,
+			d.location_city,
+			d.address,
+            d.postal_code,
             a.`status`
         FROM
             t_shipping_order a
         LEFT JOIN t_order c ON c.order_id = a.order_id
+		LEFT JOIN t_order_send_receive d ON a.order_id=d.order_id
         WHERE a.shipping_order_id=#{shippingOrderId}
     </select>
 
