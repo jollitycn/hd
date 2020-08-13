@@ -3,6 +3,7 @@ package com.insigma.ordercenter.quartz;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.insigma.ordercenter.base.CodeMsg;
+import com.insigma.ordercenter.constant.OrderStatus;
 import com.insigma.ordercenter.constant.OrderStrategyConstant;
 import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.feign.RegionService;
@@ -84,10 +85,11 @@ public class OriginalOrderQuartz {
             order.setIsPeriod(0);
             order.setMobilePhone(originalOrder.getMobilePhone());
             order.setOrderNo(originalOrder.getOrderNo());
-            order.setOrderStatus(2);
+            order.setOrderStatus(OrderStatus.UNCHECKED);
             order.setShopId(originalOrder.getShopId());
             order.setTotalPrice(originalOrder.getTotalPrice());
             order.setOriginOrderNo(originalOrder.getOriginalOrderNo());
+            order.setOrderTime(originalOrder.getOrderTime());
             //保存下单人 收货人信息
             SendReceiveInfo sendReceiveInfo = new SendReceiveInfo();
             sendReceiveInfo.setAddress(originalOrder.getAddress());
@@ -106,7 +108,12 @@ public class OriginalOrderQuartz {
             sendReceiveInfoService.save(sendReceiveInfo);
             //更新原始订单中的订单字段 关联到订单
             originalOrder.setOrderId(order.getOrderId());
+            originalOrder.setOrderStatus(1);
             originalOrderService.updateById(originalOrder);
+            //更新支付信息 支付信息绑定订单
+            OrderPay pay = orderPayService.getOne(Wrappers.<OrderPay>lambdaQuery().eq(OrderPay::getOriginalOrderId, originalOrder.getOriginalOrderId()));
+            pay.setOrderId(order.getOrderId());
+            orderPayService.updateById(pay);
             //获取原始订单详情
             List<OriginalOrderDetail> orderDetailList = originalOrderDetailService.list(Wrappers.<OriginalOrderDetail>lambdaQuery()
                     .eq(OriginalOrderDetail::getOriginalOrderId, originalOrder.getOriginalOrderId()));
@@ -166,7 +173,7 @@ public class OriginalOrderQuartz {
                 for (Long originOrderId : idSet) {
                     //获取原始订单
                     OriginalOrder originalOrder = originalOrderService.getById(originOrderId);
-                    //根据原始订单编号订单，订单详情，收货人信息
+                    //根据原始订单编号 删除之前生成的订单，订单详情，收货人信息
                     orderDetailService.remove(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, originalOrder.getOrderId()));
                     orderService.remove(Wrappers.<Order>lambdaQuery().eq(Order::getOrderId, originalOrder.getOrderId()));
                     sendReceiveInfoService.remove(Wrappers.<SendReceiveInfo>lambdaQuery().eq(SendReceiveInfo::getOrderId, originalOrder.getOrderId()));
@@ -176,7 +183,8 @@ public class OriginalOrderQuartz {
                     order.setBatchNo(batchNo);
                     order.setMobilePhone(originalOrder.getMobilePhone());
                     order.setOrderNo(originalOrder.getOrderNo());
-                    order.setOrderStatus(0);
+                    order.setOrderTime(originalOrder.getOrderTime());
+                    order.setOrderStatus(OrderStatus.UNCHECKED);
                     totalPrice = totalPrice.add(originalOrder.getTotalPrice());
                     order.setShopId(originalOrder.getShopId());
                     List<OriginalOrderDetail> orderDetailList = originalOrderDetailService.list(Wrappers.<OriginalOrderDetail>lambdaQuery()
@@ -203,6 +211,11 @@ public class OriginalOrderQuartz {
                     sendReceiveInfo.setPayType(1);
                     sendReceiveInfo.setReceiveName(originalOrder.getConsumerName());
                     sendReceiveInfo.setSendRemark(originalOrder.getRemark());
+                    //支付信息绑定新订单
+                    OrderPay pay = orderPayService.getOne(Wrappers.<OrderPay>lambdaQuery().eq(OrderPay::getOriginalOrderId, originOrderId));
+                    pay.setOrderId(orderId);
+                    orderPayService.updateById(pay);
+
                 }
                 sendReceiveInfoService.save(sendReceiveInfo);
                 order.setTotalPrice(totalPrice);
@@ -262,7 +275,7 @@ public class OriginalOrderQuartz {
                 SysRegion districtRegion = regionService.name(district);
                 boolean paramIsIllegal = null == provinceRegion || null == cityRegion || null == districtRegion;
                 if(lackParam || paramIsIllegal) {
-                    order.setOrderStatus(1);
+                    order.setOrderStatus(OrderStatus.HANDLE);
                     order.setErrorReason(CodeMsg.STRATEGY_ADDRESS_PARSE_ERROR.getMessage());
                     orderService.updateById(order);
                 }

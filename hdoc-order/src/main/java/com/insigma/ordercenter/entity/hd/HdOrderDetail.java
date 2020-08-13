@@ -28,5 +28,13 @@ public class HdOrderDetail implements Serializable {
     private BigDecimal discount_fee	    ;    //优惠金额
     private String title	            ;    //商品标题
     private BigDecimal proportion      	;    //价格比例
+    //规格
+    private String productSpecs;
+
+    //单位
+    private String productUnit;
+
+    //小计
+    private BigDecimal count;
 
 }

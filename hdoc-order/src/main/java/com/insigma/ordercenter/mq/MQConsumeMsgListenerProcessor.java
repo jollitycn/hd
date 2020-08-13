@@ -127,6 +127,8 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
                 detail.setProductName(hdOrderDetail.getTitle());
                 detail.setProductPrice(hdOrderDetail.getPrice());
                 detail.setQuantity(hdOrderDetail.getNum());
+                detail.setProductSpecs(hdOrderDetail.getProductSpecs());
+                detail.setUnit(hdOrderDetail.getProductUnit());
                 detail.setTotalPrice(hdOrderDetail.getPayment());
                 detail.setDiscountFee(hdOrderDetail.getDiscount_fee());
                 detail.setDivideOrderFee(hdOrderDetail.getDivide_order_fee());

@@ -1,21 +1,35 @@
 package com.insigma.ordercenter.quartz;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.insigma.ordercenter.constant.OrderStatus;
 import com.insigma.ordercenter.constant.OrderStrategyConstant;
 import com.insigma.ordercenter.entity.*;
+import com.insigma.ordercenter.entity.dto.AddShippingOrderDTO;
 import com.insigma.ordercenter.feign.RegionService;
 import com.insigma.ordercenter.service.*;
 import com.insigma.ordercenter.utils.JsonUtil;
 import com.insigma.ordercenter.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendCallback;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.common.RemotingHelper;
+import org.apache.rocketmq.remoting.exception.RemotingException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -81,6 +95,9 @@ public class ShippingStrategyQuartz {
     @Autowired
     private IWarehouseProductRelationService wprService;
 
+    @Autowired
+    private DefaultMQProducer mqProducer;
+
 //    @Scheduled(fixedDelay = 2*60*1000)
     @GetMapping("shippingQuartz")
     public void shippingOrderDeal() {
@@ -99,7 +116,7 @@ public class ShippingStrategyQuartz {
 //            Integer autoAuditTime = 4;
             //查询最近策略中配置的分钟数以外的订单
             List<Order> orderList = orderService.list(Wrappers.<Order>lambdaQuery()
-                    .le(Order::getCreateTime, LocalDateTime.now().minusMinutes(autoAuditTime)).eq(Order::getOrderStatus,0));
+                    .le(Order::getCreateTime, LocalDateTime.now().minusMinutes(autoAuditTime)).eq(Order::getOrderStatus,2));
             List<Shop> shopList = shopService.list();
             for (Order order : orderList) {
                 for (Shop shop : shopList) {
@@ -133,7 +150,7 @@ public class ShippingStrategyQuartz {
                 }
             }
             List<Order> newOrderList = orderService.list(Wrappers.<Order>lambdaQuery()
-                    .le(Order::getCreateTime, LocalDateTime.now().minusMinutes(autoAuditTime)).eq(Order::getOrderStatus,0));
+                    .le(Order::getCreateTime, LocalDateTime.now().minusMinutes(autoAuditTime)).eq(Order::getOrderStatus,2));
             //商品分类策略
             Strategy productTypeStrategy = strategyList.get(OrderStrategyConstant.PRODUCT_TYPE_DIVIDE - 1);
             //需要拆单的商品分类
@@ -176,6 +193,11 @@ public class ShippingStrategyQuartz {
                                     shippingOrder.setWarehouseId(warehouseId);
                                     Warehouse warehouse = warehouseService.getById(warehouseId);
                                     shippingOrder.setExpressCompanyId(warehouse.getExpressCompanyId());
+                                } else {
+                                    order.setOrderStatus(OrderStatus.CHECK_ERROR);
+                                    order.setErrorReason("未匹配到仓库");
+                                    orderService.updateById(order);
+                                    break;
                                 }
                                 //如果当前商品分类符合拆单策略，则按照数量拆单
                                 if (productTypes.contains(productType)) {
@@ -205,6 +227,38 @@ public class ShippingStrategyQuartz {
                         }
                     }
                 }
+                //生成发货单给上游服务发送发货单状态消息
+                List<ShippingOrder> shippingOrderList = shippingOrderService.list(Wrappers.<ShippingOrder>lambdaQuery().eq(ShippingOrder::getOrderId, order.getOrderId()));
+                List<AddShippingOrderDTO> dtoList = new ArrayList<>();
+                for (ShippingOrder shippingOrder : shippingOrderList) {
+                    AddShippingOrderDTO dto = new AddShippingOrderDTO();
+                    BeanUtils.copyProperties(shippingOrder,dto);
+                    dto.setOrderStatus(order.getOrderStatus());
+                    dto.setOriginOrderNo(order.getOriginOrderNo());
+                    dto.setOrderNo(order.getOrderNo());
+                    dto.setOrderId(order.getOrderId());
+                    dtoList.add(dto);
+                }
+                Message message = null;
+                try {
+                    message = new Message("split_order",
+                            "store_card",
+                            JsonUtil.beanToJson(dtoList).getBytes(RemotingHelper.DEFAULT_CHARSET));
+                    mqProducer.send(message , new SendCallback() {
+                        @Override
+                        public void onSuccess(SendResult sendResult) {
+                            System.out.println("消息发送成功");
+                        }
+                        @Override
+                        public void onException(Throwable e) {
+                            e.printStackTrace();
+                            System.out.println("消息发送异常");
+                        }
+                    });
+                } catch (MQClientException | RemotingException | InterruptedException | UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
             }
         }
     }
