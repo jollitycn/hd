@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.dto.OrderDTO;
 import com.insigma.ordercenter.entity.dto.UpdateOrderStatuDTO;
 import com.insigma.ordercenter.entity.dto.AddShippingOrderResultDTO;
@@ -39,8 +40,9 @@ public class OrderController extends BaseController{
     @ApiOperation(value = "订单列表")
     public Result<?> orderList(@RequestBody OrderDTO orderDTO) {
 
+        LoginUser loginUser = redisUser();
         Page<OrderListVO> page = new Page<>(orderDTO.getPageNum(), orderDTO.getPageSize());
-
+        orderDTO.setUserId(loginUser.getUserId());
         IPage<OrderListVO> result = orderService.queryOrderListPage(page, orderDTO);
 
         return Result.success(result);
@@ -92,7 +94,8 @@ public class OrderController extends BaseController{
     @PostMapping("/addShippingOrder")
     @ApiOperation(value = "订单分派发仓库，生成发货单")
     public Result<?> addShippingOrder(@Valid @RequestBody AddShippingOrderResultDTO addShippingOrderResultDTO) {
-        return orderService.addShippingOrder(addShippingOrderResultDTO);
+        LoginUser loginUser = redisUser();
+        return orderService.addShippingOrder(addShippingOrderResultDTO,loginUser);
     }
 
     @PostMapping("/cancelOrder/{orderId}")

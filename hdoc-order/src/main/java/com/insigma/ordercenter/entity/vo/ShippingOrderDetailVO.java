@@ -26,6 +26,9 @@ public class ShippingOrderDetailVO {
     @ApiModelProperty(value = "来源")
     private String source;
 
+    @ApiModelProperty(value = "拆单人")
+    private String createName;
+
     @ApiModelProperty(value = "收货人姓名")
     private String receiveName;
 

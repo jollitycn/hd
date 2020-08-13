@@ -2,19 +2,49 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.OrderPayMapper">
 
-    <select id="queryOrderPayInfo" resultType="com.insigma.ordercenter.entity.vo.OrderpayVO">
+    <resultMap id="orderPayMap" type="com.insigma.ordercenter.entity.vo.OrderDetailExamineVO">
+        <id column="order_pay_id" property="orderPayId"/>
+        <result column="pay_type" property="payType"/>
+        <result column="original_order_id" property="originalOrderId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="pay_money" property="payMoney"/>
+        <result column="pay_datetime" property="payDatetime"/>
+        <result column="pay_card_no" property="payCardNo"/>
+        <result column="pay_back" property="payBack"/>
+        <collection column="{orderPayId=order_pay_id}" property="orderPayRelations" ofType="com.insigma.ordercenter.entity.OrderPayRelation" select="queryPayCardList"/>
+    </resultMap>
+
+    <resultMap id="orderPayCardMap" type="com.insigma.ordercenter.entity.OrderPayRelation">
+        <id column="order_pay_id" property="orderPayId"/>
+        <result column="card_no" property="cardNo"/>
+    </resultMap>
+
+
+    <select id="queryOrderPayInfo" resultMap="orderPayMap">
         SELECT
             op.order_pay_id,
             op.pay_type,
             op.pay_money,
+            op.original_order_id,
+            op.order_id,
             op.pay_datetime,
             op.pay_card_no,
             op.pay_back
         FROM
-            t_order_pay_relation pr
-            LEFT JOIN t_order_pay op ON pr.order_pay_id = op.order_pay_id
+            t_order_pay op
         WHERE
-            pr.order_id = #{orderId}
+            op.order_id = #{orderId}
+    </select>
+
+
+    <select id="queryPayCardList" resultMap="orderPayCardMap">
+        SELECT
+            opr.card_no,
+            opr.order_pay_id
+        FROM
+            t_order_pay_relation opr
+        WHERE
+            opr.order_pay_id = #{orderPayId}
     </select>
 
 </mapper>

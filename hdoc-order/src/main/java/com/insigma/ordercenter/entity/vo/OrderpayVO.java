@@ -3,9 +3,11 @@ package com.insigma.ordercenter.entity.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.insigma.ordercenter.constant.Constant;
+import com.insigma.ordercenter.entity.OrderPayRelation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,6 +15,7 @@ import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author AH
@@ -27,6 +30,7 @@ public class OrderpayVO extends BaseVO{
 
 
     @ApiModelProperty(value = "订单支付id")
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long orderPayId;
 
     @ApiModelProperty(value = "支付类型")
@@ -46,5 +50,16 @@ public class OrderpayVO extends BaseVO{
 
     @ApiModelProperty(value = "备用（微信支付昵称）")
     private String payBack;
+
+    @ApiModelProperty(value = "原始订单号")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long originalOrderId;
+
+    @ApiModelProperty(value = "订单号")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long orderId;
+
+    @ApiModelProperty(value = "支付卡号列表")
+    private List<OrderPayRelation> orderPayRelations;
 
 }

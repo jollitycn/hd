@@ -153,6 +153,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 sendReceiveInfo.setLocationCity(sendReceiveInfoVO.getLocationCity());
                 sendReceiveInfo.setProvince(sendReceiveInfoVO.getProvince());
                 sendReceiveInfo.setLoginName(sendReceiveInfoVO.getLoginName());
+                sendReceiveInfo.setRequestTime(sendReceiveInfoVO.getRequestTime());
                 orderSendReceiveService.updateById(sendReceiveInfo);
 
                 //修改订单明细信息，先删除之前的，再保存
@@ -235,7 +236,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
     @Override
-    public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO) {
+    public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO,LoginUser loginUser) {
         if (addShippingOrderResultDTO.getAddShippingOrderDTOS().size() == 0) {
             return Result.error(CodeMsg.DATA_INSERT_ERROR);
         }
@@ -243,7 +244,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             ShippingOrder shippingOrder = new ShippingOrder();
             shippingOrder.setWarehouseId(addShippingOrderDTO.getWarehouseId());
             shippingOrder.setExpressCompanyId(addShippingOrderDTO.getExpressCompanyId());
-            shippingOrder.setCreateId(addShippingOrderDTO.getCreateId());
+            shippingOrder.setCreateId(loginUser.getUserId());
             shippingOrder.setCreateTime(LocalDateTime.now());
             shippingOrder.setIsDeleted(Constant.SYS_ZERO);
             shippingOrder.setStatus(Constant.SYS_ZERO);

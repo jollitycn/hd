@@ -80,5 +80,7 @@ public class OrderDTO {
     @ApiModelProperty(value = "拆单")
     private Integer splitOrder;
 
+    @ApiModelProperty(value = "登录用户ID")
+    private Long userId;
 
 }

@@ -4,6 +4,7 @@ import com.insigma.ordercenter.entity.OrderDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.entity.vo.AddOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.OrderDetailExamineVO;
+import com.insigma.ordercenter.entity.vo.OrderDetailVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public interface IOrderDetailService extends IService<OrderDetail> {
 
-    List<OrderDetail> getOrderDetail(Long orderId);
+    List<OrderDetailVO> getOrderDetail(Long orderId);
 
     Boolean addOrderDerail(AddOrderDetailVO addOrderDetailVO);
 

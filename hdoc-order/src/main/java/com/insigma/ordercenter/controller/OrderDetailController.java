@@ -6,6 +6,7 @@ import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.OrderDetail;
 import com.insigma.ordercenter.entity.vo.AddOrderDetailVO;
+import com.insigma.ordercenter.entity.vo.OrderDetailVO;
 import com.insigma.ordercenter.service.IOrderDetailService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -69,7 +70,7 @@ public class OrderDetailController extends BaseController {
     @GetMapping("/getOrderDerail/{orderId}")
     @ApiOperation(value = "查询赠品中的订单详情列表信息",response = OrderDetail.class)
     public Result<?> getOrderDerail(@Valid @PathVariable Long orderId) {
-        List<OrderDetail> orderDetail = orderDetailService.getOrderDetail(orderId);
+        List<OrderDetailVO> orderDetail = orderDetailService.getOrderDetail(orderId);
         return Result.success(orderDetail);
     }
 

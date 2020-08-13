@@ -3,6 +3,7 @@ package com.insigma.ordercenter.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.entity.dto.*;
@@ -32,7 +33,7 @@ public interface IOrderService extends IService<Order> {
 
     List<ExpressCompanyVO> queryExpressCompany(Long warehouseId);
 
-    Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO);
+    Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO, LoginUser loginUser);
 
     Result cancelOrder(Long orderId);
 
