@@ -24,7 +24,7 @@ public class ShippingOrderVO {
     @ApiModelProperty(value = "仓库名称")
     private String warehouseName;
 
-    @ApiModelProperty(value = "发货单状态（0：待出库，1：待取货，2：已发货，3：冻结，4：取消）")
+    @ApiModelProperty(value = "状态（0：待出库，1：待取货，2：已发货，3：冻结，4：取消 5：拒收 6:异常 7：已完成）")
     private Integer status;
 
     @ApiModelProperty(value = "物流公司(承运商)")
@@ -48,5 +48,6 @@ public class ShippingOrderVO {
     @ApiModelProperty(value = "运费")
     private String freight;
 
-
+    @ApiModelProperty(value = "异常原因")
+    private String exceptionReason;
 }

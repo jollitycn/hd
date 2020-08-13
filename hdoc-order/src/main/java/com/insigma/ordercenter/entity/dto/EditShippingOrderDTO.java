@@ -3,6 +3,8 @@ package com.insigma.ordercenter.entity.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @program: hdoc-parent
  * @description: 编辑补货单参数封装类
@@ -14,6 +16,9 @@ public class EditShippingOrderDTO {
 
     @ApiModelProperty(value = "发货单号")
     private Long shippingOrderId;
+
+    @ApiModelProperty(value = "订单ID")
+    private String orderId;
 
     @ApiModelProperty(value = "订单号")
     private String orderNo;
@@ -42,4 +47,6 @@ public class EditShippingOrderDTO {
     @ApiModelProperty(value = "更改原因")
     private String changeReason;
 
+    @ApiModelProperty(value = "商品id列表")
+    private List<Long> productList;
 }

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,6 +75,12 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
         if(null!=shippingOrderId){
             shippingOrder=getById(shippingOrderId);
             this.createLog(shippingOrderId,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"编辑了补货单:"+shippingOrder.getShippingOrderNo());
+
+            //编辑时候删除补货商品
+            QueryWrapper queryWrapper=new QueryWrapper();
+            queryWrapper.eq(OrderDetail.ORDER_ID,shippingOrder.getOrderId());
+            queryWrapper.eq(OrderDetail.IS_SUPPLEMENT,Constant.SYS_ONE);
+            orderDetailMapper.delete(queryWrapper);
         }else{
             //生成发货单id ObjectId是MongoDB数据库的一种唯一ID生成策略，是UUID version1的变种
             shippingOrder.setShippingOrderNo("FH"+IdUtil.objectId().toLowerCase());
@@ -85,7 +92,21 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
         //设置为新建状态
         shippingOrder.setStatus(Constant.SYS_EIGHT);
 
-        return shippingOrderId==null?this.save(shippingOrder):this.updateById(shippingOrder);
+        //增加补货商品
+        List<Long> productList = new ArrayList<>();
+        for (Long productId:productList) {
+            Product product=productMapper.selectById(productId);
+            OrderDetail orderDetail=new OrderDetail();
+            orderDetail.setOrderId(shippingOrder.getOrderId());
+            orderDetail.setProductId(productId);
+            BeanUtil.copyProperties(product,orderDetail);
+            orderDetail.setAmount(product.getUnitQuantity());
+            orderDetail.setTotalPrice(product.getProductPrice());
+            orderDetail.setIsSupplement(Constant.SYS_ONE);
+            orderDetailMapper.insert(orderDetail);
+        }
+
+        return shippingOrderId==null?save(shippingOrder):updateById(shippingOrder);
     }
 
     /**
@@ -317,15 +338,32 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
                 int logisticsType=shippingOrder.getExpressCompanyId();
 
                 try {
-                //调度对应物流下单
-                LogisticsCentre.generateLogistics(shippingOrder.getShippingOrderNo(),commonProduct,commonConsignee,commonConsignor,logisticsType);
+                    //调度对应物流下单
+                    Result result=LogisticsCentre.generateLogistics(shippingOrder.getShippingOrderNo(),commonProduct,commonConsignee,commonConsignor,logisticsType);
+
+                    if(Constant.SYS_ZERO==result.getRetCode()){
+                        //将发货单置为已发货状态
+                        shippingOrder.setStatus(Constant.SYS_TWO);
+
+                        //写入发货单号
+                        shippingOrder.setExpressNo(result.getData().toString());
+                    }else {
+                        //将发货单置为异常状态
+                        shippingOrder.setStatus(Constant.SYS_SIX);
+
+                        //写入异常原因
+                        shippingOrder.setExceptionReason(result.getData().toString());
+                    }
                 }catch (Exception e){
+                    log.error("发货单下单失败");
                     e.printStackTrace();
                 }
 
+
             }
 
-        return false;
+            //更新发货单数据
+        return saveOrUpdateBatch(shippingOrderList);
     }
 
     /**

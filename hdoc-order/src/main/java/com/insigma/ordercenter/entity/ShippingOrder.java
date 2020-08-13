@@ -102,4 +102,7 @@ public class ShippingOrder implements Serializable {
 
     @ApiModelProperty(value = "订单ID")
     private Long orderId;
+
+    @ApiModelProperty(value = "异常原因")
+    private String exceptionReason;
 }

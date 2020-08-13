@@ -3,6 +3,7 @@ package com.insigma.ordercenter.service.impl;
 import com.insigma.ordercenter.entity.OrderDetail;
 import com.insigma.ordercenter.entity.vo.AddOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.OrderDetailExamineVO;
+import com.insigma.ordercenter.entity.vo.OrderDetailVO;
 import com.insigma.ordercenter.mapper.OrderDetailMapper;
 import com.insigma.ordercenter.service.IOrderDetailService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -29,7 +30,7 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
     private IOrderDetailService orderDetailService;
 
     @Override
-    public List<OrderDetail> getOrderDetail(Long orderId) {
+    public List<OrderDetailVO> getOrderDetail(Long orderId) {
         return orderDetailMapper.getOrderDetail(orderId);
     }
 

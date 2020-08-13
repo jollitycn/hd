@@ -16,7 +16,9 @@
             product_no,
             is_put_on,
             is_combo,
-            product_nc
+            product_nc,
+            unit,
+            unit_quantity
         FROM
             t_product
         WHERE

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
-import com.insigma.ordercenter.constant.Constant;
 import com.insigma.ordercenter.entity.dto.*;
 import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.service.IProductComboService;
@@ -206,21 +205,21 @@ public class ProductController extends BaseController {
         return Result.error(CodeMsg.DATA_UPDATE_ERROR);
     }
 
-    @GetMapping("/calculation")
-    @ApiOperation(value = "计算预约发送次数")
-    public Result calculation(Double unitQuantity,Double sendNumber) {
-
-        //除数0判断
-        if(Constant.SYS_ZERO==sendNumber.intValue()){
-            return Result.error(CodeMsg.PARAMETER_ERROR);
-        }
-
-        //向上取整返回
-        Double result=unitQuantity/sendNumber;
-
-        return Result.success(Math.ceil(result));
-
-    }
+//    @GetMapping("/calculation")
+//    @ApiOperation(value = "计算预约发送次数")
+//    public Result calculation(Double unitQuantity,Double sendNumber) {
+//
+//        //除数0判断
+//        if(Constant.SYS_ZERO==sendNumber.intValue()){
+//            return Result.error(CodeMsg.PARAMETER_ERROR);
+//        }
+//
+//        //向上取整返回
+//        Double result=unitQuantity/sendNumber;
+//
+//        return Result.success(Math.ceil(result));
+//
+//    }
 
 
     @GetMapping("/getProductRatio/{productId}")

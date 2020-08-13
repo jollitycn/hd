@@ -2,6 +2,7 @@ package com.insigma.ordercenter.mapper;
 
 import com.insigma.ordercenter.entity.OrderDetail;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.insigma.ordercenter.entity.vo.OrderDetailVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public interface OrderDetailMapper extends BaseMapper<OrderDetail> {
 
-    List<OrderDetail> getOrderDetail(@Param("orderId")Long orderId);
+    List<OrderDetailVO> getOrderDetail(@Param("orderId")Long orderId);
 
 
 }

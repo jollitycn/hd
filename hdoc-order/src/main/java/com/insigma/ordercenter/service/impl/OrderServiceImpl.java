@@ -69,14 +69,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Resource
     private DefaultMQProducer producer;
 
+    @Resource
+    private IOrderOperationLogService orderOperationLogService;
+
     @Override
     public IPage<OrderListVO> queryOrderListPage(Page<OrderListVO> page, OrderDTO orderDTO) {
+
         return baseMapper.queryOrderListPage(page, orderDTO);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result addOrder(SendReceiveInfoVO sendReceiveInfoVO) {
+    public Result addOrder(SendReceiveInfoVO sendReceiveInfoVO,LoginUser loginUser) {
         try {
             if(sendReceiveInfoVO.getSaveStatus()==0){
 
@@ -120,6 +124,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                         orderDetailService.save(OrderDetail);
                     });
                 }
+                //添加新增订单操作日志
+                OrderOperationLog orderOperationLog=new OrderOperationLog();
+                orderOperationLog.setContent("新增订单，状态："+sendReceiveInfoVO.getOrderStatus());
+                orderOperationLog.setOrderId(order.getOrderId());
+                orderOperationLogService.save(orderOperationLog);
             }else{
                 //删除原有的商品明细列表
                 if (null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size() > 0) {
@@ -153,6 +162,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 sendReceiveInfo.setLocationCity(sendReceiveInfoVO.getLocationCity());
                 sendReceiveInfo.setProvince(sendReceiveInfoVO.getProvince());
                 sendReceiveInfo.setLoginName(sendReceiveInfoVO.getLoginName());
+                sendReceiveInfo.setRequestTime(sendReceiveInfoVO.getRequestTime());
                 orderSendReceiveService.updateById(sendReceiveInfo);
 
                 //修改订单明细信息，先删除之前的，再保存
@@ -163,6 +173,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                         orderDetailService.save(orderDetail);
                     });
                 }
+                //添加修改订单日志
+                OrderOperationLog orderOperationLog=new OrderOperationLog();
+                orderOperationLog.setContent("修改订单：状态"+sendReceiveInfoVO.getOrderStatus());
+                orderOperationLog.setOrderId(order.getOrderId());
+                orderOperationLogService.save(orderOperationLog);
             }
 
         } catch (Exception e) {
@@ -176,6 +191,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public Boolean updateOrderStatu(UpdateOrderStatuDTO updateOrderStatuDTO) {
         OrderDetail orderDetail = new OrderDetail();
         BeanUtils.copyProperties(updateOrderStatuDTO, orderDetail);
+
+        //添加修改订单日志
+        OrderOperationLog orderOperationLog=new OrderOperationLog();
+        orderOperationLog.setContent("修改订单：状态"+updateOrderStatuDTO.getOrderStatus());
+        orderOperationLog.setOrderId(updateOrderStatuDTO.getOrderId());
+        orderOperationLogService.save(orderOperationLog);
+
         return orderDetailService.updateById(orderDetail);
     }
 
@@ -235,7 +257,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
     @Override
-    public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO) {
+    public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO,LoginUser loginUser) {
         if (addShippingOrderResultDTO.getAddShippingOrderDTOS().size() == 0) {
             return Result.error(CodeMsg.DATA_INSERT_ERROR);
         }
@@ -243,7 +265,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             ShippingOrder shippingOrder = new ShippingOrder();
             shippingOrder.setWarehouseId(addShippingOrderDTO.getWarehouseId());
             shippingOrder.setExpressCompanyId(addShippingOrderDTO.getExpressCompanyId());
-            shippingOrder.setCreateId(addShippingOrderDTO.getCreateId());
+            shippingOrder.setCreateId(loginUser.getUserId());
             shippingOrder.setCreateTime(LocalDateTime.now());
             shippingOrder.setIsDeleted(Constant.SYS_ZERO);
             shippingOrder.setStatus(Constant.SYS_ZERO);

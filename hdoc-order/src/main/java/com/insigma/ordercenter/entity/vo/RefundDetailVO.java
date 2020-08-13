@@ -54,6 +54,6 @@ public class RefundDetailVO {
     private Integer status;
 
     @ApiModelProperty(value = "商品列表")
-    private List<OrderDetail> productList;
+    private List<OrderDetailVO> productList;
 
 }

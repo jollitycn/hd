@@ -39,9 +39,9 @@ public class OrderSendReceiveController extends BaseController {
         return Result.success(sendReceiveInfo);
     }
 
-    @PutMapping("/updateSendReceiveInfo/{orderId}")
+    @PostMapping("/updateSendReceiveInfo")
     @ApiOperation(value = "根据订单修改收发件人信息")
-    public Result<?> updateSendReceiveInfo(@Valid UpdateSendReceiveInfoVO updateSendReceiveInfoVO) {
+    public Result<?> updateSendReceiveInfo(@Valid @RequestBody UpdateSendReceiveInfoVO updateSendReceiveInfoVO) {
         Boolean aBoolean = orderSendReceiveService.updateSendReceiveInfo(updateSendReceiveInfoVO);
         if(aBoolean){
             return Result.success();

@@ -63,4 +63,8 @@ public class ProductListPageVO extends BaseVO {
 
     @ApiModelProperty(value = "商品nc码")
     private String productNc;
+
+    @ApiModelProperty(value = "商品单位")
+    private String unit;
+
 }

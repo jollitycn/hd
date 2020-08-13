@@ -23,14 +23,17 @@
         sr.location_city,
         sr.province,
         sr.receive_remark,
+        sr.receive_name as sendReceiveName,
+        sr.mobile_phone as receiveMobilePhone,
         o.origin_order_no
         FROM
         t_order o
         LEFT JOIN t_shop sp ON o.shop_id = sp.shop_id
+        left join t_user_shop_relation usr on usr.shop_id=sp.shop_id
         LEFT JOIN t_shipping_order so ON o.order_id = so.order_id
         LEFT JOIN t_order_send_receive sr ON o.order_id = sr.order_id
         WHERE
-        1 =1
+        1 =1 and usr.user_id=#{orderDTO.userId}
         <if test="orderDTO.orderId != null and orderDTO.orderId != ''">
             AND o.order_id = #{orderDTO.orderId}
         </if>
@@ -61,6 +64,7 @@
         <if test="orderDTO.isCombined != null">
             AND o.is_combined = #{orderDTO.isCombined}
         </if>
+        group  by o.create_time desc
     </select>
 
     <resultMap id="orderDetailMap" type="com.insigma.ordercenter.entity.vo.OrderDetailExamineVO">
@@ -73,7 +77,7 @@
         <result column="product_specs" property="productSpecs"/>
         <result column="unit" property="unit"/>
         <result column="amount" property="amount"/>
-        <collection column="{productId=product_id}" property="warehouseExamineVOS" ofType="com.educiot.recruit.data.entity.Score" select="queryWarehouse"/>
+        <collection column="{productId=product_id}" property="warehouseExamineVOS" ofType="com.insigma.ordercenter.entity.vo.WarehouseExamineVO" select="queryWarehouse"/>
     </resultMap>
 
     <resultMap id="WarehouseExamineMap" type="com.insigma.ordercenter.entity.vo.WarehouseExamineVO">
@@ -219,6 +223,7 @@
         <result column="review_time" property="reviewTime" jdbcType="TIMESTAMP" />
         <result column="is_hand_order" property="isHandOrder" jdbcType="TINYINT" />
         <result column="split_order" property="splitOrder" jdbcType="TINYINT" />
+
         <collection column="{orderId=order_id}" property="shippingOrderVOS" ofType="com.insigma.ordercenter.entity.vo.ShippingOrderVO" select="queryShippingOrderList"/>
     </resultMap>
 
@@ -245,6 +250,7 @@
         <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
         <result column="express_fee" jdbcType="DECIMAL" property="expressFee" />
         <result column="order_detail_id" jdbcType="BIGINT" property="orderDetailId" />
+        <result column="create_name" property="createName" jdbcType="VARCHAR" />
         <collection column="{shippingOrderId=shipping_order_id}" property="orderDetailVOS" ofType="com.insigma.ordercenter.entity.vo.OrderDetailVO" select="queryOrderDetailLists"/>
     </resultMap>
 
@@ -280,7 +286,8 @@
             o.period_order_id,
             o.review_time,
             o.is_hand_order,
-            o.split_order
+            o.split_order,
+            o.is_hand_order
         FROM
             t_order o
         WHERE
@@ -288,7 +295,7 @@
     </select>
 
     <select id="queryShippingOrderList" resultMap="shippingResultMap">
-        SELECT
+       SELECT
             so.shipping_order_id,
             so.warehouse_id,
             so.express_company_id,
@@ -312,10 +319,12 @@
             ec.company_name,
             ec.company_no,
             ec.create_time,
-            ec.remark
+            ec.remark ,
+            su.user_name
         FROM
             t_shipping_order so
-            left join t_express_company ec on so.express_company_id=ec.express_company_id
+            LEFT JOIN t_express_company ec ON so.express_company_id = ec.express_company_id
+            left join sys_user su on su.user_id=so.create_id
         WHERE
             so.order_id = #{orderId}
     </select>

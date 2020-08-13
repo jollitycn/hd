@@ -15,7 +15,8 @@
                 a.create_id,
                 a.create_time,
                 a.`status`,
-                a.is_combined
+                a.is_combined,
+                a.exception_reason
             FROM
                 t_shipping_order AS a
         LEFT JOIN t_warehouse b ON a.warehouse_id=b.warehouse_id

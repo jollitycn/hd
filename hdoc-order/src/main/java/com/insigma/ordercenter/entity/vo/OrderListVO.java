@@ -115,6 +115,12 @@ public class OrderListVO extends BaseVO {
     @ApiModelProperty(value = "预约订单ID")
     private Long periodOrderId;
 
+    @ApiModelProperty(value = "收货人姓名")
+    private String sendReceiveName;
+
+    @ApiModelProperty(value = "收货人联系方式")
+    private String receiveMobilePhone;
+
     @ApiModelProperty(value = "发货单列表")
     private List<ShippingOrderVO> shippingOrderVOS;
 
