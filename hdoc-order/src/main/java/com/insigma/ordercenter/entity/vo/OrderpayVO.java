@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.insigma.ordercenter.constant.Constant;
-import com.insigma.ordercenter.entity.OrderPayRelation;
+import com.insigma.ordercenter.entity.OrderPayCardNo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -60,6 +60,6 @@ public class OrderpayVO extends BaseVO{
     private Long orderId;
 
     @ApiModelProperty(value = "支付卡号列表")
-    private List<OrderPayRelation> orderPayRelations;
+    private List<OrderPayCardNo> orderPayRelations;
 
 }

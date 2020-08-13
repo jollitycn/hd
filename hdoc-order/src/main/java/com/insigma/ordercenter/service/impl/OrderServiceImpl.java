@@ -69,6 +69,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Resource
     private DefaultMQProducer producer;
 
+    @Resource
+    private IOrderOperationLogService orderOperationLogService;
+
     @Override
     public IPage<OrderListVO> queryOrderListPage(Page<OrderListVO> page, OrderDTO orderDTO) {
         return baseMapper.queryOrderListPage(page, orderDTO);
@@ -76,7 +79,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Result addOrder(SendReceiveInfoVO sendReceiveInfoVO) {
+    public Result addOrder(SendReceiveInfoVO sendReceiveInfoVO,LoginUser loginUser) {
         try {
             if(sendReceiveInfoVO.getSaveStatus()==0){
 
@@ -120,6 +123,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                         orderDetailService.save(OrderDetail);
                     });
                 }
+                //添加新增订单操作日志
+                OrderOperationLog orderOperationLog=new OrderOperationLog();
+                orderOperationLog.setContent("新增订单，状态："+sendReceiveInfoVO.getOrderStatus());
+                orderOperationLog.setOrderId(order.getOrderId());
+                orderOperationLogService.save(orderOperationLog);
             }else{
                 //删除原有的商品明细列表
                 if (null != sendReceiveInfoVO.getOrderDetails() && sendReceiveInfoVO.getOrderDetails().size() > 0) {
@@ -164,6 +172,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                         orderDetailService.save(orderDetail);
                     });
                 }
+                //添加修改订单日志
+                OrderOperationLog orderOperationLog=new OrderOperationLog();
+                orderOperationLog.setContent("修改订单：状态"+sendReceiveInfoVO.getOrderStatus());
+                orderOperationLog.setOrderId(order.getOrderId());
+                orderOperationLogService.save(orderOperationLog);
             }
 
         } catch (Exception e) {
@@ -177,6 +190,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public Boolean updateOrderStatu(UpdateOrderStatuDTO updateOrderStatuDTO) {
         OrderDetail orderDetail = new OrderDetail();
         BeanUtils.copyProperties(updateOrderStatuDTO, orderDetail);
+
+        //添加修改订单日志
+        OrderOperationLog orderOperationLog=new OrderOperationLog();
+        orderOperationLog.setContent("修改订单：状态"+updateOrderStatuDTO.getOrderStatus());
+        orderOperationLog.setOrderId(updateOrderStatuDTO.getOrderId());
+        orderOperationLogService.save(orderOperationLog);
+
         return orderDetailService.updateById(orderDetail);
     }
 

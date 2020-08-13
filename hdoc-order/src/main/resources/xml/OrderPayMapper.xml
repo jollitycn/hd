@@ -11,10 +11,10 @@
         <result column="pay_datetime" property="payDatetime"/>
         <result column="pay_card_no" property="payCardNo"/>
         <result column="pay_back" property="payBack"/>
-        <collection column="{orderPayId=order_pay_id}" property="orderPayRelations" ofType="com.insigma.ordercenter.entity.OrderPayRelation" select="queryPayCardList"/>
+        <collection column="{orderPayId=order_pay_id}" property="orderPayRelations" ofType="com.insigma.ordercenter.entity.OrderPayCardNo" select="queryPayCardList"/>
     </resultMap>
 
-    <resultMap id="orderPayCardMap" type="com.insigma.ordercenter.entity.OrderPayRelation">
+    <resultMap id="orderPayCardMap" type="com.insigma.ordercenter.entity.OrderPayCardNo">
         <id column="order_pay_id" property="orderPayId"/>
         <result column="card_no" property="cardNo"/>
     </resultMap>

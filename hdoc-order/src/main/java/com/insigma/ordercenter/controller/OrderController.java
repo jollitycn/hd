@@ -51,7 +51,8 @@ public class OrderController extends BaseController{
     @PostMapping("/addOrder")
     @ApiOperation(value = "新增订单")
     public Result<?> addOrder(@Valid @RequestBody SendReceiveInfoVO sendReceiveInfoVO) {
-        return orderService.addOrder(sendReceiveInfoVO);
+        LoginUser loginUser = redisUser();
+        return orderService.addOrder(sendReceiveInfoVO,loginUser);
     }
 
     @PutMapping("/updateOrderStatu")

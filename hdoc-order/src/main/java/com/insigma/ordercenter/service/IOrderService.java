@@ -25,7 +25,7 @@ public interface IOrderService extends IService<Order> {
 
     IPage<OrderListVO> queryOrderListPage(Page<OrderListVO> page, OrderDTO orderDTO);
 
-    Result addOrder(SendReceiveInfoVO sendReceiveInfoVO);
+    Result addOrder(SendReceiveInfoVO sendReceiveInfoVO,LoginUser loginUser);
 
     Boolean updateOrderStatu(UpdateOrderStatuDTO updateOrderStatuDTO);
 

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -40,7 +41,7 @@ public class OrderOperationLog implements Serializable {
     private Long createId;
 
     @ApiModelProperty(value = "创建时间")
-    private Long createTime;
+    private LocalDateTime createTime;
 
     @ApiModelProperty(value = "内容")
     private String content;
