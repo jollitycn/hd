@@ -320,7 +320,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 UpdateOrderStatuDTO orderStatuDTO = new UpdateOrderStatuDTO();
                 orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
                 //订单状态 2 为已发货
-                orderStatuDTO.setOrderStatus(OrderStatus.ORDER_TWO);
+                orderStatuDTO.setOrderStatus(OrderStatus.UNCHECKED);
                 orderService.updateOrderStatu(orderStatuDTO);
                 return;
             }
@@ -332,7 +332,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 UpdateOrderStatuDTO orderStatuDTO = new UpdateOrderStatuDTO();
                 orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
                 //订单状态 6 为冻结
-                orderStatuDTO.setOrderStatus(OrderStatus.ORDER_SIX);
+                orderStatuDTO.setOrderStatus(OrderStatus.FROZEN);
                 orderService.updateOrderStatu(orderStatuDTO);
                 return;
             }
@@ -355,7 +355,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             UpdateOrderStatuDTO orderStatuDTO = new UpdateOrderStatuDTO();
             orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
             //订单状态 9 为取消
-            orderStatuDTO.setOrderStatus(OrderStatus.ORDER_NINE);
+            orderStatuDTO.setOrderStatus(OrderStatus.CANCELED);
             orderService.updateOrderStatu(orderStatuDTO);
         }
 
@@ -363,7 +363,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             UpdateOrderStatuDTO orderStatuDTO = new UpdateOrderStatuDTO();
             orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
             //订单状态 8 为已完成
-            orderStatuDTO.setOrderStatus(OrderStatus.ORDER_EIGHT);
+            orderStatuDTO.setOrderStatus(OrderStatus.FINISHED);
             orderService.updateOrderStatu(orderStatuDTO);
         }
 
@@ -385,7 +385,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 if (ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_THREE || ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_FIVE || ShippingOrderCancelVO.getStatus() == OrderStatus.SHIPPING_ORDER_SIX) {
                     UpdateOrderStatuDTO updateOrderStatuDTO = new UpdateOrderStatuDTO();
                     updateOrderStatuDTO.setOrderId(orderId);
-                    updateOrderStatuDTO.setOrderStatus(OrderStatus.ORDER_SIX);
+                    updateOrderStatuDTO.setOrderStatus(OrderStatus.FROZEN);
                     orderService.updateOrderStatu(updateOrderStatuDTO);
                     flag.set(false);
                 } else {
@@ -397,7 +397,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             UpdateOrderStatuDTO updateOrderStatuDTO = new UpdateOrderStatuDTO();
             updateOrderStatuDTO.setOrderId(orderId);
             //订单状态 5 为取消
-            updateOrderStatuDTO.setOrderStatus(OrderStatus.ORDER_FIVE);
+            updateOrderStatuDTO.setOrderStatus(OrderStatus.OUT_OF_WAREHOUSE);
             orderService.updateOrderStatu(updateOrderStatuDTO);
         }
         // TODO 发货单那边提供接口，返回是否能取消成功，否则订单状态为冻结
