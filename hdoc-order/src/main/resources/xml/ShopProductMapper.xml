@@ -20,8 +20,8 @@
 
     <select id="selectList" resultType="com.insigma.ordercenter.entity.ShopProduct">
     SELECT b.* FROM
-        t_shop a
-    LEFT JOIN t_shop_product b ON a.shop_id=b.shop_id AND b.product_id=#{productId}
+      t_shop_product b
+    LEFT JOIN   t_shop a ON a.shop_id=b.shop_id AND b.product_id=#{productId}
     WHERE
         a.is_stop = 0
     AND a.is_deleted = 0

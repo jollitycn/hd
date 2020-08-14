@@ -200,7 +200,13 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         if (checkSPS(sps)) return true;
         int tr = 0;
         Iterator it = sps.iterator();
-        while (it.hasNext())  tr += ((ShopProduct) it.next()).getRatio();
+        while (it.hasNext()) {
+          Object object=   it.next();
+          if(object!=null) {
+              ShopProduct sp = (ShopProduct)object;
+              tr += sp.getRatio();
+          }
+        }
         if (tr <= 0) return true;
         int tq = getTq(whp, sps, tr);
         int rn = whp.getQuantity() - tq;
