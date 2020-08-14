@@ -2,6 +2,7 @@ package com.insigma.ordercenter.quartz;
 
 import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.constant.OrderStatus;
 import com.insigma.ordercenter.constant.OrderStrategyConstant;
 import com.insigma.ordercenter.entity.*;
@@ -97,13 +98,13 @@ public class ShippingStrategyQuartz {
 
 //    @Scheduled(fixedDelay = 2*60*1000)
     @GetMapping("shippingQuartz")
-    public void shippingOrderDeal() {
+    public Result<?> shippingOrderDeal() {
         //从缓存获取策略
         Object redisStrategy = redisUtil.get("strategyList");
         List<Strategy> strategyList = JsonUtil.jsonToList(JsonUtil.beanToJson(redisStrategy),Strategy.class);
         if (null == strategyList || strategyList.size() == 0) {
             log.error("未获取到策略，无法进行处理");
-            return ;
+            return Result.success() ;
         }
         Strategy strategy = strategyList.get(OrderStrategyConstant.AUTO_SHIPPING - 1);
         Strategy remarkStrategy = strategyList.get(OrderStrategyConstant.REMARK - 1);
@@ -135,6 +136,7 @@ public class ShippingStrategyQuartz {
                                 orderService.updateById(order);
                             }
                             //判断发货比例
+
                             if (shopProduct.getRatio() == null ) {
                                 order.setIsHandOrder(1);
                                 order.setOrderStatus(OrderStatus.HANDLE);
@@ -274,6 +276,7 @@ public class ShippingStrategyQuartz {
                 }
             }
         }
+        return Result.success() ;
     }
     public Integer orderMatchWarehouse(Order order,OrderDetail detail) {
         //根据订单中的店铺去查找对应的仓库
