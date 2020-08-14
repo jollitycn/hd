@@ -191,8 +191,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public Boolean updateOrderStatu(UpdateOrderStatuDTO updateOrderStatuDTO,LoginUser loginUser) {
-        OrderDetail orderDetail = new OrderDetail();
-        BeanUtils.copyProperties(updateOrderStatuDTO, orderDetail);
+        Order order=new Order();
+        BeanUtils.copyProperties(updateOrderStatuDTO, order);
 
         //添加修改订单日志
         OrderOperationLog orderOperationLog=new OrderOperationLog();
@@ -200,7 +200,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderOperationLog.setOrderId(updateOrderStatuDTO.getOrderId());
         orderOperationLogService.addOrderOperationLog(orderOperationLog,loginUser);
 
-        return orderDetailService.updateById(orderDetail);
+        return orderService.updateById(order);
     }
 
     @Override
@@ -314,6 +314,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            //手动审单后，更新订单中的审单时间
+            Order order=new Order();
+            order.setReviewTime(LocalDateTime.now());
+            order.setOrderId(addShippingOrderDTO.getOrderId());
+            orderService.updateById(order);
         });
         return Result.success();
     }
@@ -407,7 +412,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
     @Override
-    public Result cancelOrder(Long orderId,LoginUser loginUser) {
+    public Result   cancelOrder(Long orderId,LoginUser loginUser) {
         //添加修改订单日志
         OrderOperationLog orderOperationLog=new OrderOperationLog();
         AtomicReference<Boolean> flag = new AtomicReference<>(true);
@@ -435,9 +440,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             orderOperationLog.setContent("修改订单：状态"+OrderStatus.CANCELED);
             orderService.updateOrderStatu(updateOrderStatuDTO,loginUser);
         }
+        // TODO 发货单那边提供接口，返回是否能取消成功，否则订单状态为冻结
         orderOperationLog.setOrderId(orderId);
         orderOperationLogService.addOrderOperationLog(orderOperationLog,loginUser);
-        // TODO 发货单那边提供接口，返回是否能取消成功，否则订单状态为冻结
+
         return Result.success();
     }
 

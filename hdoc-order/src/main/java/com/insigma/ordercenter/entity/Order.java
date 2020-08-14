@@ -39,7 +39,8 @@ public class Order implements Serializable {
     @ApiModelProperty(value = "订单编号")
     private String orderNo;
 
-    @ApiModelProperty(value = "订单状态（0：待审核，1：待出库，2：打单出库，3：已完成，4：冻结，5：异常）")
+    @ApiModelProperty(value = "订单状态（0：新建状态，1：手动审核状态，2：待审核状态，3：审核异常状态，4：待出库状态，" +
+            "  5：已出库状态，6：冻结状态，7：发货异常状态，8：已完成状态，9：取消状态，10：已退货状态）")
     private Integer orderStatus;
 
     @ApiModelProperty(value = "下单时间")
