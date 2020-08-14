@@ -1,22 +1,17 @@
 package com.insigma.ordercenter.entity;
 
-import java.math.BigDecimal;
-
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-
-import java.time.LocalDateTime;
-
 import com.baomidou.mybatisplus.annotation.TableId;
-
-import java.io.Serializable;
-
-import com.insigma.ordercenter.constant.Constant;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -53,6 +48,9 @@ public class Refund implements Serializable {
 
     @ApiModelProperty(value = "发起时间")
     private LocalDateTime createTime;
+
+    @ApiModelProperty(value = "创建人")
+    private Long createId;
 
     @ApiModelProperty(value = "审核状态（0：未审核，1：通过，2：不通过）")
     private Integer auditStatus;

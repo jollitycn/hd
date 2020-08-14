@@ -34,6 +34,9 @@ public class RefundVO {
     @ApiModelProperty(value = "发起时间")
     private String createTime;
 
+    @ApiModelProperty(value = "录单人")
+    private String createName;
+
     @ApiModelProperty(value = "订单状态（0：待审核，1：待出库，2：打单出库，3：已完成，4：冻结）")
     private Integer orderStatus;
 
