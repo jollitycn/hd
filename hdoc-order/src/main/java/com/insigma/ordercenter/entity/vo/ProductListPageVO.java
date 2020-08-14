@@ -55,7 +55,7 @@ public class ProductListPageVO extends BaseVO {
     @ApiModelProperty(value = "商品编码")
     private String productNo;
 
-    @ApiModelProperty(value = "是否上架（0：未上架，1：已上架）")
+    @ApiModelProperty(value = "是否禁用（0：已禁用，1：已启用）")
     private Integer isPutOn;
 
     @ApiModelProperty(value = "是否是组合商品（0：单品，1：组合）")
