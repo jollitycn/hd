@@ -141,14 +141,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public boolean delete(Long productId) {
 
-        Product product = getById(productId);
+//        Product product = getById(productId);
 
-        if (product != null) {
-            product.setIsDeleted(Constant.SYS_ONE);
-            return updateById(product);
-        } else {
-            return false;
-        }
+
+            return removeById(productId);
     }
 
     /**

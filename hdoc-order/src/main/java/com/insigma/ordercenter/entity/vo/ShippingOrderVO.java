@@ -39,7 +39,7 @@ public class ShippingOrderVO {
     @ApiModelProperty(value = "订单号")
     private String orderNo;
 
-    @ApiModelProperty(value = "下单日期")
+    @ApiModelProperty(value = "下单时间")
     private String orderNoCreateTime;
 
     @ApiModelProperty(value = "物流单号")

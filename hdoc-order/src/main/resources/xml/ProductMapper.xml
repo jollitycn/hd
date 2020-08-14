@@ -4,42 +4,43 @@
 
     <select id="getProductListPage" resultType="com.insigma.ordercenter.entity.vo.ProductListPageVO">
         SELECT
-            product_id,
-            product_sku,
-            product_name,
-            product_price,
-            discount_price,
-            product_specs,
-            put_on_time,
-            sub_title,
-            brand,
-            product_no,
-            is_put_on,
-            is_combo,
-            product_nc,
-            unit,
-            unit_quantity
+        a.product_id,
+        a.product_sku,
+        a.product_name,
+        a.product_price,
+        a.discount_price,
+        a.product_specs,
+        a.put_on_time,
+        a.sub_title,
+        b.data_value AS brand,
+        a.product_no,
+        a.is_put_on,
+        a.is_combo,
+        a.product_nc,
+        a.unit,
+        a.unit_quantity
         FROM
-            t_product
+        t_product AS a
+        LEFT JOIN sys_dictionary b ON a.brand=b.data_code
         WHERE
-            is_deleted = 0
+        a.is_deleted = 0
         <if test="productName != null and productName != ''">
-            AND product_name like #{productName}
+            AND a.product_name like #{productName}
         </if>
         <if test="productSku != null and productSku != ''">
-            AND product_sku like #{productSku}
+            AND a.product_sku like #{productSku}
         </if>
         <if test="productNo != null and productNo != ''">
-            AND product_no like #{productNo}
+            AND a.product_no like #{productNo}
         </if>
         <if test="isPutOn != null">
-            AND is_put_on=#{isPutOn}
+            AND a.is_put_on=#{isPutOn}
         </if>
         <if test="isCombo != null">
-            AND is_combo=#{isCombo}
+            AND a.is_combo=#{isCombo}
         </if>
         <if test="brand != null and brand != ''">
-            AND brand =#{brand}
+            AND a.brand =#{brand}
         </if>
     </select>
 
