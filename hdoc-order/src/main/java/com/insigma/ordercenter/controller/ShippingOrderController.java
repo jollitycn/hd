@@ -56,7 +56,7 @@ public class ShippingOrderController extends BaseController{
 
     @PostMapping("/increaseCargo")
     @ApiOperation("新建补货单")
-    public Result increaseCargo(EditShippingOrderDTO editShippingOrderDTO) {
+    public Result increaseCargo(@RequestBody EditShippingOrderDTO editShippingOrderDTO) {
 
         LoginUser loginUser=redisUser();
 
@@ -83,14 +83,13 @@ public class ShippingOrderController extends BaseController{
         return Result.error(CodeMsg.DATA_UPDATE_ERROR);
     }
 
-    @PutMapping("/changeAddress/{shippingOrderId}")
+    @PutMapping("/changeAddress")
     @ApiOperation(value ="更改地址")
-    public Result changeAddress(@PathVariable Long shippingOrderId,
-                                EditShippingOrderDTO editShippingOrderDTO) {
+    public Result changeAddress(@RequestBody EditShippingOrderDTO editShippingOrderDTO) {
 
         LoginUser loginUser=redisUser();
 
-        Boolean result = shippingOrderService.changeAddress(loginUser,shippingOrderId,editShippingOrderDTO);
+        Boolean result = shippingOrderService.changeAddress(loginUser,editShippingOrderDTO);
 
         if(result){
             return Result.success();
@@ -99,14 +98,13 @@ public class ShippingOrderController extends BaseController{
         return Result.error(CodeMsg.DATA_UPDATE_ERROR);
     }
 
-    @PutMapping("/changeProduct/{shippingOrderId}")
+    @PutMapping("/changeProduct")
     @ApiOperation(value ="更改商品")
-    public Result changeProduct(@PathVariable Long shippingOrderId,
-                                @RequestBody EditShippingOrderProductDTO editParameters) {
+    public Result changeProduct(@RequestBody EditShippingOrderProductDTO editParameters) {
 
         LoginUser loginUser=redisUser();
 
-        Boolean result = shippingOrderService.changeProduct(loginUser,shippingOrderId,editParameters);
+        Boolean result = shippingOrderService.changeProduct(loginUser,editParameters);
 
         if(result){
             return Result.success();
@@ -115,14 +113,13 @@ public class ShippingOrderController extends BaseController{
         return Result.error(CodeMsg.DATA_UPDATE_ERROR);
     }
 
-    @PutMapping("/changeWarehouse/{shippingOrderId}")
+    @PutMapping("/changeWarehouse")
     @ApiOperation(value ="更改仓库")
-    public Result changeWarehouse(@PathVariable Long shippingOrderId,
-                                  EditShippingOrderDTO editShippingOrderDTO) {
+    public Result changeWarehouse(@RequestBody EditShippingOrderDTO editShippingOrderDTO) {
 
         LoginUser loginUser=redisUser();
 
-        Boolean result = shippingOrderService.changeWarehouse(loginUser,shippingOrderId,editShippingOrderDTO);
+        Boolean result = shippingOrderService.changeWarehouse(loginUser,editShippingOrderDTO);
 
         if(result){
             return Result.success();

@@ -25,7 +25,8 @@
         sr.receive_remark,
         sr.receive_name as sendReceiveName,
         sr.mobile_phone as receiveMobilePhone,
-        o.origin_order_no
+        o.origin_order_no,
+        o.order_time
         FROM
         t_order o
         LEFT JOIN t_shop sp ON o.shop_id = sp.shop_id
@@ -43,26 +44,29 @@
         <if test="orderDTO.orderNo != null and orderDTO.orderNo != ''">
             AND o.order_no = #{orderDTO.orderNo}
         </if>
-        <if test="orderDTO.shippingOrderId != null and orderDTO.shippingOrderId != ''">
+        <if test="orderDTO.shippingOrderId != null">
             AND so.shipping_order_id = #{orderDTO.shippingOrderId}
         </if>
-        <if test="orderDTO.reviewTimeStart != null and orderDTO.reviewTimeStart != ''">
-                AND o.review_time &gt;= #{orderDTO.reviewTimeStart} and o.review_time &lt;= #{orderDTO.reviewTimeEnd}
+        <if test="orderDTO.reviewTimeStart != null">
+            AND o.review_time &gt;= #{orderDTO.reviewTimeStart} and o.review_time &lt;= #{orderDTO.reviewTimeEnd}
         </if>
-        <if test="orderDTO.createTimeStart != null and orderDTO.createTimeStart != ''">
-            AND o.createTime &gt;= #{orderDTO.createTimeStart} and o.createTime &lt;= #{orderDTO.createTimeStart}
+        <if test="orderDTO.createTimeStart != null">
+            AND o.order_time &gt;= #{orderDTO.createTimeStart} and o.order_time &lt;= #{orderDTO.createTimeEnd}
         </if>
-        <if test="orderDTO.sendTimeStart != null and orderDTO.sendTimeStart != ''">
-            AND o.send_time &gt;= #{orderDTO.sendTimeStart} and o.send_time &lt;= #{orderDTO.sendTimeStart}
+        <if test="orderDTO.sendTimeStart != null">
+            AND o.send_time &gt;= #{orderDTO.sendTimeStart} and o.send_time &lt;= #{orderDTO.sendTimeEnd}
         </if>
-        <if test="orderDTO.receiveName != null and orderDTO.receiveName != ''">
+        <if test="orderDTO.receiveName != null">
             AND so.receive_name = #{orderDTO.receiveName}
         </if>
-        <if test="orderDTO.mobilePhone != null and orderDTO.mobilePhone != ''">
+        <if test="orderDTO.mobilePhone != null">
             AND so.mobile_phone = #{orderDTO.mobilePhone}
         </if>
         <if test="orderDTO.isCombined != null">
             AND o.is_combined = #{orderDTO.isCombined}
+        </if>
+        <if test="orderDTO.splitOrder != null">
+            AND o.split_order = #{orderDTO.splitOrder}
         </if>
         group  by o.create_time desc
     </select>
@@ -228,7 +232,7 @@
     </resultMap>
 
 
-    <resultMap id="shippingResultMap" type="com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO">
+    <resultMap id="shippingResultMap" type="com.insigma.ordercenter.entity.vo.ShippingOrderVO">
         <id column="shipping_order_id" jdbcType="BIGINT" property="shippingOrderId" />
         <result column="warehouse_id" jdbcType="BIGINT" property="warehouseId" />
         <result column="express_company_id" jdbcType="BIGINT" property="expressCompanyId" />
@@ -250,7 +254,8 @@
         <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
         <result column="express_fee" jdbcType="DECIMAL" property="expressFee" />
         <result column="order_detail_id" jdbcType="BIGINT" property="orderDetailId" />
-        <result column="create_name" property="createName" jdbcType="VARCHAR" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="warehouse_name" property="warehouseName" jdbcType="VARCHAR" />
         <collection column="{shippingOrderId=shipping_order_id}" property="orderDetailVOS" ofType="com.insigma.ordercenter.entity.vo.OrderDetailVO" select="queryOrderDetailLists"/>
     </resultMap>
 
@@ -296,37 +301,38 @@
 
     <select id="queryShippingOrderList" resultMap="shippingResultMap">
        SELECT
-            so.shipping_order_id,
-            so.warehouse_id,
-            so.express_company_id,
-            so.express_no,
-            so.create_id,
-            so.create_time,
-            so.modify_id,
-            so.modify_time,
-            so.is_deleted,
-            so.`status`,
-            so.receive_name,
-            so.mobile_phone,
-            so.request_time,
-            so.address,
-            so.receive_remark,
-            so.is_combined,
-            so.is_refuse,
-            so.shipping_order_no,
-            so.send_time,
-            so.express_fee,
-            ec.company_name,
-            ec.company_no,
-            ec.create_time,
-            ec.remark ,
-            su.user_name
-        FROM
-            t_shipping_order so
-            LEFT JOIN t_express_company ec ON so.express_company_id = ec.express_company_id
-            left join sys_user su on su.user_id=so.create_id
-        WHERE
-            so.order_id = #{orderId}
+        so.shipping_order_id,
+        so.warehouse_id,
+        so.express_company_id,
+        so.express_no,
+        so.create_id,
+        so.create_time,
+        so.modify_id,
+        so.modify_time,
+        so.is_deleted,
+        so.`status`,
+        so.receive_name,
+        so.mobile_phone,
+        so.request_time,
+        so.address,
+        so.receive_remark,
+        so.is_combined,
+        so.is_refuse,
+        so.shipping_order_no,
+        so.send_time,
+        so.express_fee,
+        ec.company_name,
+        ec.company_no,
+        ec.remark,
+        su.user_name,
+        wa.warehouse_name
+    FROM
+        t_shipping_order so
+        LEFT JOIN t_express_company ec ON so.express_company_id = ec.express_company_id
+        left join t_warehouse wa on so.warehouse_id=wa.warehouse_id
+        LEFT JOIN sys_user su ON su.user_id = so.create_id
+    WHERE
+        so.order_id =#{orderId}
     </select>
 
     <select id="queryOrderDetailLists" resultMap="shippingOrderDetailMap">
@@ -339,7 +345,7 @@
             od.product_price,
             od.product_specs,
             od.unit,
-            od.quantity,
+           ( SELECT sum( pr.quantity ) FROM t_warehouse_product_relation pr WHERE pr.product_id = od.product_id ) quantity,
             od.total_price,
             od.is_gift
         FROM

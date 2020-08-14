@@ -4,82 +4,87 @@
 
     <select id="getProductListPage" resultType="com.insigma.ordercenter.entity.vo.ProductListPageVO">
         SELECT
-            product_id,
-            product_sku,
-            product_name,
-            product_price,
-            discount_price,
-            product_specs,
-            put_on_time,
-            sub_title,
-            brand,
-            product_no,
-            is_put_on,
-            is_combo,
-            product_nc,
-            unit,
-            unit_quantity
+        a.product_id,
+        a.product_sku,
+        a.product_name,
+        a.product_price,
+        a.discount_price,
+        a.product_specs,
+        a.put_on_time,
+        a.sub_title,
+        b.data_value AS brand,
+        a.product_no,
+        a.is_put_on,
+        a.is_combo,
+        a.product_nc,
+        a.unit,
+        a.unit_quantity
         FROM
-            t_product
+        t_product AS a
+        LEFT JOIN sys_dictionary b ON a.brand=b.data_code
         WHERE
-            is_deleted = 0
+        a.is_deleted = 0
         <if test="productName != null and productName != ''">
-            AND product_name like #{productName}
+            AND a.product_name like #{productName}
         </if>
         <if test="productSku != null and productSku != ''">
-            AND product_sku like #{productSku}
+            AND a.product_sku like #{productSku}
         </if>
         <if test="productNo != null and productNo != ''">
-            AND product_no like #{productNo}
+            AND a.product_no like #{productNo}
         </if>
         <if test="isPutOn != null">
-            AND is_put_on=#{isPutOn}
+            AND a.is_put_on=#{isPutOn}
         </if>
         <if test="isCombo != null">
-            AND is_combo=#{isCombo}
+            AND a.is_combo=#{isCombo}
         </if>
         <if test="brand != null and brand != ''">
-            AND brand =#{brand}
+            AND a.brand =#{brand}
         </if>
     </select>
 
 
     <select id="getProductDetail" resultType="com.insigma.ordercenter.entity.vo.ProductDetailVO">
-        SELECT
-            a.product_id,
-            a.product_sku,
-            a.product_name,
-            a.product_price,
-            a.discount_price,
-            a.product_specs,
-            a.unit,
-            a.product_type,
-            a.sub_title,
-            a.description,
-            a.is_put_on,
-            a.is_combo,
-            c.data_value AS brand,
-            a.ship_weight,
-            a.product_no,
-            a.product_nc,
-            a.order_source_id,
-            b.source_name AS orderSourceName,
-            a.is_discount,
-            a.unit_quantity,
-            a.weight,
-            a.qr_code,
-            a.length_width_height,
-			a.product_picture_url,
-			a.is_reserve,
-			a.cycle,
-			a.reserve_time,
-			a.send_count,
-			a.send_number
-        FROM
-            t_product a
-        LEFT JOIN t_order_source b ON a.order_source_id=b.order_source_id
-        LEFT JOIN sys_dictionary c ON a.brand=c.data_code
-        WHERE a.product_id=#{productId}
+             SELECT
+                        a.product_id,
+                        a.product_sku,
+                        a.product_name,
+                        a.product_price,
+                        a.discount_price,
+                        a.product_specs,
+                        f.data_value AS unit,
+                        d.data_value AS productType,
+                        a.sub_title,
+                        a.description,
+                        a.is_put_on,
+                        a.is_combo,
+                        c.data_value AS brand,
+                        a.ship_weight,
+                        a.product_no,
+                        a.product_nc,
+                        a.order_source_id,
+                        b.source_name AS orderSourceName,
+                        a.is_discount,
+                        a.unit_quantity,
+                        a.weight,
+                        a.qr_code,
+                        a.length_width_height,
+                        a.product_picture_url,
+                        a.is_reserve,
+                        a.cycle,
+                        a.reserve_time,
+                        a.send_count,
+                        a.send_number,
+                        e.data_value AS shipType
+                    FROM
+                        t_product a
+                    LEFT JOIN t_order_source b ON a.order_source_id=b.order_source_id
+                    LEFT JOIN sys_dictionary c ON a.brand=c.data_code
+                    LEFT JOIN sys_dictionary d ON a.product_type=d.dictionary_id
+                    LEFT JOIN sys_dictionary e ON a.ship_type=e.data_code
+					LEFT JOIN sys_dictionary f ON a.unit=f.data_code
+                    WHERE a.product_id=#{productId}
     </select>
 
     <select id="getShippingOrderProductList" resultType="com.insigma.ordercenter.entity.vo.ShippingProductVO">

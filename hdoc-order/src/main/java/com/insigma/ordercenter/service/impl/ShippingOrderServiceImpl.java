@@ -17,9 +17,11 @@ import com.insigma.ordercenter.entity.vo.ShippingOrderVO;
 import com.insigma.ordercenter.logistics.LogisticsCentre;
 import com.insigma.ordercenter.mapper.*;
 import com.insigma.ordercenter.service.IShippingOrderService;
+import com.insigma.ordercenter.utils.UUIDUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +71,7 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
     @Override
     public Boolean increaseCargo(LoginUser loginUser,EditShippingOrderDTO editShippingOrderDTO) {
 
-        Long shippingOrderId=editShippingOrderDTO.getShippingOrderId();
+        Long shippingOrderId=editShippingOrderDTO.getShippingOrderIds().get(0);
         //写入发货单对象
         ShippingOrder shippingOrder = new ShippingOrder();
         if(null!=shippingOrderId){
@@ -82,8 +84,8 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
             queryWrapper.eq(OrderDetail.IS_SUPPLEMENT,Constant.SYS_ONE);
             orderDetailMapper.delete(queryWrapper);
         }else{
-            //生成发货单id ObjectId是MongoDB数据库的一种唯一ID生成策略，是UUID version1的变种
-            shippingOrder.setShippingOrderNo("FH"+IdUtil.objectId().toLowerCase());
+            //生成发货单id
+            shippingOrder.setShippingOrderNo(UUIDUtil.getSerializeNo("FH"));
             shippingOrder.setCreateTime(LocalDateTime.now());
             this.createLog(null,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"新增了补货单:"+shippingOrder.getShippingOrderNo());
         }
@@ -93,15 +95,18 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
         shippingOrder.setStatus(Constant.SYS_EIGHT);
 
         //增加补货商品
-        List<Long> productList = new ArrayList<>();
-        for (Long productId:productList) {
+        List<ShippingProductAddDTO> productList = editShippingOrderDTO.getProductList();
+        for (ShippingProductAddDTO shippingProduct:productList) {
+            Long productId=shippingProduct.getProductId();
             Product product=productMapper.selectById(productId);
             OrderDetail orderDetail=new OrderDetail();
             orderDetail.setOrderId(shippingOrder.getOrderId());
             orderDetail.setProductId(productId);
             BeanUtil.copyProperties(product,orderDetail);
-            orderDetail.setAmount(product.getUnitQuantity());
-            orderDetail.setTotalPrice(product.getProductPrice());
+            Integer amount=shippingProduct.getAmount();
+            orderDetail.setAmount(amount);
+            //小计为 数量乘以单价
+            orderDetail.setTotalPrice(product.getProductPrice().multiply(new BigDecimal(amount)));
             orderDetail.setIsSupplement(Constant.SYS_ONE);
             orderDetailMapper.insert(orderDetail);
         }
@@ -112,56 +117,71 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
     /**
      * 更改发货单地址
      *
-     * @param shippingOrderId
      * @param editShippingOrderDTO
      * @return
      */
     @Override
-    public Boolean changeAddress(LoginUser loginUser,Long shippingOrderId, EditShippingOrderDTO editShippingOrderDTO) {
+    public Boolean changeAddress(LoginUser loginUser, EditShippingOrderDTO editShippingOrderDTO) {
 
-        //获取发货单对象
-        ShippingOrder shippingOrder=this.getById(shippingOrderId);
+        List<Long> shippingOrderIds=editShippingOrderDTO.getShippingOrderIds();
 
-        //状态判断
-        //TODO
-        Integer status=shippingOrder.getStatus();
+        //批量更新
+        List<ShippingOrder> updateList=new ArrayList<>();
+        for (Long shippingOrderId:shippingOrderIds) {
 
-        //更新收货信息
-        shippingOrder.setAddress(editShippingOrderDTO.getAddress());
-        shippingOrder.setMobilePhone(editShippingOrderDTO.getMobilePhone());
-        shippingOrder.setReceiveName(editShippingOrderDTO.getReceiveName());
+            //获取发货单对象
+            ShippingOrder shippingOrder=this.getById(shippingOrderId);
 
+            //状态判断
+            //TODO
+            Integer status=shippingOrder.getStatus();
 
-        this.createLog(shippingOrderId,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"修改了发货单:"+shippingOrder.getShippingOrderNo()+"的收货人信息。更改原因："+editShippingOrderDTO.getChangeReason());
+            //更新收货信息
+            shippingOrder.setAddress(editShippingOrderDTO.getAddress());
+            shippingOrder.setMobilePhone(editShippingOrderDTO.getMobilePhone());
+            shippingOrder.setReceiveName(editShippingOrderDTO.getReceiveName());
 
-        return this.updateById(shippingOrder);
+            updateList.add(shippingOrder);
+
+            this.createLog(shippingOrderId,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"修改了发货单:"+shippingOrder.getShippingOrderNo()+"的收货人信息。更改原因："+editShippingOrderDTO.getChangeReason());
+        }
+
+        return updateBatchById(updateList);
+
     }
 
     /**
      * 更改发货单商品
      *
-     * @param shippingOrderId
      * @param editParameters
      * @return
      */
     @Override
-    public Boolean changeProduct(LoginUser loginUser,Long shippingOrderId, EditShippingOrderProductDTO editParameters) {
+    public Boolean changeProduct(LoginUser loginUser, EditShippingOrderProductDTO editParameters) {
 
-        //获取发货单对象
-        ShippingOrder shippingOrder=this.getById(shippingOrderId);
+        List<Long> shippingOrderIds=editParameters.getShippingOrderId();
 
-        //状态判断
-        Integer status=shippingOrder.getStatus();
+        //批量更新
+        List<ShippingOrder> updateList=new ArrayList<>();
+        for (Long shippingOrderId:shippingOrderIds) {
 
-        for (EditOrderProductDTO editOrderProductDTO:editParameters.getEditOrderProductDTOList()) {
-            OrderDetail orderDetail=orderDetailMapper.selectById(editOrderProductDTO.getOrderDetailId());
-            orderDetail.setAmount(editOrderProductDTO.getAmount());
-            orderDetail.setProductSpecs(editOrderProductDTO.getProductSpecs());
-            orderDetailMapper.updateById(orderDetail);
+            //获取发货单对象
+            ShippingOrder shippingOrder=this.getById(shippingOrderId);
+
+            //状态判断
+            Integer status=shippingOrder.getStatus();
+
+            //更改商品
+            for (EditOrderProductDTO editOrderProductDTO:editParameters.getEditOrderProductDTOList()) {
+                OrderDetail orderDetail=orderDetailMapper.selectById(editOrderProductDTO.getOrderDetailId());
+                orderDetail.setAmount(editOrderProductDTO.getAmount());
+                orderDetail.setProductSpecs(editOrderProductDTO.getProductSpecs());
+                orderDetailMapper.updateById(orderDetail);
+            }
+
+            this.createLog(shippingOrderId,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"修改了发货单:"+shippingOrder.getShippingOrderNo()+"的商品,原因:"+editParameters.getChangeReason());
         }
 
-
-        this.createLog(shippingOrderId,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"修改了发货单:"+shippingOrder.getShippingOrderNo()+"的商品,原因:"+editParameters.getChangeReason());
 
         return true;
     }
@@ -169,26 +189,35 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
     /**
      * 更改发货单仓库
      *
-     * @param shippingOrderId
      * @param editShippingOrderDTO
      * @return
      */
     @Override
-    public Boolean changeWarehouse(LoginUser loginUser,Long shippingOrderId, EditShippingOrderDTO editShippingOrderDTO) {
+    public Boolean changeWarehouse(LoginUser loginUser, EditShippingOrderDTO editShippingOrderDTO) {
 
-        //获取发货单对象
-        ShippingOrder shippingOrder=this.getById(shippingOrderId);
+        List<Long> shippingOrderIds=editShippingOrderDTO.getShippingOrderIds();
 
-        //状态判断
-        //TODO
-        Integer status=shippingOrder.getStatus();
+        //批量更新
+        List<ShippingOrder> updateList=new ArrayList<>();
+        for (Long shippingOrderId:shippingOrderIds) {
 
-        //修改仓库
-        shippingOrder.setWarehouseId(editShippingOrderDTO.getWarehouseId());
+            //获取发货单对象
+            ShippingOrder shippingOrder=this.getById(shippingOrderId);
 
-        this.createLog(shippingOrderId,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"修改了发货单:"+shippingOrder.getShippingOrderNo()+"的仓库");
+            //状态判断
+            //TODO
+            Integer status=shippingOrder.getStatus();
 
-        return this.updateById(shippingOrder);
+            //修改仓库
+            shippingOrder.setWarehouseId(editShippingOrderDTO.getWarehouseId());
+
+            this.createLog(shippingOrderId,shippingOrder.getOrderId(),loginUser.getUserId(),loginUser.getUserName()+"修改了发货单:"+shippingOrder.getShippingOrderNo()+"的仓库");
+
+            updateList.add(shippingOrder);
+        }
+
+
+        return updateBatchById(updateList);
     }
 
     /**

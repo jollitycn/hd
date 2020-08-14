@@ -27,7 +27,7 @@ public interface IOrderService extends IService<Order> {
 
     Result addOrder(SendReceiveInfoVO sendReceiveInfoVO,LoginUser loginUser);
 
-    Boolean updateOrderStatu(UpdateOrderStatuDTO updateOrderStatuDTO);
+    Boolean updateOrderStatu(UpdateOrderStatuDTO updateOrderStatuDTO,LoginUser loginUser);
 
     List<OrderDetailExamineVO> queryOrderDetailList(Long orderId);
 
@@ -35,7 +35,7 @@ public interface IOrderService extends IService<Order> {
 
     Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO, LoginUser loginUser);
 
-    Result cancelOrder(Long orderId);
+    Result cancelOrder(Long orderId,LoginUser loginUser);
 
     OrderListVO queryOrderById(Long orderId);
 
@@ -53,5 +53,5 @@ public interface IOrderService extends IService<Order> {
 
     List<?> queryExpressInfo(Long shippingOrderNo);
 
-    Boolean shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO);
+    Boolean shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO,LoginUser loginUser);
 }

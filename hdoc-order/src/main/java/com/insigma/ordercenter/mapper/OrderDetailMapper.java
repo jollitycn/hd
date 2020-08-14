@@ -19,5 +19,5 @@ public interface OrderDetailMapper extends BaseMapper<OrderDetail> {
 
     List<OrderDetailVO> getOrderDetail(@Param("orderId")Long orderId);
 
-
+    List<OrderDetailVO> orderDerailList(@Param("orderId")Long orderId);
 }

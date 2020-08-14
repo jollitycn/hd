@@ -23,7 +23,7 @@ public class ShippingOrderDetailVO {
     @ApiModelProperty(value = "原始订单号")
     private String orderNo;
 
-    @ApiModelProperty(value = "来源")
+    @ApiModelProperty(value = "来源 （店铺名称）")
     private String source;
 
     @ApiModelProperty(value = "拆单人")
@@ -36,7 +36,13 @@ public class ShippingOrderDetailVO {
     private String mobilePhone;
 
     @ApiModelProperty(value = "邮编")
-    private String postcode;
+    private String postalCode;
+
+    @ApiModelProperty(value = "省")
+    private String province;
+
+    @ApiModelProperty(value = "市")
+    private String locationCity;
 
     @ApiModelProperty(value = "地址")
     private String address;

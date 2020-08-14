@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * @program: hdoc-parent
  * @description: 发货单列表返回封装类
@@ -30,16 +33,13 @@ public class ShippingOrderVO {
     @ApiModelProperty(value = "物流公司(承运商)")
     private String companyName;
 
-    @ApiModelProperty(value = "分配人")
-    private String createName;
-
     @ApiModelProperty(value = "分配日期")
     private String createTime;
 
     @ApiModelProperty(value = "订单号")
     private String orderNo;
 
-    @ApiModelProperty(value = "下单日期")
+    @ApiModelProperty(value = "下单时间")
     private String orderNoCreateTime;
 
     @ApiModelProperty(value = "物流单号")
@@ -50,4 +50,40 @@ public class ShippingOrderVO {
 
     @ApiModelProperty(value = "异常原因")
     private String exceptionReason;
+    private Long createId;
+
+    private Long warehouseId;
+
+    private Long expressCompanyId;
+
+    private Long modifyId;
+
+    private LocalDateTime modifyTime;
+
+    private Integer isDeleted;
+
+    private String receiveName;
+
+    private String mobilePhone;
+
+    private LocalDateTime requestTime;
+
+    private String address;
+
+    private String receiveRemark;
+
+    private Integer isCombined;
+
+    private Integer isRefuse;
+
+    private LocalDateTime sendTime;
+
+    private float expressFee;
+
+    private Long orderDetailId;
+
+    private String userName;
+
+    private List<OrderDetailVO> orderDetailVOS;
+
 }

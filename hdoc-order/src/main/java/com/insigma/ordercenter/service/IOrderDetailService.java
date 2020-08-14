@@ -6,7 +6,9 @@ import com.insigma.ordercenter.entity.vo.AddOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.OrderDetailExamineVO;
 import com.insigma.ordercenter.entity.vo.OrderDetailVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -22,5 +24,7 @@ public interface IOrderDetailService extends IService<OrderDetail> {
     List<OrderDetailVO> getOrderDetail(Long orderId);
 
     Boolean addOrderDerail(AddOrderDetailVO addOrderDetailVO);
+
+    List<OrderDetailVO> orderDerailList(Long orderId);
 
 }

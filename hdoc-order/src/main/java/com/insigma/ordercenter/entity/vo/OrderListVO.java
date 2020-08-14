@@ -121,6 +121,12 @@ public class OrderListVO extends BaseVO {
     @ApiModelProperty(value = "收货人联系方式")
     private String receiveMobilePhone;
 
+    @ApiModelProperty(value = "下单时间")
+    @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime orderTime;
+
     @ApiModelProperty(value = "发货单列表")
     private List<ShippingOrderVO> shippingOrderVOS;
 

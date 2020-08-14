@@ -3,6 +3,12 @@ package com.insigma.ordercenter.entity.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.insigma.ordercenter.constant.Constant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -32,6 +38,9 @@ public class UpdateSendReceiveInfoVO extends BaseVO{
     private String sendRemark;
 
     @ApiModelProperty(value = "下单时间")
+    @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime orderTime;
 
     @ApiModelProperty(value = "收货人姓名")
@@ -41,6 +50,9 @@ public class UpdateSendReceiveInfoVO extends BaseVO{
     private String mobilePhone;
 
     @ApiModelProperty(value = "要求收货时间")
+    @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime requestTime;
 
     @ApiModelProperty(value = "收货人地址")
@@ -58,4 +70,6 @@ public class UpdateSendReceiveInfoVO extends BaseVO{
     @ApiModelProperty(value = "所在省份")
     private String province;
 
+    @ApiModelProperty(value = "收货人邮编")
+    private String postalCode;
 }

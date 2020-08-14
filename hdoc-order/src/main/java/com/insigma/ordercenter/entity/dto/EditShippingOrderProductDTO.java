@@ -15,6 +15,9 @@ import java.util.List;
 @Data
 public class EditShippingOrderProductDTO {
 
+    @ApiModelProperty(value = "发货单号")
+    private List<Long> shippingOrderId;
+
     @ApiModelProperty(value = "退货原因")
     private String changeReason;
 

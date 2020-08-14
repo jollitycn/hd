@@ -16,12 +16,15 @@
                 a.create_time,
                 a.`status`,
                 a.is_combined,
-                a.exception_reason
+                a.exception_reason,
+                e.order_no,
+                e.order_time AS orderNoCreateTime
             FROM
                 t_shipping_order AS a
         LEFT JOIN t_warehouse b ON a.warehouse_id=b.warehouse_id
         LEFT JOIN t_express_company c ON a.express_company_id=c.express_company_id
         LEFT JOIN sys_user d ON a.create_id=d.user_id
+        LEFT JOIN t_order e ON a.order_id=e.order_id
         WHERE 1=1
         <if test="shippingOrderDTO.shippingNo !=null and shippingOrderDTO.shippingNo !=''">
             AND a.shipping_order_no=#{shippingOrderDTO.shippingNo}
@@ -36,17 +39,23 @@
 
 
     <select id="getShippingDetail" resultType="com.insigma.ordercenter.entity.vo.ShippingOrderDetailVO">
-        SELECT
+       	SELECT
             a.shipping_order_id,
             a.order_id,
             c.order_no,
-            a.receive_name,
-            a.mobile_phone,
-            a.address,
+		    e.shop_name AS source,
+			d.receive_name,
+			d.mobile_phone,
+		    d.province,
+			d.location_city,
+			d.address,
+            d.postal_code,
             a.`status`
         FROM
             t_shipping_order a
         LEFT JOIN t_order c ON c.order_id = a.order_id
+		LEFT JOIN t_order_send_receive d ON a.order_id=d.order_id
+		LEFT JOIN t_shop e ON c.shop_id=e.shop_id
         WHERE a.shipping_order_id=#{shippingOrderId}
     </select>
 

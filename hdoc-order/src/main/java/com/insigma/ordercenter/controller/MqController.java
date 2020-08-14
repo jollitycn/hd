@@ -49,10 +49,10 @@ public class MqController {
     @ApiOperation("发送消息")
     public Result<?> send(String msg) {
         Message message = null;
-        String str = "{\"signId\":\"hdnm\",\"xtwldm\":\"00045\",\"tid\":\"200723173549840\",\"receiver_adress\":\"olp\",\"receiver_phone\":\"18898980909\",\"receiver_zip\":\"\",\"seller_nick\":\"平台\",\"created\":\"2020-07-23 17:35:49\",\"buyer_nick\":\"19958719050\",\"receiver_city\":\"230400\",\"r_city\":\"230400\",\"receiver_mobile\":\"18898980909\",\"receiver_name\":\"离家\",\"buyer_email\":\"\",\"receiver_state\":\"230000\",\"r_state\":\"230000\",\"receiver_district\":\"230405\",\"r_district\":\"230405\",\"post_fee\":\"0.00\",\"seller_memo\":\"\",\"buyer_message\":\"\",\"buyer_alipay_no\":\"\",\"pay_time\":\"2020-07-23 17:35:49\",\"pay_status\":\"Y\",\"invoice_name\":\"\",\"invoice_type\":\"\",\"inv_payee\":0.0,\"inv_content\":\"\",\"source\":\"HDNM_MALL2\",\"trade_payment\":0.00,\"alipay_no\":\"\",\"received_payment\":0.00,\"data\":[{\"xtwldm\":\"00045\",\"tid\":\"200723173549840\",\"oid\":\"233\",\"outer_iid\":\"233_0\",\"outer_sku_id\":\"LY100011\",\"num_iid\":233,\"num\":1,\"price\":0.0,\"payment\":0.0,\"divide_order_fee\":0.0,\"discount_fee\":0.0,\"title\":\"有机dada油茶籽油500ml*2礼盒装K2100\",\"proportion\":0.00},{\"xtwldm\":\"00045\",\"tid\":\"200723173549840\",\"oid\":\"234\",\"outer_iid\":\"234_0\",\"outer_sku_id\":\"LY100021\",\"num_iid\":234,\"num\":2,\"price\":0.0,\"payment\":0.0,\"divide_order_fee\":0.0,\"discount_fee\":0.0,\"title\":\"有机dada大米5kg普通装K100\",\"proportion\":0.00}],\"payType\":{\"xtwldm\":\"00045\",\"tid\":\"200723173549840\",\"pay_type\":\"AA\",\"pay_fee\":0.00},\"card\":[{\"tid\":\"200723173549840\",\"card_no\":\"\"}]}";
-//        String str = "null";
+//        String str = "{\"signId\":\"hdnm\",\"xtwldm\":\"00045\",\"tid\":\"200723173549840\",\"receiver_adress\":\"olp\",\"receiver_phone\":\"18898980909\",\"receiver_zip\":\"\",\"seller_nick\":\"平台\",\"created\":\"2020-07-23 17:35:49\",\"buyer_nick\":\"19958719050\",\"receiver_city\":\"230400\",\"r_city\":\"230400\",\"receiver_mobile\":\"18898980909\",\"receiver_name\":\"离家\",\"buyer_email\":\"\",\"receiver_state\":\"230000\",\"r_state\":\"230000\",\"receiver_district\":\"230405\",\"r_district\":\"230405\",\"post_fee\":\"0.00\",\"seller_memo\":\"\",\"buyer_message\":\"\",\"buyer_alipay_no\":\"\",\"pay_time\":\"2020-07-23 17:35:49\",\"pay_status\":\"Y\",\"invoice_name\":\"\",\"invoice_type\":\"\",\"inv_payee\":0.0,\"inv_content\":\"\",\"source\":\"HDNM_MALL2\",\"trade_payment\":0.00,\"alipay_no\":\"\",\"received_payment\":0.00,\"data\":[{\"xtwldm\":\"00045\",\"tid\":\"200723173549840\",\"oid\":\"233\",\"outer_iid\":\"233_0\",\"outer_sku_id\":\"LY100011\",\"num_iid\":233,\"num\":1,\"price\":0.0,\"payment\":0.0,\"divide_order_fee\":0.0,\"discount_fee\":0.0,\"title\":\"有机dada油茶籽油500ml*2礼盒装K2100\",\"proportion\":0.00},{\"xtwldm\":\"00045\",\"tid\":\"200723173549840\",\"oid\":\"234\",\"outer_iid\":\"234_0\",\"outer_sku_id\":\"LY100021\",\"num_iid\":234,\"num\":2,\"price\":0.0,\"payment\":0.0,\"divide_order_fee\":0.0,\"discount_fee\":0.0,\"title\":\"有机dada大米5kg普通装K100\",\"proportion\":0.00}],\"payType\":{\"xtwldm\":\"00045\",\"tid\":\"200723173549840\",\"pay_type\":\"AA\",\"pay_fee\":0.00},\"card\":[{\"tid\":\"200723173549840\",\"card_no\":\"\"}]}";
+        String str = "null";
         try {
-            message = new Message("topic-order",
+            message = new Message("e-storedvalue-card-dispatch",
                     "TagA",
                    str.getBytes(RemotingHelper.DEFAULT_CHARSET));
         } catch (UnsupportedEncodingException e) {
@@ -147,4 +147,4 @@ public class MqController {
     }
 
 
-    }
+}

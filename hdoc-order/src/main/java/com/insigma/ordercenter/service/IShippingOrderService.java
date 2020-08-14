@@ -40,27 +40,24 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
 
     /**
      * 更改发货单地址
-     * @param shippingOrderId
      * @param editShippingOrderDTO
      * @return
      */
-    Boolean changeAddress(LoginUser loginUser,Long shippingOrderId, EditShippingOrderDTO editShippingOrderDTO);
+    Boolean changeAddress(LoginUser loginUser, EditShippingOrderDTO editShippingOrderDTO);
 
     /**
      * 更改发货单商品
-     * @param shippingOrderId
      * @param editParameters
      * @return
      */
-    Boolean changeProduct(LoginUser loginUser,Long shippingOrderId, EditShippingOrderProductDTO editParameters);
+    Boolean changeProduct(LoginUser loginUser,EditShippingOrderProductDTO editParameters);
 
     /**
      * 更改发货单仓库
-     * @param shippingOrderId
      * @param editShippingOrderDTO
      * @return
      */
-    Boolean changeWarehouse(LoginUser loginUser,Long shippingOrderId, EditShippingOrderDTO editShippingOrderDTO);
+    Boolean changeWarehouse(LoginUser loginUser,EditShippingOrderDTO editShippingOrderDTO);
 
     /**
      * 取消发货单

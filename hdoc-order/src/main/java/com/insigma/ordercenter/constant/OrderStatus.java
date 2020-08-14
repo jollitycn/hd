@@ -20,15 +20,15 @@ public interface OrderStatus {
 
     /**
      * 发货单状态
-     * 发货单状态（0：待出库，1：待取货，2：已发货，3：冻结，4：取消 5：拒收 6:异常 7：已完成）
+     * 发货单状态（0：待出库，1：待取货，2：已发货，3：冻结，4：取消 5：拒收 6:异常 7：已完成 8:补货状态）
      */
-    int SHIPPING_ORDER_ZERO = 0;
-    int SHIPPING_ORDER_ONE = 1;
-    int SHIPPING_ORDER_TWO = 2;
-    int SHIPPING_ORDER_THREE = 3;
-    int SHIPPING_ORDER_FOUR =4;
-    int SHIPPING_ORDER_FIVE =5;
-    int SHIPPING_ORDER_SIX =6;
-    int SHIPPING_ORDER_SEVEN =7;
-
+    int CHECKOUT = 0;
+    int PICKUP = 1;
+    int SENDOUT = 2;
+    int FREEZE = 3;
+    int CALLOFF =4;
+    int REJECTION =5;
+    int ABNORMAL =6;
+    int DONE =7;
+    int REPLENISH=8;
 }
