@@ -29,10 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -121,7 +118,7 @@ public class ShippingStrategyQuartz {
             for (Order order : orderList) {
                 for (Shop shop : shopList) {
                     if(order.getShopId().equals(shop.getShopId())) {
-                        if (shop.getStrategyStatus() == 1) {
+                        if (shop.getStrategyStatus() == 0) {
                             order.setIsHandOrder(1);
                             order.setOrderStatus(1);
                             order.setErrorReason("该店铺策略为手动审单策略");
@@ -129,11 +126,19 @@ public class ShippingStrategyQuartz {
                         }
                         List<OrderDetail> detailList = detailService.list(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, order.getOrderId()));
                         for (OrderDetail orderDetail : detailList) {
+                            //判断商品库存
                             ShopProduct shopProduct = shopProductService.getOne(Wrappers.<ShopProduct>lambdaQuery().eq(ShopProduct::getShopId, order.getShopId()).eq(ShopProduct::getProductId, orderDetail.getProductId()));
                             if (null != shopProduct && shopProduct.getNumber() <= 0) {
                                 order.setIsHandOrder(1);
-                                order.setOrderStatus(1);
+                                order.setOrderStatus(OrderStatus.HANDLE);
                                 order.setErrorReason("该店铺的商品库存已不足，设置为手动审单");
+                                orderService.updateById(order);
+                            }
+                            //判断发货比例
+                            if (shopProduct.getRatio() == null ) {
+                                order.setIsHandOrder(1);
+                                order.setOrderStatus(OrderStatus.HANDLE);
+                                order.setErrorReason("符合该商品的发货比例，设置为手动审单");
                                 orderService.updateById(order);
                             }
                         }
@@ -149,8 +154,8 @@ public class ShippingStrategyQuartz {
                     }
                 }
             }
-            List<Order> newOrderList = orderService.list(Wrappers.<Order>lambdaQuery()
-                    .le(Order::getCreateTime, LocalDateTime.now().minusMinutes(autoAuditTime)).eq(Order::getOrderStatus,2));
+            List<Order> newOrderList = orderService.list(Wrappers.<Order>lambdaQuery().le(Order::getCreateTime, LocalDateTime.now()
+                    .minusMinutes(autoAuditTime)).eq(Order::getOrderStatus,2).eq(Order::getIsHandOrder,0));
             //商品分类策略
             Strategy productTypeStrategy = strategyList.get(OrderStrategyConstant.PRODUCT_TYPE_DIVIDE - 1);
             //需要拆单的商品分类
@@ -219,6 +224,8 @@ public class ShippingStrategyQuartz {
                             }  else {
                                 //通过订单详情id找到之前已经生成相应商品分类的发货单 然后将发货单绑定订单详情
                                 List<Long> shippingOrderId = shippingOrderService.getShippingOrderByProductType(orderDetail.getOrderDetailId());
+                                ShippingOrder shippingOrder = shippingOrderService.getById(shippingOrderId.get(0));
+                                shippingOrder.getWarehouseId();
                                 dso.setShippingOrderId(shippingOrderId.get(0));
                                 detailShippingService.save(dso);
                             }
@@ -229,36 +236,42 @@ public class ShippingStrategyQuartz {
                 }
                 //生成发货单给上游服务发送发货单状态消息
                 List<ShippingOrder> shippingOrderList = shippingOrderService.list(Wrappers.<ShippingOrder>lambdaQuery().eq(ShippingOrder::getOrderId, order.getOrderId()));
-                List<AddShippingOrderDTO> dtoList = new ArrayList<>();
                 for (ShippingOrder shippingOrder : shippingOrderList) {
                     AddShippingOrderDTO dto = new AddShippingOrderDTO();
                     BeanUtils.copyProperties(shippingOrder,dto);
+                    List<DetailShippingOrderRelation> list = detailShippingService.list(Wrappers.<DetailShippingOrderRelation>lambdaQuery().eq(DetailShippingOrderRelation::getShippingOrderId, shippingOrder.getShippingOrderId()));
+                    List<OrderDetail> detailList = new ArrayList<>();
+                    for (DetailShippingOrderRelation dso : list) {
+                        OrderDetail orderDetail = orderDetailService.getById(dso.getOrderDetailId());
+                        Product product = productService.getById(orderDetail.getProductId());
+                        orderDetail.setProductSku(product.getProductNo());
+                        detailList.add(orderDetail);
+                    }
+                    dto.setOrderDetails(detailList);
                     dto.setOrderStatus(order.getOrderStatus());
                     dto.setOriginOrderNo(order.getOriginOrderNo());
                     dto.setOrderNo(order.getOrderNo());
                     dto.setOrderId(order.getOrderId());
-                    dtoList.add(dto);
+                    Message message = null;
+                    try {
+                        message = new Message("split_order",
+                                "store_card",
+                                JsonUtil.beanToJson(dto).getBytes(RemotingHelper.DEFAULT_CHARSET));
+                        mqProducer.send(message , new SendCallback() {
+                            @Override
+                            public void onSuccess(SendResult sendResult) {
+                                System.out.println("消息发送成功");
+                            }
+                            @Override
+                            public void onException(Throwable e) {
+                                e.printStackTrace();
+                                System.out.println("消息发送异常");
+                            }
+                        });
+                    } catch (MQClientException | RemotingException | InterruptedException | UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                 }
-                Message message = null;
-                try {
-                    message = new Message("split_order",
-                            "store_card",
-                            JsonUtil.beanToJson(dtoList).getBytes(RemotingHelper.DEFAULT_CHARSET));
-                    mqProducer.send(message , new SendCallback() {
-                        @Override
-                        public void onSuccess(SendResult sendResult) {
-                            System.out.println("消息发送成功");
-                        }
-                        @Override
-                        public void onException(Throwable e) {
-                            e.printStackTrace();
-                            System.out.println("消息发送异常");
-                        }
-                    });
-                } catch (MQClientException | RemotingException | InterruptedException | UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
             }
         }
     }
@@ -303,4 +316,6 @@ public class ShippingStrategyQuartz {
         }
         return null;
     }
+
+
 }
