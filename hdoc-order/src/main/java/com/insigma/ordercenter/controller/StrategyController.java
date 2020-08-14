@@ -4,6 +4,7 @@ package com.insigma.ordercenter.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Lists;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
@@ -187,22 +188,36 @@ public class StrategyController extends BaseController {
     public Result removeBlackByType(@RequestBody @Valid UpdateBlackDeleteDTO req) {
         if (req.getBlackType() == 1) {
             // 账号黑名单
-            AccountBlacklistStrategy accountBlacklistStrategy = new AccountBlacklistStrategy();
-            accountBlacklistStrategy.setAccountBlacklistStrategyId(req.getId());
-            accountBlacklistStrategy.setIsDeleted(1);
-            accountBlacklistStrategyService.updateById(accountBlacklistStrategy);
+//            AccountBlacklistStrategy accountBlacklistStrategy = new AccountBlacklistStrategy();
+//            accountBlacklistStrategy.setAccountBlacklistStrategyId(req.getId());
+//            accountBlacklistStrategy.setIsDeleted(1);
+
+            UpdateWrapper<AccountBlacklistStrategy> update = new UpdateWrapper<>();
+            update.eq(AccountBlacklistStrategy.ACCOUNT_BLACKLIST_STRATEGY_ID,req.getId());
+            this.accountBlacklistStrategyService.remove(update);
+           // accountBlacklistStrategyService.updateById(accountBlacklistStrategy);
         } else if(req.getBlackType() == 2){
             // 手机号黑名单
-            PhoneBlacklistStrategy phoneBlacklistStrategy = new PhoneBlacklistStrategy();
-            phoneBlacklistStrategy.setPhoneBlacklistStrategyId(req.getId());
-            phoneBlacklistStrategy.setIsDeleted(1);
-            phoneBlacklistStrategyService.updateById(phoneBlacklistStrategy);
+
+            UpdateWrapper<PhoneBlacklistStrategy> update = new UpdateWrapper<>();
+            update.eq(PhoneBlacklistStrategy.PHONE_BLACKLIST_STRATEGY_ID,req.getId());
+            this.phoneBlacklistStrategyService.remove(update);
+
+//            PhoneBlacklistStrategy phoneBlacklistStrategy = new PhoneBlacklistStrategy();
+//            phoneBlacklistStrategy.setPhoneBlacklistStrategyId(req.getId());
+//            phoneBlacklistStrategy.setIsDeleted(1);
+//            phoneBlacklistStrategyService.updateById(phoneBlacklistStrategy);
         } else {
             // 区域黑名单
-            RegionBlacklistStrategy regionBlacklistStrategy = new RegionBlacklistStrategy();
-            regionBlacklistStrategy.setRegionBlacklistStrategyId(req.getId());
-            regionBlacklistStrategy.setIsDeleted(1);
-            regionBlacklistStrategyService.updateById(regionBlacklistStrategy);
+
+            UpdateWrapper<RegionBlacklistStrategy> update = new UpdateWrapper<>();
+            update.eq(RegionBlacklistStrategy.REGION_BLACKLIST_STRATEGY_ID,req.getId());
+            this.regionBlacklistStrategyService.remove(update);
+
+//            RegionBlacklistStrategy regionBlacklistStrategy = new RegionBlacklistStrategy();
+//            regionBlacklistStrategy.setRegionBlacklistStrategyId(req.getId());
+//            regionBlacklistStrategy.setIsDeleted(1);
+//            regionBlacklistStrategyService.updateById(regionBlacklistStrategy);
         }
         return Result.success();
     }
