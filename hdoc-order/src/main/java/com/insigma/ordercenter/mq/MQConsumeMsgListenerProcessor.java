@@ -95,6 +95,7 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
             }
             originalOrder.setOrderNo(orderService.generateOrderNo(shopId));
             originalOrder.setRemark(hdOrder.getBuyer_message());
+            originalOrder.setBuyerNickname(hdOrder.getBuyer_nick());
             originalOrder.setShopId(shopId);
             if (StringUtils.isNotBlank(hdOrder.getR_state()) && StringUtils.isNotBlank(hdOrder.getR_city())
                     && StringUtils.isNotBlank(hdOrder.getR_district())) {

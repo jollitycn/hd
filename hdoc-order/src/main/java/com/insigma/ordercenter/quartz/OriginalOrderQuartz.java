@@ -74,7 +74,7 @@ public class OriginalOrderQuartz {
         log.info("================= 原始订单处理任务 START ==============");
         log.info("================= 预约商品规则 ===========");
         //获取最近2小时原始订单表
-        List<OriginalOrder> list = originalOrderService.list(Wrappers.<OriginalOrder>lambdaQuery()
+        List<OriginalOrder> list = originalOrderService.list(Wrappers.< OriginalOrder>lambdaQuery()
                 .eq(OriginalOrder::getOrderStatus, 0).ge(OriginalOrder::getOrderTime,LocalDateTime.now().minusDays(5)));
         //生成订单实例
         for (OriginalOrder originalOrder : list) {
@@ -86,6 +86,7 @@ public class OriginalOrderQuartz {
             order.setMobilePhone(originalOrder.getMobilePhone());
             order.setOrderNo(originalOrder.getOrderNo());
             order.setOrderStatus(OrderStatus.UNCHECKED);
+            order.setIsHandOrder(0);
             order.setShopId(originalOrder.getShopId());
             order.setTotalPrice(originalOrder.getTotalPrice());
             order.setOriginOrderNo(originalOrder.getOriginalOrderNo());
@@ -146,7 +147,8 @@ public class OriginalOrderQuartz {
                         OriginalOrder o2 = list.get(j);
                         String mobile1 = o1.getMobilePhone();
                         String mobile2 = o2.getMobilePhone();
-                        if (mobile1.equals(mobile2) && o1.getAddress().equals(o2.getAddress())) {
+                        if (mobile1.equals(mobile2) && o1.getProvince().equals(o2.getProvince()) && o1.getCity().equals(o2.getCity())
+                                && o1.getDistrict().equals(o2.getDistrict()) && o1.getAddress().equals(o2.getAddress())) {
                             log.info("id1 = {} ,id2 = {}",o1.getOriginalOrderId(),o2.getOriginalOrderId());
                             if(combinedMap.containsKey(mobile1)) {
                                 Set<Long> idSet = combinedMap.get(mobile1);
@@ -184,6 +186,7 @@ public class OriginalOrderQuartz {
                     order.setMobilePhone(originalOrder.getMobilePhone());
                     order.setOrderNo(originalOrder.getOrderNo());
                     order.setOrderTime(originalOrder.getOrderTime());
+                    order.setIsHandOrder(0);
                     order.setOrderStatus(OrderStatus.UNCHECKED);
                     totalPrice = totalPrice.add(originalOrder.getTotalPrice());
                     order.setShopId(originalOrder.getShopId());
@@ -244,7 +247,7 @@ public class OriginalOrderQuartz {
         }
         //手机号拦截
         Strategy mobileStrategy = strategyList.get(OrderStrategyConstant.BLACKLIST_MOBILE - 1);
-        if (mobileStrategy.getIsStop() == 1) {
+        if (mobileStrategy.getIsStop() == 0) {
             log.info("================= 手机号订单拦截  START =============");
             processService.mobileStrategy(batchNo);
             log.info("================= 手机号订单拦截  END =============");

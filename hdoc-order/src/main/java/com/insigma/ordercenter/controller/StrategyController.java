@@ -15,10 +15,12 @@ import com.insigma.ordercenter.entity.vo.GiftListVO;
 import com.insigma.ordercenter.entity.vo.GiftStrategyInfoVO;
 import com.insigma.ordercenter.entity.vo.StrategyVO;
 import com.insigma.ordercenter.service.*;
+import com.insigma.ordercenter.utils.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +75,9 @@ public class StrategyController extends BaseController {
     @Resource
     private IGiftService iGiftService;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
     @GetMapping("/listStrategy")
     @ApiOperation("获取所有策略")
     public Result<List<StrategyVO>> listStrategy() {
@@ -103,6 +108,8 @@ public class StrategyController extends BaseController {
         strategy.setStrategyId(strategyId);
         strategy.setIsStop((select.getIsStop() + 1) % 2);
         strategyService.updateById(strategy);
+        List<Strategy> strategyList = strategyService.list();
+        redisUtil.set("strategyList",strategyList);
         return Result.success();
     }
 

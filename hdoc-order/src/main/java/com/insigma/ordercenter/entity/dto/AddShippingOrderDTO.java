@@ -2,6 +2,9 @@ package com.insigma.ordercenter.entity.dto;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.insigma.ordercenter.entity.OrderDetail;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -39,7 +42,8 @@ public class AddShippingOrderDTO {
     private Long createId;
 
     @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private String createTime;
 
     @ApiModelProperty(value = "是否删除（0：未删除，1：已删除）")
     private Integer isDeleted;

@@ -68,7 +68,7 @@
         <if test="orderDTO.splitOrder != null">
             AND o.split_order = #{orderDTO.splitOrder}
         </if>
-        group  by o.create_time desc
+        order  by o.create_time desc
     </select>
 
     <resultMap id="orderDetailMap" type="com.insigma.ordercenter.entity.vo.OrderDetailExamineVO">
