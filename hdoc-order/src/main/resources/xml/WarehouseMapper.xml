@@ -36,7 +36,7 @@
         <if test=" map.warehouseName != null and map.warehouseName != ''">
             AND wh.warehouse_name = #{map.warehouseName}
         </if>
-        <if test=" map.warehouseNo != null and map.warehouseNo > 0">
+        <if test=" map.warehouseNo != null">
             AND wh.warehouse_no = #{map.warehouseNo}
         </if>
     </select>

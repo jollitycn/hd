@@ -1,6 +1,8 @@
 package com.insigma.ordercenter.entity.vo;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -35,4 +37,7 @@ public class WarehouseExamineVO extends BaseVO{
     @ApiModelProperty(value = "仓库名称")
     private String warehouseName;
 
+    @ApiModelProperty(value = "承运商id")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long expressCompanyId;
 }

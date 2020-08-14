@@ -14,6 +14,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author liuhao
@@ -48,7 +49,7 @@ public class OrderDTO {
     private Long orderId;
 
     @ApiModelProperty(value = "订单状态（0：待审核，1：待出库，2：打单出库，3：已完成，4：冻结）")
-    private String orderStatus;
+    private List<Integer> orderStatus;
 
     @ApiModelProperty(value = "订单编号")
     private String orderNo;
@@ -106,5 +107,8 @@ public class OrderDTO {
 
     @ApiModelProperty(value = "登录用户ID")
     private Long userId;
+
+    @ApiModelProperty(value = "店铺名称")
+    private String shopName;
 
 }

@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
+
 /**
  * @author AH
  * @program hdoc-parent
@@ -39,7 +41,7 @@ public class OrderOperationLogVO extends BaseVO{
     @JsonFormat(pattern = Constant.Sys.LOCALDATETIME_FORMATTER, timezone = "GMT+8")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private Long createTime;
+    private LocalDateTime createTime;
 
     @ApiModelProperty(value = "内容")
     private String content;

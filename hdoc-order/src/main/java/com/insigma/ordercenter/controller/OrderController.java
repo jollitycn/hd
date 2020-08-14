@@ -87,10 +87,10 @@ public class OrderController extends BaseController{
         return Result.success(orderDetailExamineVOS);
     }
 
-    @GetMapping("/queryExpressCompanyList/{warehouseId}")
+    @GetMapping("/queryExpressCompanyList/{expressCompanyId}")
     @ApiOperation(value = "审单查询商品，以及仓库列表信息",response = ExpressCompanyVO.class )
-    public Result<?> queryExpressCompanyList(@Valid @PathVariable Long warehouseId) {
-        List<ExpressCompanyVO> expressCompanyVOS = orderService.queryExpressCompany(warehouseId);
+    public Result<?> queryExpressCompanyList(@Valid @PathVariable Long expressCompanyId) {
+        List<ExpressCompanyVO> expressCompanyVOS = orderService.queryExpressCompany(expressCompanyId);
         return Result.success(expressCompanyVOS);
     }
 

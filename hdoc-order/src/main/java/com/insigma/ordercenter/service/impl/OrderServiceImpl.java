@@ -15,6 +15,7 @@ import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.mapper.OrderMapper;
 import com.insigma.ordercenter.service.*;
 import com.insigma.ordercenter.utils.DateUtils;
+import net.sf.cglib.core.Local;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -97,6 +99,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 order.setMobilePhone(sendReceiveInfoVO.getMobilePhone());
                 order.setConsumerName(sendReceiveInfoVO.getConsumerName());
                 order.setOrderStatus(sendReceiveInfoVO.getOrderStatus());
+                order.setOrderTime(LocalDateTime.now().toString());
                 orderService.save(order);
 
                 //新增订单收发件人信息
@@ -209,8 +212,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     @Override
-    public List<ExpressCompanyVO> queryExpressCompany(Long warehouseId) {
-        return baseMapper.queryExpressCompany(warehouseId);
+    public List<ExpressCompanyVO> queryExpressCompany(Long expressCompanyId) {
+        return baseMapper.queryExpressCompany(expressCompanyId);
     }
 
     public void sendMQMessage(Long orderId,List<AddShippingOrderDTO> shippingOrderDTOS){
@@ -260,6 +263,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO,LoginUser loginUser) {
+
+        final double[] totalPrice = {0};
         if (addShippingOrderResultDTO.getAddShippingOrderDTOS().size() == 0) {
             return Result.error(CodeMsg.DATA_INSERT_ERROR);
         }
@@ -283,7 +288,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             detailShippingOrderRelation.setOrderDetailId(addShippingOrderDTO.getOrderDetailId());
             detailShippingOrderRelation.setShippingOrderId(shippingOrder.getShippingOrderId());
             detailShippingOrderRelationService.save(detailShippingOrderRelation);
-
+            //计算商品详细的应收合计
+            OrderDetail orderDetail = orderDetailService.getById(addShippingOrderDTO.getOrderDetailId());
+            totalPrice[0] = totalPrice[0] +Integer.valueOf(orderDetail.getProductPrice().toString());
             // 审单时，发送队列消息到卡夫卡，给储值卡系统消费(* 给原始订单Id,发货单信息)
             Message message = null;
             Object obj = JSONArray.toJSON(addShippingOrderDTO);
@@ -318,9 +325,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             Order order=new Order();
             order.setReviewTime(LocalDateTime.now());
             order.setOrderId(addShippingOrderDTO.getOrderId());
+            order.setTotalPrice(new BigDecimal(totalPrice[0]));
             orderService.updateById(order);
         });
         return Result.success();
+
     }
 
 
@@ -351,6 +360,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 orderStatuDTO.setOrderId(updateOrderStatuDTO.getOrderId());
                 orderStatuDTO.setOrderStatus(OrderStatus.OUT_OF_WAREHOUSE);
                 orderOperationLog.setContent("修改订单：状态"+OrderStatus.OUT_OF_WAREHOUSE);
+                orderOperationLog.setOrderId(updateOrderStatuDTO.getOrderId());
                 orderService.updateOrderStatu(orderStatuDTO,loginUser);
                 return;
             }
@@ -364,6 +374,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 //订单状态 6 为冻结
                 orderStatuDTO.setOrderStatus(OrderStatus.FROZEN);
                 orderOperationLog.setContent("修改订单：状态"+OrderStatus.FROZEN);
+                orderOperationLog.setOrderId(updateOrderStatuDTO.getOrderId());
                 orderService.updateOrderStatu(orderStatuDTO,loginUser);
                 return;
             }
@@ -388,6 +399,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             //订单状态 9 为取消
             orderStatuDTO.setOrderStatus(OrderStatus.CANCELED);
             orderOperationLog.setContent("修改订单：状态"+OrderStatus.CANCELED);
+            orderOperationLog.setOrderId(updateOrderStatuDTO.getOrderId());
             orderService.updateOrderStatu(orderStatuDTO,loginUser);
         }
 
@@ -397,22 +409,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             //订单状态 8 为已完成
             orderStatuDTO.setOrderStatus(OrderStatus.FINISHED);
             orderOperationLog.setContent("修改订单：状态"+OrderStatus.FINISHED);
+            orderOperationLog.setOrderId(updateOrderStatuDTO.getOrderId());
             orderService.updateOrderStatu(orderStatuDTO,loginUser);
         }
 
         //第二步：发送MQ消息
         this.sendMQMessage(updateOrderStatuDTO.getOrderId(),shippingOrderCancelVOS);
 
-        //第三步：添加订单状态修改日志
-        //添加修改订单日志
-        orderOperationLog.setOrderId(updateOrderStatuDTO.getOrderId());
-        orderOperationLogService.addOrderOperationLog(orderOperationLog,loginUser);
         return true;
     }
 
 
     @Override
-    public Result   cancelOrder(Long orderId,LoginUser loginUser) {
+    public Result cancelOrder(Long orderId,LoginUser loginUser) {
         //添加修改订单日志
         OrderOperationLog orderOperationLog=new OrderOperationLog();
         AtomicReference<Boolean> flag = new AtomicReference<>(true);
@@ -426,6 +435,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                     updateOrderStatuDTO.setOrderId(orderId);
                     updateOrderStatuDTO.setOrderStatus(OrderStatus.FROZEN);
                     orderOperationLog.setContent("修改订单：状态"+OrderStatus.FROZEN);
+                    orderOperationLog.setOrderId(orderId);
                     orderService.updateOrderStatu(updateOrderStatuDTO,loginUser);
                     flag.set(false);
                 } else {
@@ -438,12 +448,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             updateOrderStatuDTO.setOrderId(orderId);
             updateOrderStatuDTO.setOrderStatus(OrderStatus.CANCELED);
             orderOperationLog.setContent("修改订单：状态"+OrderStatus.CANCELED);
+            orderOperationLog.setOrderId(orderId);
             orderService.updateOrderStatu(updateOrderStatuDTO,loginUser);
         }
         // TODO 发货单那边提供接口，返回是否能取消成功，否则订单状态为冻结
-        orderOperationLog.setOrderId(orderId);
-        orderOperationLogService.addOrderOperationLog(orderOperationLog,loginUser);
-
         return Result.success();
     }
 

@@ -26,7 +26,6 @@ public class OrderOperationLogServiceImpl extends ServiceImpl<OrderOperationLogM
 
     @Override
     public Result addOrderOperationLog(OrderOperationLog orderOperationLog, LoginUser loginUser) {
-        orderOperationLog.setContent("新增订单");
         orderOperationLog.setCreateId(loginUser.getUserId());
         orderOperationLog.setCreateTime(LocalDateTime.now());
         int insert = baseMapper.insert(orderOperationLog);

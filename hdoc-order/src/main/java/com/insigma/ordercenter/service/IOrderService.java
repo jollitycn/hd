@@ -31,7 +31,7 @@ public interface IOrderService extends IService<Order> {
 
     List<OrderDetailExamineVO> queryOrderDetailList(Long orderId);
 
-    List<ExpressCompanyVO> queryExpressCompany(Long warehouseId);
+    List<ExpressCompanyVO> queryExpressCompany(Long expressCompanyId);
 
     Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO, LoginUser loginUser);
 

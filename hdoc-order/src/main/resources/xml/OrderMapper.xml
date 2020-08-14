@@ -38,8 +38,14 @@
         <if test="orderDTO.orderId != null and orderDTO.orderId != ''">
             AND o.order_id = #{orderDTO.orderId}
         </if>
-        <if test="orderDTO.orderStatus != null and orderDTO.orderStatus != ''">
-            AND o.order_status in #{orderDTO.orderStatus}
+        <if test="orderDTO.shopName != null and orderDTO.shopName != ''">
+            AND sp.shop_name LIKE CONCAT('%', #{orderDTO.shopName}, '%')
+        </if>
+        <if test="orderDTO.orderStatus != null and  orderDTO.orderStatus.size > 0">
+            AND o.order_status in
+            <foreach collection="orderDTO.orderStatus" item="orderStatu" index="index" open="(" close=")" separator=",">
+                #{orderStatu}
+            </foreach>
         </if>
         <if test="orderDTO.orderNo != null and orderDTO.orderNo != ''">
             AND o.order_no = #{orderDTO.orderNo}
@@ -93,6 +99,7 @@
         <result column="region_id" property="regionId"/>
         <result column="warehouse_no" property="warehouseNo"/>
         <result column="warehouse_name" property="warehouseName"/>
+        <result column="express_company_id" property="expressCompanyId"/>
     </resultMap>
 
     <!--根据订单查询，订单明细和仓库列表-->
@@ -124,13 +131,14 @@
             w.address,
             w.region_id,
             w.warehouse_no,
-            w.warehouse_name
+            w.warehouse_name,
+            w.express_company_id
         FROM
             t_product p
             LEFT JOIN t_warehouse_product_relation pr ON p.product_id = pr.product_id
             LEFT JOIN t_warehouse w ON pr.warehouse_id = w.warehouse_id
         WHERE
-            p.product_id =#{productId}
+            p.product_id = #{productId}
     </select>
 
     <!--根据仓库关联出对应的物流信息-->
@@ -140,10 +148,9 @@
             ec.company_no,
             ec.express_company_id
         FROM
-            t_express_warehouse_relation wr
-            LEFT JOIN t_express_company ec ON wr.express_company_id = ec.express_company_id
+            t_express_company ec
         WHERE
-            wr.warehouse_id = #{warehouseId}
+            ec.express_company_id = #{expressCompanyId}
     </select>
 
     <!--根据订单Id查询发货单列表信息-->
