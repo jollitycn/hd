@@ -60,6 +60,8 @@ public class ProductDetailVO extends BaseVO {
     @ApiModelProperty(value = "商品描述")
     private String description;
 
+    @ApiModelProperty(value = "所属货主id")
+    private String orderSourceId;
 
     @ApiModelProperty(value = "所属货主")
     private String orderSourceName;

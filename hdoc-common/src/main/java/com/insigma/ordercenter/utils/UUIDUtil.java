@@ -1,5 +1,9 @@
 package com.insigma.ordercenter.utils;
 
+
+import cn.hutool.core.util.RandomUtil;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -13,7 +17,18 @@ public class UUIDUtil {
         return uuid;
     }
 
-    public static void main(String[] args) {
-        System.out.println(getUUID());
+    public static String getSerializeNo(String code) {
+        String timestamp = DateUtils.formatLocalDateTimeToString(LocalDateTime.now(), DateUtils.TIME_PATTERN_MILLISECOND);
+        String randomNum = String.valueOf(RandomUtil.randomInt(999));
+
+        if (randomNum.length() == 1) {
+            randomNum = "00" + randomNum;
+        } else if (randomNum.length() == 2) {
+            randomNum = "0" + randomNum;
+        }
+        String serialNo = code + timestamp + randomNum;
+        return serialNo;
     }
+
+
 }
