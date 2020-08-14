@@ -2,6 +2,7 @@ package com.insigma.ordercenter.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.insigma.ordercenter.entity.OrderSource;
 import com.insigma.ordercenter.entity.Warehouse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.insigma.ordercenter.entity.dto.WarehouseDTO;
@@ -39,4 +40,11 @@ public interface WarehouseMapper extends BaseMapper<Warehouse> {
 
     void removeProduct(@Param("warehouseId") String warehouseId,@Param("productId")  String productId);
 
+//    OrderSource checkDuplById (@Param("warehouse") Warehouse warehouse );
+
+//    OrderSource checkDupl (@Param("warehouse") Warehouse warehouse );
+
+    List<Warehouse> checkDuplWarehouseName (@Param("map") Warehouse warehouse );
+
+    List<Warehouse> checkDuplWarehouseNo (@Param("map") Warehouse warehouse );
 }

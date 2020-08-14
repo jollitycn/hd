@@ -57,13 +57,15 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     @Transactional
-    public Result<?> addWarehouse(WarehouseDTO wareHouseDTO, LoginUser redisUser) {
+    public Result<?> addWarehouse(WarehouseDTO wareHouseDTO, LoginUser redisUser) throws MyException {
         //新增仓库
         Warehouse warehouse = new Warehouse();
         BeanUtils.copyProperties(wareHouseDTO,warehouse);
+        checkDupl(warehouse);
         warehouse.setCreateId(redisUser.getUserId());
         warehouse.setCreateTime(LocalDateTime.now());
         boolean res = this.save(warehouse);
+
         //新增仓库地区
         Integer[] regionIds = wareHouseDTO.getRegionIds();
         for (Integer regionId : regionIds) {
@@ -87,12 +89,21 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         return Result.error(CodeMsg.DATA_INSERT_ERROR);
     }
 
+    private void checkDupl (Warehouse warehouse ) throws MyException {
+        List<Warehouse>  os = null;
+            os =  baseMapper.checkDuplWarehouseNo(warehouse);
+            if(os !=null && os.size()>0) throw new MyException(CodeMsg.WARE_HOUSE_NO_DUPL);
+            os =  baseMapper.checkDuplWarehouseName(warehouse);
+            if(os !=null && os.size()>0)  throw new MyException(CodeMsg.WARE_HOUSE_NAME_DUPL);
+    }
+
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public Result<?> updateWarehouse(WarehouseDTO warehouseDTO, LoginUser loginUser) {
+    public Result<?> updateWarehouse(WarehouseDTO warehouseDTO, LoginUser loginUser) throws MyException {
         //修改仓库信息
         Warehouse warehouse = new Warehouse();
         BeanUtils.copyProperties(warehouseDTO,warehouse);
+        checkDupl(warehouse);
         warehouse.setModifyId(loginUser.getUserId());
         warehouse.setModifyTime(LocalDateTime.now());
         this.updateById(warehouse);
@@ -252,12 +263,12 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     public void removeProduct(String warehouseId, String productId,Long userId) {
-        WarehouseProductRelation wpr = productRelationService.getWarehouseProductRelation(warehouseId,productId);
+        List<WarehouseProductRelation> wpr = productRelationService.getWarehouseProductRelation(warehouseId,productId);
         this.baseMapper.removeProduct(warehouseId, productId);
         updateLog(userId,wpr);
     }
 
-    private void updateLog( Long userId, WarehouseProductRelation... whps) {
+    private void updateLog( Long userId, List<WarehouseProductRelation> whps) {
         List<StockOperationLog> sols = new ArrayList<>();
         for (WarehouseProductRelation whp:
                 whps) {

@@ -9,6 +9,7 @@ import com.insigma.ordercenter.entity.dto.WarehouseDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductDTO;
 import com.insigma.ordercenter.entity.dto.WarehouseProductPageQuery;
 import com.insigma.ordercenter.entity.vo.WarehouseVo;
+import com.insigma.ordercenter.service.impl.MyException;
 
 import java.io.Serializable;
 
@@ -22,9 +23,9 @@ import java.io.Serializable;
  */
 public interface IWarehouseService extends IService<Warehouse> {
 
-    Result<?> addWarehouse(WarehouseDTO wareHouseDTO, LoginUser redisUser);
+    Result<?> addWarehouse(WarehouseDTO wareHouseDTO, LoginUser redisUser) throws MyException;
 
-    Result<?> updateWarehouse(WarehouseDTO warehouseDTO, LoginUser loginUser);
+    Result<?> updateWarehouse(WarehouseDTO warehouseDTO, LoginUser loginUser) throws MyException;
 
     Result<?> addProduct(WarehouseProductDTO req,Long userId);
 

@@ -85,11 +85,11 @@ public class WarehouseProductRelationServiceImpl extends ServiceImpl<WarehousePr
     }
 
     @Override
-    public WarehouseProductRelation getWarehouseProductRelation(String warehouseId, String productId) {
+    public List<WarehouseProductRelation> getWarehouseProductRelation(String warehouseId, String productId) {
         QueryWrapper<WarehouseProductRelation> wrapper = new QueryWrapper<WarehouseProductRelation>();
         wrapper.eq(WarehouseProductRelation.WAREHOUSE_ID,warehouseId);
         wrapper.eq(WarehouseProductRelation.PRODUCT_ID,productId);
-        return baseMapper.selectOne(wrapper);
+        return baseMapper.selectList(wrapper);
     }
 
 

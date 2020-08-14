@@ -17,6 +17,7 @@ import com.insigma.ordercenter.service.IWarehouseManagerService;
 import com.insigma.ordercenter.service.IWarehouseRegionService;
 import com.insigma.ordercenter.service.IWarehouseService;
 import com.insigma.ordercenter.service.IWarehouseTypeService;
+import com.insigma.ordercenter.service.impl.MyException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -62,7 +63,11 @@ public class WarehouseController extends BaseController {
         if (StringUtils.isBlank(wareHouseDTO.getWarehouseName())) {
             return Result.error(CodeMsg.LACK_OF_PARAM);
         }
-        return warehouseService.addWarehouse(wareHouseDTO,redisUser());
+        try {
+            return warehouseService.addWarehouse(wareHouseDTO,redisUser());
+        } catch (MyException e) {
+            return Result.error(e.getCodeMsg());
+        }
     }
 
     @PostMapping
@@ -71,7 +76,11 @@ public class WarehouseController extends BaseController {
         if (null == warehouseDTO.getWarehouseId()) {
             return Result.error(CodeMsg.LACK_OF_WHID);
         }
-        return warehouseService.updateWarehouse(warehouseDTO,redisUser());
+        try {
+            return warehouseService.updateWarehouse(warehouseDTO,redisUser());
+        } catch (MyException e) {
+            return Result.error(e.getCodeMsg());
+        }
     }
 
     @GetMapping

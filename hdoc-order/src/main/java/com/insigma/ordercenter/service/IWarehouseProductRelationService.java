@@ -21,7 +21,7 @@ public interface IWarehouseProductRelationService extends IService<WarehouseProd
 
     List<ProductStockInfoVO> getProductStockInfo(Long productId);
 
-    WarehouseProductRelation getWarehouseProductRelation(String warehouseId, String productId);
+    List<WarehouseProductRelation>  getWarehouseProductRelation(String warehouseId, String productId);
     /**
      * 删除商品库存
      * @param warehouseProductRelationId

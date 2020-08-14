@@ -1,7 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.insigma.ordercenter.mapper.WarehouseMapper">
-
+    <select id="checkDuplWarehouseNo" resultType="com.insigma.ordercenter.entity.Warehouse">
+        SELECT
+        wh.warehouse_id,
+        wh.province,
+        wh.city,
+        wh.district,
+        wh.address,
+        wh.region_id,
+        wh.latitude,
+        wh.longitude,
+        wh.warehouse_no,
+        wh.warehouse_name,
+        wh.create_id,
+        wh.create_time,
+        wh.manager_name,
+        wh.modify_id,
+        wh.modify_time,
+        wh.is_deleted,
+        wh.remark,
+        wh.mobile_phone,
+        wh.order_source_id,
+        wh.express_company_id,
+        os.source_name as orderSourceName,
+        ec.company_name as expressCompanyName
+        FROM
+        t_warehouse wh
+        LEFT JOIN t_order_source os
+        on wh.order_source_id = os.order_source_id
+        LEFT JOIN t_express_company ec
+        on wh.express_company_id = ec.express_company_id
+        where 1= 1
+        <if test=" map.warehouseId != null and map.warehouseId != ''">
+            AND wh.warehouse_id = #{map.warehouseId}
+        </if>
+        <if test=" map.warehouseNo != null and map.warehouseNo != ''">
+            AND wh.warehouse_no = #{map.warehouseNo}
+        </if>
+    </select>
+    <select id="checkDuplWarehouseName" resultType="com.insigma.ordercenter.entity.Warehouse">
+        SELECT
+        wh.warehouse_id,
+        wh.province,
+        wh.city,
+        wh.district,
+        wh.address,
+        wh.region_id,
+        wh.latitude,
+        wh.longitude,
+        wh.warehouse_no,
+        wh.warehouse_name,
+        wh.create_id,
+        wh.create_time,
+        wh.manager_name,
+        wh.modify_id,
+        wh.modify_time,
+        wh.is_deleted,
+        wh.remark,
+        wh.mobile_phone,
+        wh.order_source_id,
+        wh.express_company_id,
+        os.source_name as orderSourceName,
+        ec.company_name as expressCompanyName
+        FROM
+        t_warehouse wh
+        LEFT JOIN t_order_source os
+        on wh.order_source_id = os.order_source_id
+        LEFT JOIN t_express_company ec
+        on wh.express_company_id = ec.express_company_id
+        where 1= 1
+        <if test=" map.warehouseId != null and map.warehouseId != ''">
+            AND wh.warehouse_id = #{map.warehouseId}
+        </if>
+        <if test=" map.warehouseName != null and map.warehouseName != ''">
+            AND wh.warehouse_name = #{map.warehouseName}
+        </if>
+    </select>
     <select id="page" resultType="com.insigma.ordercenter.entity.vo.WarehouseVo">
         SELECT
            wh.warehouse_id,
@@ -36,15 +111,15 @@
         <if test=" map.warehouseName != null and map.warehouseName != ''">
             AND wh.warehouse_name = #{map.warehouseName}
         </if>
-        <if test=" map.warehouseNo != null and map.warehouseNo > 0">
+        <if test=" map.warehouseNo != null and map.warehouseNo  != ''">
             AND wh.warehouse_no = #{map.warehouseNo}
         </if>
     </select>
 
     <select id="list" resultType="com.insigma.ordercenter.entity.dto.WarehouseProductPage">
-       SELECT  wpr.* , p.*,vpc.data_value productTypeName FROM t_warehouse w
-left join `t_warehouse_product_relation` wpr
-on w.warehouse_id = wpr.warehouse_id
+       SELECT  wpr.* , p.*,vpc.data_value productTypeName FROM
+ `t_warehouse_product_relation` wpr left join t_warehouse w
+on wpr.warehouse_id = w.warehouse_id
 left join t_product p on p.product_id = wpr.product_id
         left join v_product_category vpc on p.product_type = vpc.dictionary_id
         where w.warehouse_id =  #{request.warehouseId}
