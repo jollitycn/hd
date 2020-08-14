@@ -56,7 +56,7 @@ public class ShippingOrderController extends BaseController{
 
     @PostMapping("/increaseCargo")
     @ApiOperation("新建补货单")
-    public Result increaseCargo(EditShippingOrderDTO editShippingOrderDTO) {
+    public Result increaseCargo(@RequestBody EditShippingOrderDTO editShippingOrderDTO) {
 
         LoginUser loginUser=redisUser();
 

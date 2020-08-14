@@ -23,8 +23,8 @@ public class ShippingOrderDetailVO {
     @ApiModelProperty(value = "原始订单号")
     private String orderNo;
 
-    @ApiModelProperty(value = "来源 1手动订单 0卡兑换系统")
-    private Integer isHandOrder;
+    @ApiModelProperty(value = "来源 （店铺名称）")
+    private String source;
 
     @ApiModelProperty(value = "拆单人")
     private String createName;

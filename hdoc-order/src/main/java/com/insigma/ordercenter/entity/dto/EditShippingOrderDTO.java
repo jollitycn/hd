@@ -47,6 +47,6 @@ public class EditShippingOrderDTO {
     @ApiModelProperty(value = "更改原因")
     private String changeReason;
 
-    @ApiModelProperty(value = "商品id列表")
-    private List<Long> productList;
+    @ApiModelProperty(value = "补货单添加商品列表")
+    private List<ShippingProductAddDTO> productList;
 }

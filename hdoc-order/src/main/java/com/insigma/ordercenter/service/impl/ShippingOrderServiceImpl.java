@@ -20,8 +20,8 @@ import com.insigma.ordercenter.service.IShippingOrderService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -93,15 +93,18 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
         shippingOrder.setStatus(Constant.SYS_EIGHT);
 
         //增加补货商品
-        List<Long> productList = new ArrayList<>();
-        for (Long productId:productList) {
+        List<ShippingProductAddDTO> productList = editShippingOrderDTO.getProductList();
+        for (ShippingProductAddDTO shippingProduct:productList) {
+            Long productId=shippingProduct.getProductId();
             Product product=productMapper.selectById(productId);
             OrderDetail orderDetail=new OrderDetail();
             orderDetail.setOrderId(shippingOrder.getOrderId());
             orderDetail.setProductId(productId);
             BeanUtil.copyProperties(product,orderDetail);
-            orderDetail.setAmount(product.getUnitQuantity());
-            orderDetail.setTotalPrice(product.getProductPrice());
+            Integer amount=shippingProduct.getAmount();
+            orderDetail.setAmount(amount);
+            //小计为 数量乘以单价
+            orderDetail.setTotalPrice(product.getProductPrice().multiply(new BigDecimal(amount)));
             orderDetail.setIsSupplement(Constant.SYS_ONE);
             orderDetailMapper.insert(orderDetail);
         }
