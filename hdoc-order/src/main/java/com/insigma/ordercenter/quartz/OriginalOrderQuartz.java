@@ -182,6 +182,7 @@ public class OriginalOrderQuartz {
                     order.setConsumerName(originalOrder.getConsumerName());
                     order.setCreateTime(LocalDateTime.now());
                     order.setIsPeriod(0);
+                    order.setIsCombined(1);
                     order.setBatchNo(batchNo);
                     order.setMobilePhone(originalOrder.getMobilePhone());
                     order.setOrderNo(originalOrder.getOrderNo());

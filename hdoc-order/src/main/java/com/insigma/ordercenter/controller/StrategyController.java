@@ -15,13 +15,16 @@ import com.insigma.ordercenter.entity.vo.GiftListVO;
 import com.insigma.ordercenter.entity.vo.GiftStrategyInfoVO;
 import com.insigma.ordercenter.entity.vo.StrategyVO;
 import com.insigma.ordercenter.service.*;
+import com.insigma.ordercenter.utils.JsonUtil;
 import com.insigma.ordercenter.utils.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -395,6 +398,17 @@ public class StrategyController extends BaseController {
             return Result.success();
         }
         throw new JSONException(CodeMsg.DATA_DELETE_ERROR.getMessage());
+    }
+
+    @Scheduled(fixedDelay = 5*1000L)
+    public void refreshCache() {
+        Object redisStrategy = redisUtil.get("strategyList");
+        List<Strategy> strategyList = JsonUtil.jsonToList(JsonUtil.beanToJson(redisStrategy),Strategy.class);
+        if (CollectionUtils.isEmpty(strategyList)) {
+            log.warn("策略缓存已丢失，正在重新获取...");
+            List<Strategy> list = strategyService.list();
+            redisUtil.set("strategyList",list);
+        }
     }
 
 }
