@@ -18,7 +18,7 @@
             po.rule,
             po.total_count,
             po.next_send_time,
-            s.shop_name
+            s.platform_name
         FROM
             t_period_order po
             LEFT JOIN t_shop s ON po.shop_id = s.shop_id
@@ -27,11 +27,14 @@
         <if test="periodOrderDTO.periodOrderNo != null and periodOrderDTO.periodOrderNo != ''">
             AND po.period_order_no = #{periodOrderDTO.periodOrderNo}
         </if>
+        <if test="periodOrderDTO.platformName != null and periodOrderDTO.platformName != ''">
+            AND s.platform_name LIKE CONCAT('%', #{periodOrderDTO.platformName}, '%')
+        </if>
         <if test="periodOrderDTO.periodOrderType != null">
             AND po.period_order_type = #{periodOrderDTO.periodOrderType}
         </if>
-        <if test="periodOrderDTO.shopId != null and periodOrderDTO.shopId != ''">
-            AND po.shopId = #{periodOrderDTO.shopId}
+        <if test="periodOrderDTO.orderStatus != null">
+            AND po.order_status = #{periodOrderDTO.orderStatus}
         </if>
     </select>
 

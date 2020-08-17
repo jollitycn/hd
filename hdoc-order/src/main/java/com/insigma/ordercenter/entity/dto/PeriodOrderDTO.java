@@ -49,7 +49,7 @@ public class PeriodOrderDTO {
     @ApiModelProperty(value = "订单状态（0：待审核，1：待出库，2：打单出库，3：已完成，4：冻结）")
     private Integer orderStatus;
 
-    @ApiModelProperty(value = "店铺ID")
-    private Long shopId;
+    @ApiModelProperty(value = "店铺名称")
+    private Long platformName;
 
 }

@@ -13,9 +13,9 @@
         sp.shop_name,
         o.create_time,
         o.review_time,
-        ( SELECT MIN( tso.send_time ) FROM t_shipping_order tso WHERE tso.shipping_order_id = so.shipping_order_id ) send_time,
-        so.receive_name,
-        so.mobile_phone,
+        ( SELECT MIN( tso.send_time ) FROM t_shipping_order tso WHERE tso.order_id = o.order_id ) send_time,
+        sr.receive_name,
+        sr.mobile_phone,
         o.error_reason,
         o.is_combined,
         o.is_hand_order,
@@ -23,15 +23,14 @@
         sr.location_city,
         sr.province,
         sr.receive_remark,
-        sr.receive_name as sendReceiveName,
-        sr.mobile_phone as receiveMobilePhone,
+        sr.receive_name AS sendReceiveName,
+        sr.mobile_phone AS receiveMobilePhone,
         o.origin_order_no,
         o.order_time
         FROM
         t_order o
         LEFT JOIN t_shop sp ON o.shop_id = sp.shop_id
-        left join t_user_shop_relation usr on usr.shop_id=sp.shop_id
-        LEFT JOIN t_shipping_order so ON o.order_id = so.order_id
+        LEFT JOIN t_user_shop_relation usr ON usr.shop_id = sp.shop_id
         LEFT JOIN t_order_send_receive sr ON o.order_id = sr.order_id
         WHERE
         1 =1 and usr.user_id=#{orderDTO.userId}
@@ -50,9 +49,6 @@
         <if test="orderDTO.orderNo != null and orderDTO.orderNo != ''">
             AND o.order_no = #{orderDTO.orderNo}
         </if>
-        <if test="orderDTO.shippingOrderId != null">
-            AND so.shipping_order_id = #{orderDTO.shippingOrderId}
-        </if>
         <if test="orderDTO.reviewTimeStart != null">
             AND o.review_time &gt;= #{orderDTO.reviewTimeStart} and o.review_time &lt;= #{orderDTO.reviewTimeEnd}
         </if>
@@ -63,10 +59,10 @@
             AND o.send_time &gt;= #{orderDTO.sendTimeStart} and o.send_time &lt;= #{orderDTO.sendTimeEnd}
         </if>
         <if test="orderDTO.receiveName != null">
-            AND so.receive_name = #{orderDTO.receiveName}
+            AND sr.receive_name = #{orderDTO.receiveName}
         </if>
         <if test="orderDTO.mobilePhone != null">
-            AND so.mobile_phone = #{orderDTO.mobilePhone}
+            AND sr.mobile_phone = #{orderDTO.mobilePhone}
         </if>
         <if test="orderDTO.isCombined != null">
             AND o.is_combined = #{orderDTO.isCombined}

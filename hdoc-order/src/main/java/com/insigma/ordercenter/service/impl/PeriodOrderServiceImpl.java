@@ -65,6 +65,8 @@ public class PeriodOrderServiceImpl extends ServiceImpl<PeriodOrderMapper, Perio
         periodOrder.setIsStop(periodStatuDTO.getIsStop());
         if(periodOrder.getIsStop() == 1){
             periodOrder.setOrderStatus(Constant.SYS_ONE);
+        }else{
+            periodOrder.setOrderStatus(Constant.SYS_ZERO);
         }
         int i = baseMapper.updateById(periodOrder);
         if(i>0){
