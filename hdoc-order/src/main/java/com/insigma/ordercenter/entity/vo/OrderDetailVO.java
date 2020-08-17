@@ -1,7 +1,5 @@
 package com.insigma.ordercenter.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
@@ -33,6 +31,9 @@ public class OrderDetailVO extends BaseVO{
     @ApiModelProperty(value = "商品ID")
     @JsonSerialize(using = ToStringSerializer.class)
     private Long productId;
+
+    @ApiModelProperty(value = "商品编码")
+    private String productNo;
 
     @ApiModelProperty(value = "商品sku")
     private String productSku;

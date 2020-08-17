@@ -6,6 +6,7 @@
       SELECT
         od.order_detail_id,
         od.order_id,
+        p.product_no,
         od.product_id,
         od.product_sku,
         od.product_name,

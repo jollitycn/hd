@@ -104,7 +104,7 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * 发货单物流下单
      * @return
      */
-    boolean createLogisticsJob();
+    boolean createLogisticsJob() throws Exception;
 
     /**
      * 保存补货单

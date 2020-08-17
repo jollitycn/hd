@@ -25,15 +25,24 @@
         LEFT JOIN t_express_company c ON a.express_company_id=c.express_company_id
         LEFT JOIN sys_user d ON a.create_id=d.user_id
         LEFT JOIN t_order e ON a.order_id=e.order_id
-        WHERE 1=1
+        WHERE a.is_deleted=0
         <if test="shippingOrderDTO.shippingNo !=null and shippingOrderDTO.shippingNo !=''">
             AND a.shipping_order_no=#{shippingOrderDTO.shippingNo}
         </if>
         <if test="shippingOrderDTO.expressNo !=null and shippingOrderDTO.expressNo !=''">
-            AND a.express_no=#{shippingOrderDTO.shippingNo}
+            AND a.express_no=#{shippingOrderDTO.expressNo}
         </if>
         <if test="shippingOrderDTO.status !=null and shippingOrderDTO.status !=''">
             AND a.`status` IN(${shippingOrderDTO.status})
+        </if>
+        <if test="shippingOrderDTO.startTime !=null and shippingOrderDTO.endTime !=null">
+            AND DATE_FORMAT(a.create_time,'%Y-%m-%d') BETWEEN #{shippingOrderDTO.startTime}  AND #{shippingOrderDTO.endTime}
+        </if>
+        <if test="shippingOrderDTO.expressCompanyId !=null ">
+            AND a.express_company_id=#{shippingOrderDTO.expressCompanyId}
+        </if>
+        <if test="shippingOrderDTO.warehouseId !=null ">
+            AND a.warehouse_id=#{shippingOrderDTO.warehouseId}
         </if>
     </select>
 

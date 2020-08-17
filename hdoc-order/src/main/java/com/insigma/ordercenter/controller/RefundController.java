@@ -4,6 +4,7 @@ package com.insigma.ordercenter.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.dto.AddRefundDTO;
 import com.insigma.ordercenter.entity.dto.RefundDTO;
 import com.insigma.ordercenter.entity.vo.RefundDetailVO;
@@ -51,9 +52,11 @@ public class RefundController extends BaseController {
 
     @PostMapping("/add")
     @ApiOperation(value = "新增退货单")
-    public Result add(AddRefundDTO addRefundDTO) {
+    public Result add(@RequestBody AddRefundDTO addRefundDTO) {
 
-        boolean result = refundService.addRefund(addRefundDTO);
+        LoginUser loginUser=redisUser();
+
+        boolean result = refundService.addRefund(loginUser,addRefundDTO);
 
         if (result) {
             return Result.success();

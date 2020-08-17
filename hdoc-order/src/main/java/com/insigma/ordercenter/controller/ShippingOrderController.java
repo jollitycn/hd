@@ -192,8 +192,9 @@ public class ShippingOrderController extends BaseController{
      * 创建物流快递单 定时任务调用
      * @return
      */
+    @ApiOperation("物流下单-仅供测试使用")
     @GetMapping("/createLogisticsJob")
-    public Result createLogisticsJob() {
+    public Result createLogisticsJob() throws Exception{
 
         log.info("发货单定时物流下单接口调度成功");
 

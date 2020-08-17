@@ -28,6 +28,10 @@ public class RefundDTO {
     @Max(value = 100L, message = "查询数量超出限制")
     protected Integer pageSize;
 
+    @ApiModelProperty(value = "订单编号")
+    private String orderNo;
 
+    @ApiModelProperty(value = "退货单号")
+    private String refundNo;
 
 }

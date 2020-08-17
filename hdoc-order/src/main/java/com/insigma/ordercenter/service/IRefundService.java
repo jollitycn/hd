@@ -1,8 +1,9 @@
 package com.insigma.ordercenter.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.insigma.ordercenter.entity.Refund;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.LoginUser;
+import com.insigma.ordercenter.entity.Refund;
 import com.insigma.ordercenter.entity.dto.AddRefundDTO;
 import com.insigma.ordercenter.entity.dto.RefundDTO;
 import com.insigma.ordercenter.entity.vo.RefundDetailVO;
@@ -37,7 +38,7 @@ public interface IRefundService extends IService<Refund> {
      * @param addRefundDTO
      * @return
      */
-    boolean addRefund(AddRefundDTO addRefundDTO);
+    boolean addRefund(LoginUser loginUser, AddRefundDTO addRefundDTO);
 
     /**
      * 退货单入库

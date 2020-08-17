@@ -58,15 +58,15 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         //处理查询参数
         String productName = productListDTO.getProductName();
         if (StrUtil.isNotEmpty(productName)) {
-            productName = StringUtil.addPercent(productListDTO.getProductName());
+            productName = StringUtil.addPercent(productName);
         }
         String productSku = productListDTO.getProductSku();
         if (StrUtil.isNotEmpty(productSku)) {
-            productSku = StringUtil.addPercent(productListDTO.getProductSku());
+            productSku = StringUtil.addPercent(productSku);
         }
         String productNo = productListDTO.getProductNo();
         if (StrUtil.isNotEmpty(productNo)) {
-            productNo = StringUtil.addPercent(productListDTO.getProductNo());
+            productNo = StringUtil.addPercent(productNo);
         }
 
 

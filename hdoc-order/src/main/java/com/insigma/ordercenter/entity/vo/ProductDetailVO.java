@@ -119,4 +119,7 @@ public class ProductDetailVO extends BaseVO {
 
     @ApiModelProperty(value = "预约发送次数")
     private Integer sendCount;
+
+    @ApiModelProperty(value = "订单详情id")
+    private Long orderDetailId;
 }
