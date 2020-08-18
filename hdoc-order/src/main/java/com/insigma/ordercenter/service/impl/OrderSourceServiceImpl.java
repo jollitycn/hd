@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -64,13 +65,13 @@ public class OrderSourceServiceImpl extends ServiceImpl<OrderSourceMapper, Order
     }
 
     private boolean checkDupl ( OrderSource orderSource ) {
-        OrderSource  os = null;
-        if(orderSource.getOrderSourceId()!=null){
-            os =  baseMapper.checkDuplById(orderSource);
-        }else{
-            os =  baseMapper.checkDupl(orderSource);
+        List<OrderSource> os = null;
+        if (orderSource.getOrderSourceId() != null) {
+            os = baseMapper.checkDuplById(orderSource);
+        } else {
+            os = baseMapper.checkDupl(orderSource);
         }
-        return os !=null;
+        return os != null && os.size() > 0;
     }
 
     @Override

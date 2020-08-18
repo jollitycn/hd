@@ -27,7 +27,7 @@ public interface IWarehouseService extends IService<Warehouse> {
 
     Result<?> updateWarehouse(WarehouseDTO warehouseDTO, LoginUser loginUser) throws MyException;
 
-    Result<?> addProduct(WarehouseProductDTO req,Long userId);
+    Result<?> addProduct(WarehouseProductDTO req,Long userId) throws MyException;
 
     Result<?> modifyStock(WarehouseProductRelation whp, LoginUser redisUser);
 

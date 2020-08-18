@@ -141,7 +141,11 @@ public class WarehouseController extends BaseController {
     @PostMapping("/product")
     @ApiOperation("仓库添加商品库存")
     public Result<?> addProduct(@RequestBody WarehouseProductDTO req) {
-        return warehouseService.addProduct(req,redisUser().getUserId());
+        try {
+            return warehouseService.addProduct(req,redisUser().getUserId());
+        } catch (MyException e) {
+            return Result.error(e.getCodeMsg());
+        }
     }
 
     @PostMapping("/stock")

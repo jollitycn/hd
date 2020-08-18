@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.insigma.ordercenter.entity.vo.OrderSourceListVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <p>
  * 订单来源定义表 Mapper 接口
@@ -20,7 +22,7 @@ public interface OrderSourceMapper extends BaseMapper<OrderSource> {
     IPage<OrderSourceListVO> getOrderSourceList(Page<OrderSourceListVO> page,
                                                @Param("orderSource") OrderSource orderSource);
 
-    OrderSource checkDuplById (  @Param("orderSource") OrderSource orderSource );
+    List<OrderSource> checkDuplById ( @Param("orderSource") OrderSource orderSource );
 
-    OrderSource checkDupl (  @Param("orderSource") OrderSource orderSource );
+    List<OrderSource> checkDupl (  @Param("orderSource") OrderSource orderSource );
 }

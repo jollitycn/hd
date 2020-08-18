@@ -137,11 +137,19 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         return Result.success(CodeMsg.SUCCESS);
     }
 
+    private void checkDuplProduct (Integer warehouseId,Long[] productIds ) throws MyException {
+        List<WarehouseProductRelation>  os = null;
+        os =  baseMapper.checkDuplProduct(warehouseId,productIds);
+        if(os !=null && os.size()>0) throw new MyException(CodeMsg.PRODUCT_NO_DUPL);
+    }
+
+
+
     @Override
-    public Result<?> addProduct(WarehouseProductDTO req,Long userId) {
+    public Result<?> addProduct(WarehouseProductDTO req,Long userId) throws MyException {
+        checkDuplProduct(req.getWarehouseId(),req.getProductIds());
         //遍历商品编号 ，新增仓库商品记录
         List<WarehouseProductRelation> whps = new ArrayList<WarehouseProductRelation>();
-
         List<StockOperationLog> sols = new ArrayList<StockOperationLog>();
         for (Long productId : req.getProductIds()) {
             WarehouseProductRelation whp = new WarehouseProductRelation();
