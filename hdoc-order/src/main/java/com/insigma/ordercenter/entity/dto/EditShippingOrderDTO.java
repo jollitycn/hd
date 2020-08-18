@@ -35,7 +35,13 @@ public class EditShippingOrderDTO {
     @ApiModelProperty(value = "联系方式")
     private String mobilePhone;
 
-    @ApiModelProperty(value = "收货人地址")
+    @ApiModelProperty(value = "收货人省")
+    private String province;
+
+    @ApiModelProperty(value = "收货人市")
+    private String locationCity;
+
+    @ApiModelProperty(value = "收货人详细地址")
     private String address;
 
     @ApiModelProperty(value = "仓库id")

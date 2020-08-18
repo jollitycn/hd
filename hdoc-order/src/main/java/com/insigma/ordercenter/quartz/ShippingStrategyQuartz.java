@@ -1,7 +1,9 @@
 package com.insigma.ordercenter.quartz;
 
 import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.constant.OrderStatus;
 import com.insigma.ordercenter.constant.OrderStrategyConstant;
 import com.insigma.ordercenter.entity.*;
@@ -29,10 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -100,13 +99,13 @@ public class ShippingStrategyQuartz {
 
 //    @Scheduled(fixedDelay = 2*60*1000)
     @GetMapping("shippingQuartz")
-    public void shippingOrderDeal() {
+    public Result<?> shippingOrderDeal() {
         //从缓存获取策略
         Object redisStrategy = redisUtil.get("strategyList");
         List<Strategy> strategyList = JsonUtil.jsonToList(JsonUtil.beanToJson(redisStrategy),Strategy.class);
         if (null == strategyList || strategyList.size() == 0) {
             log.error("未获取到策略，无法进行处理");
-            return ;
+            return Result.success() ;
         }
         Strategy strategy = strategyList.get(OrderStrategyConstant.AUTO_SHIPPING - 1);
         Strategy remarkStrategy = strategyList.get(OrderStrategyConstant.REMARK - 1);
@@ -121,7 +120,7 @@ public class ShippingStrategyQuartz {
             for (Order order : orderList) {
                 for (Shop shop : shopList) {
                     if(order.getShopId().equals(shop.getShopId())) {
-                        if (shop.getStrategyStatus() == 1) {
+                        if (shop.getStrategyStatus() == 0) {
                             order.setIsHandOrder(1);
                             order.setOrderStatus(1);
                             order.setErrorReason("该店铺策略为手动审单策略");
@@ -129,11 +128,23 @@ public class ShippingStrategyQuartz {
                         }
                         List<OrderDetail> detailList = detailService.list(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, order.getOrderId()));
                         for (OrderDetail orderDetail : detailList) {
+                            //判断商品库存
                             ShopProduct shopProduct = shopProductService.getOne(Wrappers.<ShopProduct>lambdaQuery().eq(ShopProduct::getShopId, order.getShopId()).eq(ShopProduct::getProductId, orderDetail.getProductId()));
-                            if (null != shopProduct && shopProduct.getNumber() <= 0) {
+
+                            if (null == shopProduct) {
                                 order.setIsHandOrder(1);
-                                order.setOrderStatus(1);
+                                order.setOrderStatus(OrderStatus.HANDLE);
+                                order.setErrorReason("该店铺的商品没有配置库存，设置为手动审单");
+                                orderService.updateById(order);
+                            } else if (shopProduct.getNumber() <= 0) {
+                                order.setIsHandOrder(1);
+                                order.setOrderStatus(OrderStatus.HANDLE);
                                 order.setErrorReason("该店铺的商品库存已不足，设置为手动审单");
+                                orderService.updateById(order);
+                            }else if (shopProduct.getRatio() == null||shopProduct.getRatio() == 0 ) {
+                                order.setIsHandOrder(1);
+                                order.setOrderStatus(OrderStatus.HANDLE);
+                                order.setErrorReason("不符合该商品的发货比例，设置为手动审单");
                                 orderService.updateById(order);
                             }
                         }
@@ -149,8 +160,8 @@ public class ShippingStrategyQuartz {
                     }
                 }
             }
-            List<Order> newOrderList = orderService.list(Wrappers.<Order>lambdaQuery()
-                    .le(Order::getCreateTime, LocalDateTime.now().minusMinutes(autoAuditTime)).eq(Order::getOrderStatus,2));
+            List<Order> newOrderList = orderService.list(Wrappers.<Order>lambdaQuery().le(Order::getCreateTime, LocalDateTime.now()
+                    .minusMinutes(autoAuditTime)).eq(Order::getOrderStatus,2).eq(Order::getIsHandOrder,0));
             //商品分类策略
             Strategy productTypeStrategy = strategyList.get(OrderStrategyConstant.PRODUCT_TYPE_DIVIDE - 1);
             //需要拆单的商品分类
@@ -188,14 +199,13 @@ public class ShippingStrategyQuartz {
                                 shippingOrder.setReceiveName(sendReceiveInfo.getReceiveName());
                                 shippingOrder.setReceiveRemark(sendReceiveInfo.getReceiveRemark());
                                 shippingOrder.setShippingOrderNo(orderService.getSerializeNo("FH"));
-                                Integer warehouseId = orderMatchWarehouse(order, orderDetail);
-                                if (null != warehouseId) {
-                                    shippingOrder.setWarehouseId(warehouseId);
-                                    Warehouse warehouse = warehouseService.getById(warehouseId);
+                                Warehouse warehouse = orderMatchWarehouse(order, orderDetail);
+                                if (null != warehouse) {
+                                    shippingOrder.setWarehouseId(warehouse.getWarehouseId());
                                     shippingOrder.setExpressCompanyId(warehouse.getExpressCompanyId());
                                 } else {
                                     order.setOrderStatus(OrderStatus.CHECK_ERROR);
-                                    order.setErrorReason("未匹配到仓库");
+                                    order.setErrorReason("商品:"+orderDetail.getProductName()+"未匹配到仓库");
                                     orderService.updateById(order);
                                     break;
                                 }
@@ -219,8 +229,48 @@ public class ShippingStrategyQuartz {
                             }  else {
                                 //通过订单详情id找到之前已经生成相应商品分类的发货单 然后将发货单绑定订单详情
                                 List<Long> shippingOrderId = shippingOrderService.getShippingOrderByProductType(orderDetail.getOrderDetailId());
-                                dso.setShippingOrderId(shippingOrderId.get(0));
-                                detailShippingService.save(dso);
+                                ShippingOrder shippingOrder = shippingOrderService.getById(shippingOrderId.get(0));
+                                //判断该发货单的仓库是否有该商品的库存 如果没有 则需要查找新仓库 新建发货单
+                                Integer warehouseId = shippingOrder.getWarehouseId();
+                                WarehouseProductRelation wp = wprService.getOne(Wrappers.<WarehouseProductRelation>lambdaQuery().eq(WarehouseProductRelation
+                                        ::getProductId, orderDetail.getProductId()).eq(WarehouseProductRelation::getWarehouseId, warehouseId));
+                                if (null == wp ||(wp.getQuantity() <= 0)) {
+                                    Warehouse newWarehouse = orderMatchWarehouse(order,orderDetail);
+                                    //查看仓库是否存在
+                                    if (null != newWarehouse) {
+                                        //判断订单中是否存在仓库和承运商一致的发货单
+                                        ShippingOrder so0 = shippingOrderService.getOne(
+                                                Wrappers.<ShippingOrder>lambdaQuery().eq(ShippingOrder::getOrderId,order.getOrderId())
+                                                .eq(ShippingOrder::getWarehouseId,newWarehouse.getWarehouseId())
+                                                .eq(ShippingOrder::getExpressCompanyId,newWarehouse.getExpressCompanyId())
+                                        );
+                                        //如果不存在则新建发货单
+                                        if (so0 == null) {
+                                            ShippingOrder so = new ShippingOrder();
+                                            BeanUtils.copyProperties(shippingOrder,so);
+                                            so.setExpressCompanyId(newWarehouse.getExpressCompanyId());
+                                            so.setWarehouseId(newWarehouse.getWarehouseId());
+                                            so.setShippingOrderNo(orderService.getSerializeNo("FH"));
+                                            so.setShippingOrderId(IdWorker.getId());
+                                            shippingOrderService.save(so);
+                                            dso.setShippingOrderId(so.getShippingOrderId());
+                                        } else {
+                                            //已存在发货单则将发货单绑定商品详情
+                                            dso.setShippingOrderId(so0.getShippingOrderId());
+                                        }
+                                        detailShippingService.save(dso);
+                                    } else {
+                                        //仓库不存在则审单异常 删掉该订单关联的发货单
+                                        shippingOrderService.remove(Wrappers.<ShippingOrder>lambdaQuery().eq(ShippingOrder::getOrderId,order.getOrderId()));
+                                        order.setOrderStatus(OrderStatus.CHECK_ERROR);
+                                        order.setErrorReason("匹配到的仓库不存在 无法生成发货单");
+                                        orderService.updateById(order);
+                                        break;
+                                    }
+                                } else {
+                                    dso.setShippingOrderId(shippingOrderId.get(0));
+                                    detailShippingService.save(dso);
+                                }
                             }
                         } else {
                             break;
@@ -229,42 +279,49 @@ public class ShippingStrategyQuartz {
                 }
                 //生成发货单给上游服务发送发货单状态消息
                 List<ShippingOrder> shippingOrderList = shippingOrderService.list(Wrappers.<ShippingOrder>lambdaQuery().eq(ShippingOrder::getOrderId, order.getOrderId()));
-                List<AddShippingOrderDTO> dtoList = new ArrayList<>();
                 for (ShippingOrder shippingOrder : shippingOrderList) {
                     AddShippingOrderDTO dto = new AddShippingOrderDTO();
                     BeanUtils.copyProperties(shippingOrder,dto);
+                    List<DetailShippingOrderRelation> list = detailShippingService.list(Wrappers.<DetailShippingOrderRelation>lambdaQuery().eq(DetailShippingOrderRelation::getShippingOrderId, shippingOrder.getShippingOrderId()));
+                    List<OrderDetail> detailList = new ArrayList<>();
+                    for (DetailShippingOrderRelation dso : list) {
+                        OrderDetail orderDetail = orderDetailService.getById(dso.getOrderDetailId());
+                        Product product = productService.getById(orderDetail.getProductId());
+                        orderDetail.setProductSku(product.getProductNo());
+                        detailList.add(orderDetail);
+                    }
+                    dto.setOrderDetails(detailList);
                     dto.setOrderStatus(order.getOrderStatus());
                     dto.setOriginOrderNo(order.getOriginOrderNo());
                     dto.setOrderNo(order.getOrderNo());
                     dto.setOrderId(order.getOrderId());
-                    dtoList.add(dto);
+                    Message message = null;
+                    try {
+                        message = new Message("split_order",
+                                "store_card",
+                                JsonUtil.beanToJson(dto).getBytes(RemotingHelper.DEFAULT_CHARSET));
+                        mqProducer.send(message , new SendCallback() {
+                            @Override
+                            public void onSuccess(SendResult sendResult) {
+                                System.out.println("消息发送成功");
+                            }
+                            @Override
+                            public void onException(Throwable e) {
+                                e.printStackTrace();
+                                System.out.println("消息发送异常");
+                            }
+                        });
+                    } catch (MQClientException | RemotingException | InterruptedException | UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                 }
-                Message message = null;
-                try {
-                    message = new Message("split_order",
-                            "store_card",
-                            JsonUtil.beanToJson(dtoList).getBytes(RemotingHelper.DEFAULT_CHARSET));
-                    mqProducer.send(message , new SendCallback() {
-                        @Override
-                        public void onSuccess(SendResult sendResult) {
-                            System.out.println("消息发送成功");
-                        }
-                        @Override
-                        public void onException(Throwable e) {
-                            e.printStackTrace();
-                            System.out.println("消息发送异常");
-                        }
-                    });
-                } catch (MQClientException | RemotingException | InterruptedException | UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
             }
         }
+        return Result.success() ;
     }
-    public Integer orderMatchWarehouse(Order order,OrderDetail detail) {
+    public Warehouse orderMatchWarehouse(Order order,OrderDetail detail) {
         //根据订单中的店铺去查找对应的仓库
-        List<ShopWarehouse> list = shopWarehouseService.list(Wrappers.<ShopWarehouse>lambdaQuery().eq(ShopWarehouse::getShopId, order.getShopId()));
+        List<ShopWarehouse> list = shopWarehouseService.list(Wrappers.<ShopWarehouse>lambdaQuery().eq(ShopWarehouse::getShopId,order.getShopId()));
         for (ShopWarehouse shopWarehouse : list) {
             //查询仓库对应的负责区域
             List<WarehouseRegion> regionList = warehouseRegionService.list(Wrappers.<WarehouseRegion>lambdaQuery().eq(WarehouseRegion::getWarehouseId, shopWarehouse.getWarehouseId()));
@@ -280,7 +337,7 @@ public class ShippingStrategyQuartz {
                     for (WarehouseProductRelation wp : wList) {
                         //判断如果仓库编号存在仓库有该商品的库存
                         if (wp.getWarehouseId().equals(shopWarehouse.getWarehouseId()) && wp.getQuantity() > 0) {
-                            return wp.getWarehouseId();
+                            return warehouseService.getById(wp.getWarehouseId());
                         }
                     }
                 }
@@ -303,4 +360,6 @@ public class ShippingStrategyQuartz {
         }
         return null;
     }
+
+
 }

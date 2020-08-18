@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.LoginUser;
-import com.insigma.ordercenter.entity.dto.OrderDTO;
-import com.insigma.ordercenter.entity.dto.UpdateOrderStatuDTO;
-import com.insigma.ordercenter.entity.dto.AddShippingOrderResultDTO;
-import com.insigma.ordercenter.entity.dto.UpdateShippingOrderStatuDTO;
+import com.insigma.ordercenter.entity.dto.*;
 import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.service.IOrderService;
 import io.swagger.annotations.Api;
@@ -87,10 +84,10 @@ public class OrderController extends BaseController{
         return Result.success(orderDetailExamineVOS);
     }
 
-    @GetMapping("/queryExpressCompanyList/{warehouseId}")
+    @GetMapping("/queryExpressCompanyList/{expressCompanyId}")
     @ApiOperation(value = "审单查询商品，以及仓库列表信息",response = ExpressCompanyVO.class )
-    public Result<?> queryExpressCompanyList(@Valid @PathVariable Long warehouseId) {
-        List<ExpressCompanyVO> expressCompanyVOS = orderService.queryExpressCompany(warehouseId);
+    public Result<?> queryExpressCompanyList(@Valid @PathVariable Long expressCompanyId) {
+        List<ExpressCompanyVO> expressCompanyVOS = orderService.queryExpressCompany(expressCompanyId);
         return Result.success(expressCompanyVOS);
     }
 
@@ -159,5 +156,10 @@ public class OrderController extends BaseController{
     }
 
 
-
+    @PostMapping("/checkProductAmount")
+    @ApiOperation(value = "审单点击分派时，判断库存和店铺发货比例")
+    public Result<?> checkProductAmount(@Valid @RequestBody CheckProductListDTO checkProductListDTO) {
+        Boolean aBoolean = orderService.checkProductAmount(checkProductListDTO);
+        return Result.success(aBoolean);
+    }
 }

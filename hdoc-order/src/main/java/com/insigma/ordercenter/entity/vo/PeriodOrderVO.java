@@ -65,6 +65,9 @@ public class PeriodOrderVO extends BaseVO{
     @ApiModelProperty(value = "发货规则")
     private String rule;
 
+    @ApiModelProperty(value = "订单来源")
+    private String platformName;
+
     @ApiModelProperty(value = "总次数")
     private Integer totalCount;
 

@@ -13,9 +13,9 @@
         sp.shop_name,
         o.create_time,
         o.review_time,
-        ( SELECT MIN( tso.send_time ) FROM t_shipping_order tso WHERE tso.shipping_order_id = so.shipping_order_id ) send_time,
-        so.receive_name,
-        so.mobile_phone,
+        ( SELECT MIN( tso.send_time ) FROM t_shipping_order tso WHERE tso.order_id = o.order_id ) send_time,
+        sr.receive_name,
+        sr.mobile_phone,
         o.error_reason,
         o.is_combined,
         o.is_hand_order,
@@ -23,29 +23,31 @@
         sr.location_city,
         sr.province,
         sr.receive_remark,
-        sr.receive_name as sendReceiveName,
-        sr.mobile_phone as receiveMobilePhone,
+        sr.receive_name AS sendReceiveName,
+        sr.mobile_phone AS receiveMobilePhone,
         o.origin_order_no,
         o.order_time
         FROM
         t_order o
         LEFT JOIN t_shop sp ON o.shop_id = sp.shop_id
-        left join t_user_shop_relation usr on usr.shop_id=sp.shop_id
-        LEFT JOIN t_shipping_order so ON o.order_id = so.order_id
+        LEFT JOIN t_user_shop_relation usr ON usr.shop_id = sp.shop_id
         LEFT JOIN t_order_send_receive sr ON o.order_id = sr.order_id
         WHERE
         1 =1 and usr.user_id=#{orderDTO.userId}
         <if test="orderDTO.orderId != null and orderDTO.orderId != ''">
             AND o.order_id = #{orderDTO.orderId}
         </if>
-        <if test="orderDTO.orderStatus != null and orderDTO.orderStatus != ''">
-            AND o.order_status in #{orderDTO.orderStatus}
+        <if test="orderDTO.shopName != null and orderDTO.shopName != ''">
+            AND sp.shop_name LIKE CONCAT('%', #{orderDTO.shopName}, '%')
+        </if>
+        <if test="orderDTO.orderStatus != null and  orderDTO.orderStatus.size > 0">
+            AND o.order_status in
+            <foreach collection="orderDTO.orderStatus" item="orderStatu" index="index" open="(" close=")" separator=",">
+                #{orderStatu}
+            </foreach>
         </if>
         <if test="orderDTO.orderNo != null and orderDTO.orderNo != ''">
             AND o.order_no = #{orderDTO.orderNo}
-        </if>
-        <if test="orderDTO.shippingOrderId != null">
-            AND so.shipping_order_id = #{orderDTO.shippingOrderId}
         </if>
         <if test="orderDTO.reviewTimeStart != null">
             AND o.review_time &gt;= #{orderDTO.reviewTimeStart} and o.review_time &lt;= #{orderDTO.reviewTimeEnd}
@@ -57,10 +59,10 @@
             AND o.send_time &gt;= #{orderDTO.sendTimeStart} and o.send_time &lt;= #{orderDTO.sendTimeEnd}
         </if>
         <if test="orderDTO.receiveName != null">
-            AND so.receive_name = #{orderDTO.receiveName}
+            AND sr.receive_name = #{orderDTO.receiveName}
         </if>
         <if test="orderDTO.mobilePhone != null">
-            AND so.mobile_phone = #{orderDTO.mobilePhone}
+            AND sr.mobile_phone = #{orderDTO.mobilePhone}
         </if>
         <if test="orderDTO.isCombined != null">
             AND o.is_combined = #{orderDTO.isCombined}
@@ -68,7 +70,7 @@
         <if test="orderDTO.splitOrder != null">
             AND o.split_order = #{orderDTO.splitOrder}
         </if>
-        group  by o.create_time desc
+        order  by o.create_time desc
     </select>
 
     <resultMap id="orderDetailMap" type="com.insigma.ordercenter.entity.vo.OrderDetailExamineVO">
@@ -93,6 +95,7 @@
         <result column="region_id" property="regionId"/>
         <result column="warehouse_no" property="warehouseNo"/>
         <result column="warehouse_name" property="warehouseName"/>
+        <result column="express_company_id" property="expressCompanyId"/>
     </resultMap>
 
     <!--根据订单查询，订单明细和仓库列表-->
@@ -124,13 +127,14 @@
             w.address,
             w.region_id,
             w.warehouse_no,
-            w.warehouse_name
+            w.warehouse_name,
+            w.express_company_id
         FROM
             t_product p
             LEFT JOIN t_warehouse_product_relation pr ON p.product_id = pr.product_id
             LEFT JOIN t_warehouse w ON pr.warehouse_id = w.warehouse_id
         WHERE
-            p.product_id =#{productId}
+            p.product_id = #{productId}
     </select>
 
     <!--根据仓库关联出对应的物流信息-->
@@ -140,10 +144,9 @@
             ec.company_no,
             ec.express_company_id
         FROM
-            t_express_warehouse_relation wr
-            LEFT JOIN t_express_company ec ON wr.express_company_id = ec.express_company_id
+            t_express_company ec
         WHERE
-            wr.warehouse_id = #{warehouseId}
+            ec.express_company_id = #{expressCompanyId}
     </select>
 
     <!--根据订单Id查询发货单列表信息-->

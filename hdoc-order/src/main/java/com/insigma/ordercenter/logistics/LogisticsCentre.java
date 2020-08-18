@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.logistics;
 
+import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
@@ -75,7 +76,9 @@ public class LogisticsCentre {
                 APIResponse apiresponse=QiaoAPIService.query(EspServiceCode.EXP_RECE_CREATE_ORDER,sfParam);
 
                 //格式化返回结果
-                OrderFilterResponse sfResult=(OrderFilterResponse)apiresponse.getApiResultData();
+                String resultStr=(String) apiresponse.getApiResultData();
+                OrderFilterResponse sfResult=JSONUtil.toBean(resultStr,OrderFilterResponse.class);
+
                 if(sfResult.isSuccess()){
                     //如果成功，返回顺丰订单号
                     return Result.success(sfResult.getMsgData().getWaybillNoInfoList().get(0).getWaybillNo());
@@ -84,7 +87,6 @@ public class LogisticsCentre {
                     return Result.error(CodeMsg.CREATE_LOGISTICS_ERROR,sfResult.getErrorMsg());
                 }
 
-//                break;
             case 2:
                 //转换参数
                 TwSoNotifyReq twSoNotifyReq=transformationBestParam(shippingOrderNo,commonProduct,commonConsignee,commonConsignor);
@@ -92,9 +94,17 @@ public class LogisticsCentre {
                 //执行百世下单接口
                 TwSoNotifyRsp executed= BestApi.twSoNotify(twSoNotifyReq);
 
-                //处理返回结果 TODO
+                System.out.println(executed);
 
-                break;
+                //TODO 调用一直失败
+                if(executed.isResult()){
+                    //如果成功，返回百世订单号
+                    return Result.success("333");
+                }else{
+                    //将发货单置为异常状态，并记录异常原因
+                    return Result.error(CodeMsg.CREATE_LOGISTICS_ERROR,executed.getErrorDescription());
+                }
+
             case 3:
                 //获取ZJS下单单号
                 String zjsOrder=ZjsApi.queryOrder();
@@ -114,8 +124,6 @@ public class LogisticsCentre {
                     return Result.error(CodeMsg.CREATE_LOGISTICS_ERROR,zjsReuslt.getReason());
                 }
 
-
-//                break;
             default:
 
 
@@ -334,11 +342,11 @@ public class LogisticsCentre {
         //收件人信息
         Receiver receiver = new Receiver();
         receiver.setName(commonConsignee.getReceiveName());
-        //TODO 收件人省市区
-        receiver.setProvince("江西省");
-        receiver.setCity("赣州市");
-        receiver.setDistrict("章贡区");
+        receiver.setProvince(commonConsignee.getProvince());
+        receiver.setCity(commonConsignee.getLocationCity());
+//        receiver.setDistrict("章贡区");
         receiver.setAddress(commonConsignee.getAddress());
+        receiver.setPhone(commonConsignee.getMobilePhone());
         req.setReceiver(receiver);
 
         //货物信息
@@ -346,14 +354,16 @@ public class LogisticsCentre {
         List<Item> items = Lists.newArrayList();
         List<ProductDetailVO>productDetailVOList= commonProduct.getProductList();
         for (ProductDetailVO productDetailVO:productDetailVOList) {
+            int i=1;
             Item item = new Item();
             item.setLineNo(productDetailVO.getProductId().intValue());
-            item.setItemSkuCode(productDetailVO.getProductSku());
+            item.setItemSkuCode("aa"+i);
             item.setItemName(productDetailVO.getProductName());
             item.setItemQuantity(productDetailVO.getUnitQuantity());
             items.add(item);
-            itemList.setItem(items);
+            i++;
         }
+        itemList.setItem(items);
         req.setItemList(itemList);
 
         return req;
@@ -372,20 +382,22 @@ public class LogisticsCentre {
                                                          CommonProductDTO commonProduct,
                                                          CommonConsigneeDTO commonConsignee ,
                                                          CommonConsignorDTO commonConsignor){
+        List<ProductDetailVO> productList=commonProduct.getProductList();
+
 
         ZjsRequestData zjsRequestData=new ZjsRequestData();
         zjsRequestData.setClientFlag("test");
         zjsRequestData.setOrderNo(shippingOrderNo);
         zjsRequestData.setBusType("1");
-        zjsRequestData.setGoodsName(commonProduct.getProductName());
-        zjsRequestData.setGoodsNum(commonProduct.getUnitQuantity().toString());
-        zjsRequestData.setGoodsWeight(commonProduct.getShipWeight().toString());
+        zjsRequestData.setGoodsName(productList.get(0).getProductName());
+        zjsRequestData.setGoodsNum(productList.get(0).getUnitQuantity().toString());
+        zjsRequestData.setGoodsWeight(productList.get(0).getShipWeight().toString());
         zjsRequestData.setSendName(commonConsignor.getReceiveName());
         zjsRequestData.setSendAddress(commonConsignor.getAddress());
         zjsRequestData.setSendMobile(commonConsignor.getMobilePhone());
         zjsRequestData.setReceiveName(commonConsignee.getReceiveName());
-        zjsRequestData.setReceivePro("广东省");
-        zjsRequestData.setReceiveCity("深圳市");
+        zjsRequestData.setReceivePro(commonConsignee.getProvince());
+        zjsRequestData.setReceiveCity(commonConsignee.getLocationCity());
         zjsRequestData.setReceiveDistrict("宝安区");
         zjsRequestData.setReceiveAddress(commonConsignee.getAddress());
         zjsRequestData.setReceiveMobile(commonConsignee.getMobilePhone());

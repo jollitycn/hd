@@ -34,7 +34,7 @@ public interface OrderMapper extends BaseMapper<Order> {
     IPage<OrderListVO> queryOrderListPage(Page<OrderListVO> page,
                                           @Param("orderDTO")OrderDTO orderDTO);
 
-    List<ExpressCompanyVO> queryExpressCompany(@Param("warehouseId")Long warehouseId);
+    List<ExpressCompanyVO> queryExpressCompany(@Param("expressCompanyId")Long expressCompanyId);
 
 
     List<OrderDetailExamineVO> queryOrderDetailList(@Param("orderId") Long orderId);

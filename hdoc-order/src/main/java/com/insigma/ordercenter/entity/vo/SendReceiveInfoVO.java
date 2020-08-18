@@ -145,6 +145,9 @@ public class SendReceiveInfoVO extends BaseVO{
     @ApiModelProperty(value = "邮政编码")
     private String postalCode;
 
+    @ApiModelProperty(value = "所在区县")
+    private String district;
+
     @ApiModelProperty(value = "订单商品列表")
     private List<OrderDetail> orderDetails;
 

@@ -88,19 +88,26 @@
     </select>
 
     <select id="getShippingOrderProductList" resultType="com.insigma.ordercenter.entity.vo.ShippingProductVO">
-        SELECT
-            a.order_id,
-            a.order_detail_id,
-            a.product_id,
-            a.product_sku,
-            a.product_name,
-            a.product_specs,
-            a.amount,
-            a.unit,
-            a.product_price
-        FROM
-            t_order_detail a
-        WHERE a.order_id=#{orderId}
+            SELECT
+                a.order_id,
+                a.order_detail_id,
+                a.product_id,
+                a.product_sku,
+                a.product_name,
+                a.product_specs,
+                a.amount,
+                a.unit,
+                a.product_price
+            FROM
+                t_order_detail a
+            WHERE a.order_detail_id IN (
+            SELECT
+                b.order_detail_id
+            FROM
+                t_detail_shipping_order_relation b
+            WHERE
+                b.shipping_order_id = #{shippingOrderId}
+            )
     </select>
 
 
@@ -119,7 +126,8 @@
         a.amount AS unitQuantity,
         a.total_price AS productPrice,
         a.is_gift,
-        c.ship_weight
+        c.ship_weight,
+        c.product_no
         FROM
             t_order_detail a
         LEFT JOIN t_product c ON a.product_id=c.product_id
@@ -130,7 +138,7 @@
                 FROM
                     t_shipping_order_operation b
                 WHERE
-                    b.shipping_order_id = 1286205644413874178
+                    b.shipping_order_id = #{shippingOrderId}
             )
     </select>
 </mapper>

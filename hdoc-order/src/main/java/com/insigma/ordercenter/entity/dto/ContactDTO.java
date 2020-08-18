@@ -18,7 +18,17 @@ public class ContactDTO {
     @ApiModelProperty(value = "联系方式")
     private String mobilePhone;
 
-    @ApiModelProperty(value = "地址")
+    @ApiModelProperty(value = "省")
+    private String province;
+
+    @ApiModelProperty(value = "市")
+    private String locationCity;
+
+    @ApiModelProperty(value = "区")
+    private String district;
+
+    @ApiModelProperty(value = "详细地址")
     private String address;
+
 
 }

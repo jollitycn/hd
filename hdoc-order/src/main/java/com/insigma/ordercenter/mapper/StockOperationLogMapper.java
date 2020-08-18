@@ -5,6 +5,7 @@ import com.insigma.ordercenter.entity.StockOperationLog;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.insigma.ordercenter.entity.dto.StockOperationLogPage;
 import com.insigma.ordercenter.entity.dto.StockOperationLogPageQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface StockOperationLogMapper extends BaseMapper<StockOperationLog> {
 
     List listStockLog(String warehouseId, String productId);
 
-    List<StockOperationLogPage> page(Page page, StockOperationLogPageQuery request);
+    List<StockOperationLogPage> page(Page page, @Param("request") StockOperationLogPageQuery request);
 }

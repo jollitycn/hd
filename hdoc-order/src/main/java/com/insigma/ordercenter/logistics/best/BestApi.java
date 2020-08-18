@@ -6,7 +6,6 @@ import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import com.insigma.ordercenter.logistics.best.sdk.Client;
 import com.insigma.ordercenter.logistics.best.sdk.getShippingOrderInfo.request.GetShippingOrderInfoReq;
-import com.insigma.ordercenter.logistics.best.sdk.getShippingOrderInfo.request.ShippingOrders;
 import com.insigma.ordercenter.logistics.best.sdk.getShippingOrderInfo.response.GetShippingOrderInfoRsp;
 import com.insigma.ordercenter.logistics.best.sdk.twCancelNotiry.request.TwCancelNotiryReq;
 import com.insigma.ordercenter.logistics.best.sdk.twCancelNotiry.response.TwCancelNotiryRsp;
@@ -176,28 +175,16 @@ public class BestApi {
         TwSoNotifyReq req = new TwSoNotifyReq();
         req.setOperationFlag("W");
         req.setCustomerCode("FXNN");
-        req.setOrderCode("TEST0002");
+        req.setOrderCode(twSoNotifyReq.getOrderCode());
         req.setWarehouseCode("QIMEN");
         req.setActionType("ADD");
         req.setOperationTypeCode("WDO");
 
-        Receiver receiver = new Receiver();
-        receiver.setName("pjc");
-        receiver.setProvince("江西省");
-        receiver.setCity("赣州市");
+        Receiver receiver = twSoNotifyReq.getReceiver();
         receiver.setDistrict("章贡区");
-        receiver.setAddress("长征第一渡");
         req.setReceiver(receiver);
 
-        ItemList itemList = new ItemList();
-        List<Item> items = Lists.newArrayList();
-        Item item = new Item();
-        item.setLineNo(1);
-        item.setItemSkuCode("WATER-01");
-        item.setItemName("恒大冰泉");
-        item.setItemQuantity(20);
-        items.add(item);
-        itemList.setItem(items);
+        ItemList itemList = twSoNotifyReq.getItemList();
         req.setItemList(itemList);
 
         return client.executed(req);

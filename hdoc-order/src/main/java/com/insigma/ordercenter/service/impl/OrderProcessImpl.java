@@ -3,9 +3,11 @@ package com.insigma.ordercenter.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.constant.OrderStatus;
 import com.insigma.ordercenter.entity.*;
 import com.insigma.ordercenter.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -169,8 +171,12 @@ public class OrderProcessImpl implements IOrderProcessService {
             for (PhoneBlacklistStrategy phoneBlack : phoneList) {
                 if (order.getShopId().equals(phoneBlack.getShopId()) && order.getMobilePhone().equals(phoneBlack.getPhone())) {
                     order.setIsHandOrder(1);
-                    order.setOrderStatus(1);
-                    order.setErrorReason(order.getErrorReason()==null?"":order.getErrorReason() + "  " + CodeMsg.STRATEGY_BLACK_PHONE.getMessage());
+                    order.setOrderStatus(OrderStatus.HANDLE);
+                    if (StringUtils.isBlank(order.getErrorReason()) ) {
+                        order.setErrorReason(CodeMsg.STRATEGY_BLACK_PHONE.getMessage() +":" +order.getMobilePhone());
+                    } else {
+                        order.setErrorReason(order.getErrorReason() +" " +CodeMsg.STRATEGY_BLACK_PHONE.getMessage() +":" +order.getMobilePhone());
+                    }
                     orderService.updateById(order);
                 }
             }
@@ -187,7 +193,11 @@ public class OrderProcessImpl implements IOrderProcessService {
             for (RegionBlacklistStrategy blackRegion : blackRegionList) {
                 if (order.getShopId().equals(blackRegion.getShopId()) && sendReceive.getProvince().equals(blackRegion.getProvince())
                         && sendReceive.getLocationCity().equals(blackRegion.getCity())) {
-                    order.setErrorReason(order.getErrorReason()==null?"":order.getErrorReason() + " " + CodeMsg.STRATEGY_BLACK_REGION.getMessage());
+                    if (null == order.getErrorReason() ||StringUtils.isBlank(order.getErrorReason()) ) {
+                        order.setErrorReason(CodeMsg.STRATEGY_BLACK_REGION.getMessage() +":" +blackRegion.getProvince() +blackRegion.getCity());
+                    } else {
+                        order.setErrorReason(order.getErrorReason() +" " +CodeMsg.STRATEGY_BLACK_REGION.getMessage() +":" +blackRegion.getProvince() +blackRegion.getCity());
+                    }
                     order.setIsHandOrder(1);
                     order.setOrderStatus(1);
                     orderService.updateById(order);

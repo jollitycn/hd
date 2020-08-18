@@ -30,7 +30,7 @@ public interface ProductMapper extends BaseMapper<Product> {
 
     ProductDetailVO getProductDetail(@Param("productId")Long productId);
 
-    List<ShippingProductVO> getShippingOrderProductList(@Param("orderId")Long orderId);
+    List<ShippingProductVO> getShippingOrderProductList(@Param("shippingOrderId")Long shippingOrderId);
 
     List<ProductDetailVO> getProductListByshippingOrderId(Long shippingOrderId);
 }

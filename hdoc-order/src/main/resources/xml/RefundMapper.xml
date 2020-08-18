@@ -11,6 +11,7 @@
             a.refund_type,
             a.source_type,
             a.create_time,
+            e.user_name AS createName,
             a.audit_status,
             a.audit_id,
             a.reason,
@@ -26,6 +27,14 @@
         LEFT JOIN t_order b ON a.order_id = b.order_id
         LEFT JOIN t_warehouse c ON a.warehouse_id = c.warehouse_id
         LEFT JOIN t_express_company d ON c.express_company_id=d.express_company_id
+        LEFT JOIN sys_user e ON e.user_id=a.create_id
+        WHERE  1=1
+        <if test="orderNo != null and orderNo != ''">
+            AND b.order_no  like #{orderNo}
+        </if>
+        <if test="refundNo != null and refundNo != ''">
+            AND a.refund_no like #{refundNo}
+        </if>
     </select>
 
     <select id="getRefundDetail" resultType="com.insigma.ordercenter.entity.vo.RefundDetailVO">

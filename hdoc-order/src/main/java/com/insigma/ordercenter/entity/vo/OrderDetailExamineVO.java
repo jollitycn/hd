@@ -46,6 +46,8 @@ public class OrderDetailExamineVO extends BaseVO{
     @ApiModelProperty(value = "数量")
     private Integer amount;
 
+
+
     @ApiModelProperty(value = "仓库列表")
     private List<WarehouseExamineVO> warehouseExamineVOS;
 

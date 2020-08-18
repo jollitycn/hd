@@ -34,7 +34,8 @@
             ri.order_reason,
             ri.location_city,
             ri.province,
-            ri.postal_code
+            ri.postal_code,
+            ri.district
         FROM
             t_order o
             LEFT JOIN t_order_send_receive ri ON o.order_id = ri.order_id

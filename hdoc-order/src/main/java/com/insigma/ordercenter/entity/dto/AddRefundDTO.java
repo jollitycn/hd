@@ -3,6 +3,8 @@ package com.insigma.ordercenter.entity.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @program: hdoc-parent
  * @description: 添加退货单请求参数封装类
@@ -15,8 +17,11 @@ public class AddRefundDTO {
     @ApiModelProperty(value = "订单号")
     private String orderNo;
 
-    @ApiModelProperty(value = "商品id")
-    private Long productId;
+    @ApiModelProperty(value = "发货单号")
+    private String shippingOrderNo;
+
+    @ApiModelProperty(value = "商品id集合")
+    private List<Long> productIds;
 
     @ApiModelProperty(value = "仓库id")
     private Long warehouseId;

@@ -58,7 +58,7 @@ public class MyJobConfig {
             @Value("${originalOrderJob.shardingTotalCount}") final int shardingTotalCount,
             @Value("${originalOrderJob.shardingItemParameters}") final String shardingItemParameters) {
 
-        return new SpringJobScheduler(new OriginalOrderJob(), regCenter, getLiteJobConfiguration(CreateLogisticsJob.class,
+        return new SpringJobScheduler(new OriginalOrderJob(), regCenter, getLiteJobConfiguration(OriginalOrderJob.class,
                 cron, shardingTotalCount, shardingItemParameters, "TEST！！！"));
     }
 
@@ -76,7 +76,7 @@ public class MyJobConfig {
             @Value("${shippingOrderJob.shardingTotalCount}") final int shardingTotalCount,
             @Value("${shippingOrderJob.shardingItemParameters}") final String shardingItemParameters) {
 
-        return new SpringJobScheduler(new OrderShippingJob(), regCenter, getLiteJobConfiguration(CreateLogisticsJob.class,
+        return new SpringJobScheduler(new OrderShippingJob(), regCenter, getLiteJobConfiguration(OrderShippingJob.class,
                 cron, shardingTotalCount, shardingItemParameters, "TEST！！！"));
     }
 

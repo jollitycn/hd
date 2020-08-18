@@ -10,7 +10,9 @@ import com.insigma.ordercenter.entity.dto.*;
 import com.insigma.ordercenter.entity.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.formula.functions.T;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -31,7 +33,7 @@ public interface IOrderService extends IService<Order> {
 
     List<OrderDetailExamineVO> queryOrderDetailList(Long orderId);
 
-    List<ExpressCompanyVO> queryExpressCompany(Long warehouseId);
+    List<ExpressCompanyVO> queryExpressCompany(Long expressCompanyId);
 
     Result addShippingOrder(AddShippingOrderResultDTO addShippingOrderResultDTO, LoginUser loginUser);
 
@@ -54,4 +56,6 @@ public interface IOrderService extends IService<Order> {
     List<?> queryExpressInfo(Long shippingOrderNo);
 
     Boolean shippingOrderStatuChange(UpdateShippingOrderStatuDTO updateOrderStatuDTO,LoginUser loginUser);
+
+    Boolean checkProductAmount(CheckProductListDTO checkProductListDTO);
 }

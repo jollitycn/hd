@@ -12,7 +12,7 @@ public interface Constant {
     int SYS_THREE = 3;
     int SYS_FOUR =4;
     int SYS_FIVE =5;
-    int SYS_SIX =5;
+    int SYS_SIX =6;
     int SYS_EIGHT =8;
     int SYS_NEGATIVE_ONE = -1;
 
