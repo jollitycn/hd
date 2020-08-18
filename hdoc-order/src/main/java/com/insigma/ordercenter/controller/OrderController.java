@@ -156,15 +156,10 @@ public class OrderController extends BaseController{
     }
 
 
-    @GetMapping("/checkProductAmount")
+    @PostMapping("/checkProductAmount")
     @ApiOperation(value = "审单点击分派时，判断库存和店铺发货比例")
     public Result<?> checkProductAmount(@Valid @RequestBody CheckProductListDTO checkProductListDTO) {
         Boolean aBoolean = orderService.checkProductAmount(checkProductListDTO);
-        if(aBoolean){
-            return Result.success();
-        }else{
-            return Result.error(CodeMsg.CHECK_PRODUCT_AMOUNT);
-        }
+        return Result.success(aBoolean);
     }
-
 }
