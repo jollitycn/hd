@@ -19,7 +19,7 @@
         FROM
             sys_menu m
         WHERE
-            m.parent_id =#{parentId}
+            m.parent_id =#{parentId}  and m.show_order != 1
     </select>
 
     <select id="listLevelOneMenuByRoleIds" resultType="com.insigma.ordercenter.entity.SysLoginUserMenu">
