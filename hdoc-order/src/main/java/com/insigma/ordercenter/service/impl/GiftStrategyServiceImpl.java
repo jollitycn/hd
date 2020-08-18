@@ -180,6 +180,25 @@ public class GiftStrategyServiceImpl extends ServiceImpl<GiftStrategyMapper, Gif
             paramShop.setParamType(2);
             paramShopList.add(paramShop);
         });
+
+        // 先删除关联赠品
+        QueryWrapper<Gift> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(Gift.GIFT_STRATEGY_ID,req.getGiftStrategyId());
+        this.giftService.remove(queryWrapper);
+
+        // 在新增参数与赠品的关联关系
+        List<Gift> giftList = Lists.newArrayList();
+        if(null != req.getGiftList() && !req.getGiftList().isEmpty()){
+            req.getGiftList().forEach(addGiftDTO -> {
+                Gift gift = new Gift();
+                BeanUtil.copyProperties(addGiftDTO, gift);
+                gift.setGiftStrategyId(giftStrategy.getGiftStrategyId());
+                giftList.add(gift);
+            });
+            if (!giftList.isEmpty()) {
+                giftService.saveBatch(giftList);
+            }
+        }
         boolean b = paramShopService.saveBatch(paramShopList);
 
         if(b && 1 == i){

@@ -28,4 +28,7 @@ public class GiftListVO {
 
     @ApiModelProperty("单位数量")
     private Integer stockQuantity;
+
+    @ApiModelProperty("商品id")
+    private String productId;
 }

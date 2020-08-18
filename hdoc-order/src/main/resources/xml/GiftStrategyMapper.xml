@@ -9,7 +9,8 @@
                 pt.product_name,
                 pt.product_no,
                 pt.product_specs,
-                pt.unit_quantity AS stockQuantity
+                pt.unit_quantity AS stockQuantity,
+                gt.product_id
             FROM
                 t_gift gt
             LEFT JOIN t_product pt ON pt.product_id = gt.product_id
