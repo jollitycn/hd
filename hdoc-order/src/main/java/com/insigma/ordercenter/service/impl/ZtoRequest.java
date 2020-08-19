@@ -1,10 +1,9 @@
 package com.insigma.ordercenter.service.impl;
 
-import hdjf.BaseVO;
 
 import java.util.List;
 
-public class ZtoRequest extends BaseVO {
+public class ZtoRequest  {
     private List<String> billCodes;
     private String siteId;
 
@@ -27,6 +26,7 @@ public class ZtoRequest extends BaseVO {
         this.siteId = siteId;
     }
 
+    @Override
     public boolean equals ( final Object o ) {
         if (o == this) return true;
         if (!(o instanceof ZtoRequest)) return false;
@@ -45,6 +45,7 @@ public class ZtoRequest extends BaseVO {
         return other instanceof ZtoRequest;
     }
 
+    @Override
     public int hashCode ( ) {
         final int PRIME = 59;
         int result = 1;
@@ -55,6 +56,7 @@ public class ZtoRequest extends BaseVO {
         return result;
     }
 
+    @Override
     public String toString ( ) {
         return "ZtoRequest(billCodes=" + this.getBillCodes() + ", siteId=" + this.getSiteId() + ")";
     }
