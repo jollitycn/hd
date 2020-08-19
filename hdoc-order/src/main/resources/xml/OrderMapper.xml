@@ -130,9 +130,9 @@
             w.warehouse_name,
             w.express_company_id
         FROM
-            t_product p
-            LEFT JOIN t_warehouse_product_relation pr ON p.product_id = pr.product_id
-            LEFT JOIN t_warehouse w ON pr.warehouse_id = w.warehouse_id
+            t_warehouse w
+            LEFT JOIN t_warehouse_product_relation pr ON pr.warehouse_id = w.warehouse_id
+            LEFT JOIN t_product p ON pr.product_id = p.product_id
         WHERE
             p.product_id = #{productId}
     </select>

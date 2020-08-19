@@ -42,8 +42,9 @@ public class StrategyProductType implements Serializable {
     @ApiModelProperty(value = "策略名称")
     private String strategyName;
 
-    @ApiModelProperty("是否禁用（0-未禁用，1-已禁用）")
+    @ApiModelProperty(value = "是否禁用")
     private Integer isStop;
+
 
     public static final String STRATEGY_PRODUCT_TYPE_ID = "strategy_product_type_id";
 
@@ -53,4 +54,5 @@ public class StrategyProductType implements Serializable {
 
     public static final String STRATEGY_NAME = "strategy_name";
 
+    public static final String IS_STOP = "is_stop";
 }

@@ -4,6 +4,7 @@ package com.insigma.ordercenter.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
+import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.OrderDetail;
 import com.insigma.ordercenter.entity.vo.AddOrderDetailVO;
 import com.insigma.ordercenter.entity.vo.OrderDetailVO;
@@ -75,7 +76,8 @@ public class OrderDetailController extends BaseController {
     @PostMapping("/addOrderDerail")
     @ApiOperation(value = "保存赠品信息")
     public Result<?> addOrderDerail(@Valid @RequestBody AddOrderDetailVO addOrderDetailVO) {
-        Boolean aBoolean = orderDetailService.addOrderDerail(addOrderDetailVO);
+        LoginUser loginUser = redisUser();
+        Boolean aBoolean = orderDetailService.addOrderDerail(addOrderDetailVO,loginUser);
         if(aBoolean){
             return Result.success();
         }else{

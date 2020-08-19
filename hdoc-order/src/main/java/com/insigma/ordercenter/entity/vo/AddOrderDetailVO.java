@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.entity.vo;
 
+import com.insigma.ordercenter.entity.Order;
 import com.insigma.ordercenter.entity.OrderDetail;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

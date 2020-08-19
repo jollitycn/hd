@@ -38,7 +38,7 @@ public class SysOperationLog implements Serializable {
     private Long orderId;
 
     @ApiModelProperty(value = "订单号发货单号")
-    private Long orderNo;
+    private String orderNo;
 
     @ApiModelProperty(value = "创建人id")
     private Long createId;

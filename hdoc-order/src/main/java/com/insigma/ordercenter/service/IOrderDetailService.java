@@ -1,5 +1,6 @@
 package com.insigma.ordercenter.service;
 
+import com.insigma.ordercenter.entity.LoginUser;
 import com.insigma.ordercenter.entity.OrderDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.insigma.ordercenter.entity.vo.AddOrderDetailVO;
@@ -23,7 +24,7 @@ public interface IOrderDetailService extends IService<OrderDetail> {
 
     List<OrderDetailVO> getOrderDetail(Long orderId);
 
-    Boolean addOrderDerail(AddOrderDetailVO addOrderDetailVO);
+    Boolean addOrderDerail(AddOrderDetailVO addOrderDetailVO, LoginUser loginUser);
 
     List<OrderDetailVO> orderDerailList(Long orderId);
 

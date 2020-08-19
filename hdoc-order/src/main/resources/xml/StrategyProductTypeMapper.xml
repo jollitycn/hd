@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.insigma.ordercenter.mapper.StrategyProductTypeMapper">
+
+    <select id="strategyProductTypeList" resultType="com.insigma.ordercenter.entity.vo.StrategyProductTypeVO">
+        SELECT
+            spt.param_id,
+            spt.param_type,
+            spt.strategy_name,
+            sd.data_value,
+            spt.is_stop,
+            spt.strategy_product_type_id
+        FROM
+            t_strategy_product_type spt
+            LEFT JOIN sys_dictionary sd ON spt.param_id = sd.data_code
+            where spt.param_type=#{paramType}
+    </select>
+
+    <select id="selectStrategyProductTypeById" resultType="com.insigma.ordercenter.entity.vo.StrategyProductTypeVO">
+        SELECT
+            spt.param_id,
+            spt.param_type,
+            spt.strategy_name,
+            sd.data_value,
+            spt.is_stop
+        FROM
+            t_strategy_product_type spt
+            LEFT JOIN sys_dictionary sd ON spt.param_id = sd.dictionary_id
+        WHERE
+            spt.strategy_product_type_id = #{strategyProductTypeId}
+    </select>
+
+    <select id="selectStrategyRegionRelationsById" resultType="com.insigma.ordercenter.entity.vo.StrategyRegionRelationVO">
+        SELECT
+            sr.region_id,
+            sr.spt_id,
+            sr.srr_id,
+            re.merger_name
+        FROM
+            t_strategy_region_relation sr
+            LEFT JOIN sys_region re ON re.region_id = sr.region_id
+        WHERE
+            sr.spt_id = #{strategyProductTypeId}
+    </select>
+
+    <select id="selectStrategyWarehouseRelationsById" resultType="com.insigma.ordercenter.entity.vo.StrategyWarehouseRelationVO">
+        SELECT
+            swr.spt_id,
+            swr.srr_id,
+            swr.warehouse_id,
+            w.warehouse_name
+        FROM
+            t_strategy_warehouse_relation swr
+            LEFT JOIN t_warehouse w ON swr.warehouse_id = w.warehouse_id
+        WHERE
+            swr.spt_id = #{strategyProductTypeId}
+    </select>
+
+
+    <update id="updateStrategyProductTypeIsStop">
+        UPDATE t_strategy_product_type spt
+        SET spt.is_stop = 1
+        WHERE
+            spt.param_id = #{paramId}
+    </update>
+    
+    <update id="updateStrategyProductTypeIsOn">
+         UPDATE t_strategy_product_type spt
+        SET spt.is_stop = 0
+        WHERE
+            spt.strategy_product_type_id=#{strategyProductTypeId}
+    </update>
+
+</mapper>
