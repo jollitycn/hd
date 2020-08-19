@@ -57,7 +57,7 @@ public class OrderDetail implements Serializable {
     private String productSpecs;
 
     @ApiModelProperty(value = "商品分类 对应字典表id")
-    private Long productType;
+    private Integer productType;
 
     @ApiModelProperty(value = "单位")
     private String unit;
