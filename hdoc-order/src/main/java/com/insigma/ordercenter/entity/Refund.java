@@ -43,6 +43,9 @@ public class Refund implements Serializable {
     @ApiModelProperty(value = "类型（0：退货，1：换货）")
     private Integer refundType;
 
+    @ApiModelProperty(value = "退货仓库id")
+    private Integer warehouseId;
+
     @ApiModelProperty(value = "发起类型（0：客户发起，1：客服发起）")
     private Integer sourceType;
 

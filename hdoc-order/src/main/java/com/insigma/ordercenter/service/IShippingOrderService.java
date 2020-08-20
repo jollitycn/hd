@@ -43,7 +43,7 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * @param editShippingOrderDTO
      * @return
      */
-    Boolean changeAddress(LoginUser loginUser, EditShippingOrderDTO editShippingOrderDTO);
+    Boolean changeAddress(LoginUser loginUser, EditShippingOrderDTO editShippingOrderDTO) throws Exception;
 
     /**
      * 更改发货单商品
@@ -113,4 +113,10 @@ public interface IShippingOrderService extends IService<ShippingOrder> {
      * @return
      */
     Boolean saveIncreaseCargo(LoginUser loginUser, Long shippingOrderId);
+
+    /**
+     * 计算物流运费
+     * @return
+     */
+    boolean calculationExpressFee();
 }

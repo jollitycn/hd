@@ -89,13 +89,13 @@ public class ShippingOrderController extends BaseController{
 
         LoginUser loginUser=redisUser();
 
-        Boolean result = shippingOrderService.changeAddress(loginUser,editShippingOrderDTO);
-
-        if(result){
+        try {
+            shippingOrderService.changeAddress(loginUser,editShippingOrderDTO);
             return Result.success();
+        }catch (Exception e){
+            return Result.error(CodeMsg.DATA_UPDATE_ERROR,e.getMessage());
         }
 
-        return Result.error(CodeMsg.DATA_UPDATE_ERROR);
     }
 
     @PutMapping("/changeProduct")
@@ -199,6 +199,21 @@ public class ShippingOrderController extends BaseController{
         log.info("发货单定时物流下单接口调度成功");
 
         boolean result=shippingOrderService.createLogisticsJob();
+
+        return Result.success(result);
+    }
+
+    /**
+     * 计算物流运费 定时任务调用
+     * @return
+     */
+    @ApiOperation("计算物流运费-仅供测试使用")
+    @GetMapping("/calculationExpressFee")
+    public Result calculationExpressFee() throws Exception{
+
+        log.info("计算物流运费方法调度成功");
+
+        boolean result=shippingOrderService.calculationExpressFee();
 
         return Result.success(result);
     }

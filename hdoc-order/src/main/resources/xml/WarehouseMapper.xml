@@ -143,7 +143,7 @@ on w.warehouse_id = wpr.warehouse_id
 left join t_product p on p.product_id = wpr.product_id
         left join v_product_category vpc on p.product_type = vpc.dictionary_id
         left join v_product_brand vpb on p.brand = vpb.data_code
-        where w.warehouse_id =  #{request.warehouseId}
+        where w.warehouse_id =  #{request.warehouseId} AND p.is_deleted=0
         <if test=" request.name != null and request.name != ''">
             AND p.product_name = #{request.name}
         </if>
