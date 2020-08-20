@@ -56,6 +56,9 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
     @Resource
     private OrderSendReceiveMapper orderSendReceiveMapper;
 
+    @Resource
+    private WarehouseMapper warehouseMapper;
+
     @Override
     public IPage<ShippingOrderVO> getShippingOrderList(ShippingOrderDTO shippingOrderDTO) {
 
@@ -214,12 +217,17 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
             //获取发货单对象
             ShippingOrder shippingOrder = this.getById(shippingOrderId);
 
+            Integer warehouseId=editShippingOrderDTO.getWarehouseId();
             //状态判断
             //TODO
             Integer status = shippingOrder.getStatus();
 
             //修改仓库
-            shippingOrder.setWarehouseId(editShippingOrderDTO.getWarehouseId());
+            shippingOrder.setWarehouseId(warehouseId);
+
+            //更新承运商
+            Warehouse warehouse =warehouseMapper.selectById(warehouseId);
+            shippingOrder.setExpressCompanyId(warehouse.getExpressCompanyId());
 
             this.createLog(shippingOrderId, shippingOrder.getOrderId(), loginUser.getUserId(), loginUser.getUserName() + "修改了发货单:" + shippingOrder.getShippingOrderNo() + "的仓库");
 
