@@ -12,7 +12,7 @@
             spt.strategy_product_type_id
         FROM
             t_strategy_product_type spt
-            LEFT JOIN sys_dictionary sd ON spt.param_id = sd.data_code
+            LEFT JOIN sys_dictionary sd ON spt.param_id = sd.dictionary_id
             where spt.param_type=#{paramType}
             and sd.is_deleted = 0
     </select>
