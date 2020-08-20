@@ -14,6 +14,9 @@ import java.util.List;
 @Data
 public class EditShippingOrderDTO {
 
+    @ApiModelProperty(value = "发货单号")
+    private Long shippingOrderId;
+
     @ApiModelProperty(value = "发货单号集合")
     private List<Long> shippingOrderIds;
 
@@ -40,6 +43,9 @@ public class EditShippingOrderDTO {
 
     @ApiModelProperty(value = "收货人市")
     private String locationCity;
+
+    @ApiModelProperty(value = "区域id")
+    private Integer regionId;
 
     @ApiModelProperty(value = "收货人详细地址")
     private String address;
