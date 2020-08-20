@@ -14,6 +14,7 @@
             t_strategy_product_type spt
             LEFT JOIN sys_dictionary sd ON spt.param_id = sd.data_code
             where spt.param_type=#{paramType}
+            and sd.is_deleted = 0
     </select>
 
     <select id="selectStrategyProductTypeById" resultType="com.insigma.ordercenter.entity.vo.StrategyProductTypeVO">

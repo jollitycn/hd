@@ -19,7 +19,6 @@
         <result column="card_no" property="cardNo"/>
     </resultMap>
 
-
     <select id="queryOrderPayInfo" resultMap="orderPayMap">
         SELECT
             op.order_pay_id,

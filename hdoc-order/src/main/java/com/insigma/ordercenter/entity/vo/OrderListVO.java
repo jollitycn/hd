@@ -130,5 +130,7 @@ public class OrderListVO extends BaseVO {
     @ApiModelProperty(value = "发货单列表")
     private List<ShippingOrderVO> shippingOrderVOS;
 
+    @ApiModelProperty(value = "卖家昵称")
+    private String buyerNickname;
 
 }
