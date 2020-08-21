@@ -38,6 +38,9 @@ public class StrategyProductTypeVO extends BaseVO{
     @ApiModelProperty(value = "商品分类名称")
     private String dataValue;
 
+    @ApiModelProperty(value = "商品名称")
+    private String productName;
+
     @ApiModelProperty(value = " 策略关联区域列表")
     private List<StrategyRegionRelationVO> strategyRegionRelations;
 

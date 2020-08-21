@@ -154,4 +154,6 @@ public class SendReceiveInfoVO extends BaseVO{
     @ApiModelProperty(value = "卖家昵称")
     private String buyerNickname;
 
+    @ApiModelProperty(value = "物流重量")
+    private Double shipWeight;
 }

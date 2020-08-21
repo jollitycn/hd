@@ -41,6 +41,12 @@ public class StrategyProductTypeController extends BaseController {
     @Resource
     private IStrategyProductTypeService strategyProductTypeService;
 
+    @PostMapping("/strategyProduct/{paramType}")
+    @ApiOperation(value = "商品列表")
+    public Result<?> strategyProduct(@Valid @PathVariable Integer paramType) {
+        List<StrategyProductTypeVO> strategyProductTypeVOS = strategyProductTypeService.strategyProduct(paramType);
+        return Result.success(strategyProductTypeVOS);
+    }
 
     @PostMapping("/strategyProductTypeList/{paramType}")
     @ApiOperation(value = "商品、分类策略列表")
@@ -69,9 +75,9 @@ public class StrategyProductTypeController extends BaseController {
         return strategyProductTypeService.getStrategyProductType(strategyProductTypeId);
     }
 
-    @PutMapping("/updateStrategyProductType")
+    @PostMapping("/updateStrategyProductType")
     @ApiOperation(value = "修改商品、分类策略")
-    public Result<?> updateStrategyProductType(StrategyProductTypeVO strategyProductTypeVO) {
+    public Result<?> updateStrategyProductType(@Valid @RequestBody StrategyProductTypeVO strategyProductTypeVO) {
         return strategyProductTypeService.updateStrategyProductType(strategyProductTypeVO);
     }
 
