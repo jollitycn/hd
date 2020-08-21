@@ -85,7 +85,7 @@ public class Product implements Serializable {
     private Double shipWeight;
 
     @ApiModelProperty(value = "物流分类")
-    private String shipType;
+    private Integer shipType;
 
     @ApiModelProperty(value = "商品编码")
     private String productNo;

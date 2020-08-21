@@ -79,6 +79,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Resource
     private IWarehouseProductRelationService warehouseProductRelationService;
 
+    @Resource
+    private ISysOperationLogService sysOperationLogService;
+
     @Override
     public IPage<OrderListVO> queryOrderListPage(Page<OrderListVO> page, OrderDTO orderDTO) {
 
@@ -335,6 +338,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             order.setTotalPrice(new BigDecimal(totalPrice[0]));
             order.setOrderStatus(OrderStatus.WAIT_FOR_WAREHOUSE);
             orderService.updateById(order);
+
+            //新增系统订单操作日志
+            SysOperationLog sysOperationLog=new SysOperationLog();
+            sysOperationLog.setContent("手动审单");
+            sysOperationLog.setCreateTime(LocalDateTime.now());
+            sysOperationLog.setOrderId(addShippingOrderDTO.getShippingOrderId());
+            sysOperationLog.setCreateId(loginUser.getUserId());
+            sysOperationLog.setOrderNo(addShippingOrderDTO.getShippingOrderNo());
+            sysOperationLogService.save(sysOperationLog);
         });
         return Result.success();
 
@@ -459,6 +471,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             orderOperationLog.setOrderId(orderId);
             orderService.updateOrderStatu(updateOrderStatuDTO, loginUser);
         }
+        //新增系统订单操作日志
+
+        SysOperationLog sysOperationLog=new SysOperationLog();
+        sysOperationLog.setContent("取消订单");
+        sysOperationLog.setCreateTime(LocalDateTime.now());
+        sysOperationLog.setOrderId(orderId);
+        sysOperationLog.setCreateId(loginUser.getUserId());
+        sysOperationLogService.save(sysOperationLog);
         // TODO 发货单那边提供接口，返回是否能取消成功，否则订单状态为冻结
         return Result.success();
     }

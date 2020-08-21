@@ -90,6 +90,9 @@ public class RefundServiceImpl extends ServiceImpl<RefundMapper, Refund> impleme
         BeanUtil.copyProperties(addRefundDTO,refund);
         refund.setCreateId(loginUser.getUserId());
         refund.setCreateTime(LocalDateTime.now());
+        if(Constant.SYS_ONE==addRefundDTO.getStatus().intValue()){
+            refund.setAuditId(loginUser.getUserId());
+        }
         return this.save(refund);
     }
 

@@ -93,6 +93,7 @@ public class OrderProcessImpl implements IOrderProcessService {
                             }
                             orderDetail.setProductId(newProduct.getProductId());
                             orderDetail.setProductName(newProduct.getProductName());
+                            orderDetail.setProductType(newProduct.getShipType());
                             orderDetail.setProductPrice(newProduct.getProductPrice());
                             orderDetail.setProductSku(newProduct.getProductSku());
                             orderDetail.setProductSpecs(newProduct.getProductSpecs());
@@ -133,6 +134,7 @@ public class OrderProcessImpl implements IOrderProcessService {
                             orderDetail.setProductSku(giftProduct.getProductSku());
                             orderDetail.setProductSpecs(giftProduct.getProductSpecs());
                             orderDetail.setUnit(giftProduct.getUnit());
+                            orderDetail.setProductType(giftProduct.getShipType());
                             orderDetail.setTotalPrice(giftProduct.getProductPrice().multiply(new BigDecimal(orderDetail.getAmount())));
                             orderDetailService.save(orderDetail);
                         }

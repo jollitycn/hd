@@ -1,9 +1,11 @@
 package com.insigma.ordercenter.service.impl;
 
+import com.alibaba.druid.sql.visitor.functions.Ascii;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.insigma.ordercenter.base.CodeMsg;
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.*;
@@ -330,5 +332,61 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         List<WarehouseProductPage> list = baseMapper.list(page, request);
         page.setRecords(list);
         return page;
+    }
+
+    public static void main(String[] args) {
+        List<Warehouse> wList = Lists.newArrayList();
+        for (int i = 0; i < 5; i++) {
+            Warehouse warehouse = new Warehouse();
+            warehouse.setWarehouseId(i);
+            warehouse.setWarehouseName("仓库"+i);
+            wList.add(warehouse);
+        }
+        String [] productName = {"低钠水","恒大冰泉","粮油"};
+        List<Product> pList = Lists.newArrayList();
+        for (int i = 0; i < 3; i++) {
+            Product product = new Product();
+            product.setProductId(Long.parseLong(String.valueOf(i)));
+            product.setProductName(productName[i]);
+            pList.add(product);
+        }
+        WarehouseProductRelation wp = new WarehouseProductRelation();
+        wp.setProductId(1L);
+        wp.setWarehouseId(1);
+        WarehouseProductRelation wp1 = new WarehouseProductRelation();
+        wp.setProductId(1L);
+        wp.setWarehouseId(2);
+        WarehouseProductRelation wp2 = new WarehouseProductRelation();
+        wp.setProductId(1L);
+        wp.setWarehouseId(3);
+        WarehouseProductRelation wp3 = new WarehouseProductRelation();
+        wp.setProductId(2L);
+        wp.setWarehouseId(2);
+        WarehouseProductRelation wp4 = new WarehouseProductRelation();
+        wp.setProductId(2L);
+        wp.setWarehouseId(4);
+        WarehouseProductRelation wp5 = new WarehouseProductRelation();
+        wp.setProductId(2L);
+        wp.setWarehouseId(5);
+        WarehouseProductRelation wp6 = new WarehouseProductRelation();
+        wp.setProductId(3L);
+        wp.setWarehouseId(1);
+        WarehouseProductRelation wp7 = new WarehouseProductRelation();
+        wp.setProductId(3L);
+        wp.setWarehouseId(2);
+        WarehouseProductRelation wp8 = new WarehouseProductRelation();
+        wp.setProductId(3L);
+        wp.setWarehouseId(3);
+        List<WarehouseProductRelation> wpList = Lists.newArrayList();
+        wpList.add(wp);
+        wpList.add(wp1);
+        wpList.add(wp2);
+        wpList.add(wp3);
+        wpList.add(wp4);
+        wpList.add(wp5);
+        wpList.add(wp6);
+        wpList.add(wp7);
+        wpList.add(wp8);
+
     }
 }

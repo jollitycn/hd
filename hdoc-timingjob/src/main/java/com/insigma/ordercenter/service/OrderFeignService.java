@@ -22,7 +22,7 @@ public interface OrderFeignService {
     /**
      * 订单转成发货单
      */
-    @GetMapping("shippingQuartz")
+    @GetMapping("order/shippingQuartz")
     void shippingOrderDeal();
 
 }

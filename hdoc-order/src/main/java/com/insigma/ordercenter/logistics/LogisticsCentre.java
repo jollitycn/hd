@@ -125,14 +125,13 @@ public class LogisticsCentre {
                 }
 
             default:
+                //未匹配到对应物流
+                return Result.error(CodeMsg.CREATE_LOGISTICS_ERROR,"未匹配到对应物流");
 
-
-                break;
         }
 
 
 
-        return null;
     }
 
     /**

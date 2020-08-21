@@ -3,8 +3,10 @@ package com.insigma.ordercenter.controller;
 
 import com.insigma.ordercenter.base.Result;
 import com.insigma.ordercenter.entity.vo.OrderDetailExamineVO;
+import com.insigma.ordercenter.entity.vo.OrderPayAllVO;
 import com.insigma.ordercenter.entity.vo.OrderpayVO;
 import com.insigma.ordercenter.service.IOrderPayService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/order-pay")
+@Api(tags = {"订单管理"})
 public class OrderPayController extends BaseController {
 
     @Resource
@@ -35,8 +38,8 @@ public class OrderPayController extends BaseController {
     @GetMapping("/queryOrderPayInfo/{orderId}")
     @ApiOperation(value = "根据订单号查询支付信息")
     public Result<?> queryOrderPayInfo(@Valid @PathVariable Long orderId) {
-        List<OrderpayVO> orderpayVOS = orderPayService.queryOrderPayInfo(orderId);
-        return Result.success(orderpayVOS);
+        OrderPayAllVO orderPayAllVO = orderPayService.queryOrderPayInfo(orderId);
+        return Result.success(orderPayAllVO);
     }
 
 }

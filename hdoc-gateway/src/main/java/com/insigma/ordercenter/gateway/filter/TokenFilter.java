@@ -61,7 +61,7 @@ public class TokenFilter implements GlobalFilter, Ordered {
         try {
             String path = serverHttpRequest.getURI().getPath();
             String[] ignoresUrl = {"/validateCode/getValidateCodeImage","login","/order/sfoms/cb","/v2/api-docs",
-                                    "/swagger-ui.html", "/bestPushApi/","/codeVerify"};
+                                    "/swagger-ui.html", "/bestPushApi/","/codeVerify","/order/mq/send"};
             for (String url : ignoresUrl) {
                 if (path.contains(url)) {
                     return chain.filter(exchange);

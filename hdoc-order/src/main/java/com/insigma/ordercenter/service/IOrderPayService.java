@@ -2,6 +2,7 @@ package com.insigma.ordercenter.service;
 
 import com.insigma.ordercenter.entity.OrderPay;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.insigma.ordercenter.entity.vo.OrderPayAllVO;
 import com.insigma.ordercenter.entity.vo.OrderpayVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,6 +18,6 @@ import java.util.List;
  */
 public interface IOrderPayService extends IService<OrderPay> {
 
-    List<OrderpayVO> queryOrderPayInfo(Long orderId);
+    OrderPayAllVO queryOrderPayInfo(Long orderId);
 
 }
