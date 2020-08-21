@@ -14,8 +14,10 @@ import com.insigma.ordercenter.entity.dto.*;
 import com.insigma.ordercenter.entity.vo.*;
 import com.insigma.ordercenter.logistics.LogisticsCentre;
 import com.insigma.ordercenter.mapper.*;
+import com.insigma.ordercenter.service.IOrderService;
 import com.insigma.ordercenter.service.IShippingOrderService;
 import com.insigma.ordercenter.utils.UUIDUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -50,8 +52,11 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
     @Resource
     private ShopMapper shopMapper;
 
-    @Resource
-    private OrderMapper orderMapper;
+//    @Resource
+//    private OrderMapper orderMapper;
+
+    @Autowired
+    private IOrderService orderService;
 
     @Resource
     private OrderSendReceiveMapper orderSendReceiveMapper;
@@ -75,7 +80,7 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
     @Override
     public Boolean increaseCargo(LoginUser loginUser, EditShippingOrderDTO editShippingOrderDTO) {
 
-        Long shippingOrderId = editShippingOrderDTO.getShippingOrderIds().get(0);
+        Long shippingOrderId = editShippingOrderDTO.getShippingOrderId();
         //写入发货单对象
         ShippingOrder shippingOrder = new ShippingOrder();
         if (null != shippingOrderId) {
@@ -125,41 +130,44 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
      * @return
      */
     @Override
-    public Boolean changeAddress(LoginUser loginUser, EditShippingOrderDTO editShippingOrderDTO) {
+    public Boolean changeAddress(LoginUser loginUser, EditShippingOrderDTO editShippingOrderDTO) throws Exception{
 
-        List<Long> shippingOrderIds = editShippingOrderDTO.getShippingOrderIds();
+        Long shippingOrderId = editShippingOrderDTO.getShippingOrderId();
 
-        //批量更新
-        List<ShippingOrder> updateList = new ArrayList<>();
-        for (Long shippingOrderId : shippingOrderIds) {
 
-            //获取发货单对象
-            ShippingOrder shippingOrder = this.getById(shippingOrderId);
+        //获取发货单对象
+        ShippingOrder shippingOrder = this.getById(shippingOrderId);
 
-            //状态判断
-            //TODO
-            Integer status = shippingOrder.getStatus();
+        //状态判断
+        //TODO
+        Integer status = shippingOrder.getStatus();
 
-            Long orderId = shippingOrder.getOrderId();
-            QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.eq(OrderSendReceive.ORDER_ID, orderId);
-            OrderSendReceive orderSendReceive = orderSendReceiveMapper.selectOne(queryWrapper);
-            orderSendReceive.setLocationCity(editShippingOrderDTO.getLocationCity());
-            orderSendReceive.setProvince(editShippingOrderDTO.getProvince());
-            orderSendReceive.setAddress(editShippingOrderDTO.getAddress());
-            orderSendReceiveMapper.updateById(orderSendReceive);
+        //查询承运商
+        Warehouse warehouse = warehouseMapper.selectById(shippingOrder.getWarehouseId());
 
-            //更新收货信息
-            shippingOrder.setAddress(editShippingOrderDTO.getAddress());
-            shippingOrder.setMobilePhone(editShippingOrderDTO.getMobilePhone());
-            shippingOrder.setReceiveName(editShippingOrderDTO.getReceiveName());
-
-            updateList.add(shippingOrder);
-
-            this.createLog(shippingOrderId, shippingOrder.getOrderId(), loginUser.getUserId(), loginUser.getUserName() + "修改了发货单:" + shippingOrder.getShippingOrderNo() + "的收货人信息。更改原因：" + editShippingOrderDTO.getChangeReason());
+        //判断负责区域
+        if (!editShippingOrderDTO.getRegionId().equals(warehouse.getRegionId())) {
+            throw new Exception("地址不属于仓库负责区域！");
         }
 
-        return updateBatchById(updateList);
+        Long orderId = shippingOrder.getOrderId();
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq(OrderSendReceive.ORDER_ID, orderId);
+        OrderSendReceive orderSendReceive = orderSendReceiveMapper.selectOne(queryWrapper);
+        orderSendReceive.setLocationCity(editShippingOrderDTO.getLocationCity());
+        orderSendReceive.setProvince(editShippingOrderDTO.getProvince());
+        orderSendReceive.setAddress(editShippingOrderDTO.getAddress());
+        orderSendReceiveMapper.updateById(orderSendReceive);
+
+        //更新收货信息
+        shippingOrder.setAddress(editShippingOrderDTO.getAddress());
+        shippingOrder.setMobilePhone(editShippingOrderDTO.getMobilePhone());
+        shippingOrder.setReceiveName(editShippingOrderDTO.getReceiveName());
+
+
+        this.createLog(shippingOrderId, shippingOrder.getOrderId(), loginUser.getUserId(), loginUser.getUserName() + "修改了发货单:" + shippingOrder.getShippingOrderNo() + "的收货人信息。更改原因：" + editShippingOrderDTO.getChangeReason());
+
+        return updateById(shippingOrder);
 
     }
 
@@ -206,36 +214,29 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
      * @return
      */
     @Override
-    public Boolean changeWarehouse(LoginUser loginUser, EditShippingOrderDTO editShippingOrderDTO) {
+    public Boolean changeWarehouse(LoginUser loginUser, EditShippingOrderDTO editShippingOrderDTO)  {
 
-        List<Long> shippingOrderIds = editShippingOrderDTO.getShippingOrderIds();
-
-        //批量更新
-        List<ShippingOrder> updateList = new ArrayList<>();
-        for (Long shippingOrderId : shippingOrderIds) {
-
-            //获取发货单对象
-            ShippingOrder shippingOrder = this.getById(shippingOrderId);
-
-            Integer warehouseId=editShippingOrderDTO.getWarehouseId();
-            //状态判断
-            //TODO
-            Integer status = shippingOrder.getStatus();
-
-            //修改仓库
-            shippingOrder.setWarehouseId(warehouseId);
-
-            //更新承运商
-            Warehouse warehouse =warehouseMapper.selectById(warehouseId);
-            shippingOrder.setExpressCompanyId(warehouse.getExpressCompanyId());
-
-            this.createLog(shippingOrderId, shippingOrder.getOrderId(), loginUser.getUserId(), loginUser.getUserName() + "修改了发货单:" + shippingOrder.getShippingOrderNo() + "的仓库");
-
-            updateList.add(shippingOrder);
-        }
+        Long shippingOrderId = editShippingOrderDTO.getShippingOrderId();
 
 
-        return updateBatchById(updateList);
+        //获取发货单对象
+        ShippingOrder shippingOrder = this.getById(shippingOrderId);
+
+        Integer warehouseId = editShippingOrderDTO.getWarehouseId();
+        //状态判断
+        //TODO
+        Integer status = shippingOrder.getStatus();
+
+        //修改仓库
+        shippingOrder.setWarehouseId(warehouseId);
+
+        //更新承运商
+        Warehouse warehouse = warehouseMapper.selectById(warehouseId);
+        shippingOrder.setExpressCompanyId(warehouse.getExpressCompanyId());
+
+        this.createLog(shippingOrderId, shippingOrder.getOrderId(), loginUser.getUserId(), loginUser.getUserName() + "修改了发货单:" + shippingOrder.getShippingOrderNo() + "的仓库");
+
+        return updateById(shippingOrder);
     }
 
     /**
@@ -379,7 +380,7 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
 
                 //查询发件人
                 CommonConsignorDTO commonConsignor = new CommonConsignorDTO();
-                Order order = orderMapper.selectById(shippingOrder.getOrderId());
+                Order order = orderService.getById(shippingOrder.getOrderId());
                 Shop shop = shopMapper.selectById(order.getShopId());
                 commonConsignor.setAddress(shop.getSAddr());
                 commonConsignor.setMobilePhone(shop.getCPhone());
@@ -397,6 +398,9 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
 
                     //写入发货单号
                     shippingOrder.setExpressNo(result.getData().toString());
+
+                    //写入发货时间
+                    shippingOrder.setSendTime(LocalDateTime.now());
                 } else {
                     //将发货单置为异常状态
                     shippingOrder.setStatus(Constant.SYS_SIX);
@@ -405,6 +409,11 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
                     shippingOrder.setExceptionReason(result.getMessage());
                     log.error("发货单下单失败");
                 }
+
+                //处理订单状态
+                UpdateShippingOrderStatuDTO updateShippingOrderStatuDTO=new UpdateShippingOrderStatuDTO();
+                updateShippingOrderStatuDTO.setOrderId(shippingOrder.getOrderId());
+                orderService.shippingOrderStatuChange(updateShippingOrderStatuDTO,null);
 
             }
 
@@ -434,8 +443,28 @@ public class ShippingOrderServiceImpl extends ServiceImpl<ShippingOrderMapper, S
         return this.updateById(shippingOrder);
     }
 
-
     /**
+     * 计算物流运费
+     *
+     * @return
+     */
+    @Override
+    public boolean calculationExpressFee() {
+        //查询需要计算运费的发货单
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("status", Constant.SYS_TWO);
+        queryWrapper.eq("is_deleted", Constant.SYS_ZERO);
+        List<ShippingOrder> shippingOrderList = baseMapper.selectList(queryWrapper);
+
+        for (ShippingOrder shippingOrder:shippingOrderList) {
+
+        }
+
+        return false;
+    }
+
+
+/**
      * 建立发货单操作日志
      *
      * @param shippingOrderId

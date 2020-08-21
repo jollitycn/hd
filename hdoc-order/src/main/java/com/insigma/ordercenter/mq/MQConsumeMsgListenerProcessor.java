@@ -123,7 +123,7 @@ public class MQConsumeMsgListenerProcessor implements MessageListenerConcurrentl
                 Product product = productService.getOne(Wrappers.<Product>lambdaQuery().eq(Product::getProductNo, hdOrderDetail.getOuter_sku_i()));
                 if (null != product) {
                     detail.setProductId(product.getProductId());
-                    detail.setProductType(product.getProductType());
+                    detail.setProductType(product.getShipType());
                 }
                 detail.setProductName(hdOrderDetail.getTitle());
                 detail.setProductPrice(hdOrderDetail.getPrice());

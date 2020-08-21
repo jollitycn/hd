@@ -27,7 +27,7 @@ public interface IWarehouseService extends IService<Warehouse> {
 
     Result<?> updateWarehouse(WarehouseDTO warehouseDTO, LoginUser loginUser) throws MyException;
 
-    Result<?> addProduct(WarehouseProductDTO req,Long userId) throws MyException;
+    Result<?> addProduct(WarehouseProductDTO req, Long userId) throws MyException;
 
     Result<?> modifyStock(WarehouseProductRelation whp, LoginUser redisUser);
 
@@ -35,17 +35,18 @@ public interface IWarehouseService extends IService<Warehouse> {
 
     IPage listProducts(WarehouseProductPageQuery req);
 
-   Result<?> page(IPage<WarehouseVo> page, WarehouseDTO dto);
+    Result<?> page(IPage<WarehouseVo> page, WarehouseDTO dto);
 
-    void removeProduct(String warehouseId, String productId,Long userId);
+    void removeProduct(String warehouseId, String productId, Long userId);
 
-     void updateWarningCount(String warehouseId, String productId,String warningCount) ;
+    void updateWarningCount(String warehouseId, String productId, String warningCount);
 
-     int getWarningCount(String warehouseId, String productId) ;
-    void removeProduct(Integer warehouseId, Integer productId,Long userId);
+    int getWarningCount(String warehouseId, String productId);
 
-    void updateWarningCount(Integer warehouseId, Integer productId,Integer warningCount) ;
+    void removeProduct(Integer warehouseId, Integer productId, Long userId);
 
-    int getWarningCount(Integer warehouseId, Integer productId) ;
+    void updateWarningCount(Integer warehouseId, Integer productId, Integer warningCount);
+
+    int getWarningCount(Integer warehouseId, Integer productId);
 
 }

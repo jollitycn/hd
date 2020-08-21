@@ -69,6 +69,8 @@ public class Result<T> implements Serializable {
         return new Result<T>(cm);
     }
 
+
+
     public T getData() {
         return data;
     }

@@ -108,6 +108,7 @@ public class ShippingStrategyQuartz {
     //    @Scheduled(fixedDelay = 2*60*1000)
     @GetMapping("shippingQuartz")
     public Result<?> shippingOrderDeal() {
+        log.info("------------自动审单开始------------");
         //从缓存获取策略
         Object redisStrategy = redisUtil.get("strategyList");
         List<Strategy> strategyList = JsonUtil.jsonToList(JsonUtil.beanToJson(redisStrategy), Strategy.class);
@@ -138,7 +139,6 @@ public class ShippingStrategyQuartz {
                         for (OrderDetail orderDetail : detailList) {
                             //判断商品库存
                             ShopProduct shopProduct = shopProductService.getOne(Wrappers.<ShopProduct>lambdaQuery().eq(ShopProduct::getShopId, order.getShopId()).eq(ShopProduct::getProductId, orderDetail.getProductId()));
-
                             if (null == shopProduct) {
                                 order.setIsHandOrder(1);
                                 order.setOrderStatus(OrderStatus.HANDLE);
@@ -180,7 +180,7 @@ public class ShippingStrategyQuartz {
                 SendReceiveInfo sendReceiveInfo = sendReceiveInfoService.getOne(Wrappers.<SendReceiveInfo>lambdaQuery().eq(SendReceiveInfo::getOrderId, order.getOrderId()));
                 List<OrderDetail> orderDetailList = orderDetailService.list(Wrappers.<OrderDetail>lambdaQuery().eq(OrderDetail::getOrderId, order.getOrderId()));
                 if (productTypeStrategy.getIsStop() == 0) {
-                    Set<Long> typeSet = new HashSet<>();
+                    Set<Integer> typeSet = new HashSet<>();
                     //获取订单明细中的商品
                     for (OrderDetail orderDetail : orderDetailList) {
                         Product product = productService.getById(orderDetail);
@@ -188,7 +188,7 @@ public class ShippingStrategyQuartz {
                         dso.setOrderDetailId(orderDetail.getOrderDetailId());
                         //如果商品存在
                         if (null != product) {
-                            Long productType = product.getProductType();
+                            Integer productType = product.getShipType();
                             //如果商品分类集合已经不包含当前分类则创建一个发货单
                             if (!typeSet.contains(productType)) {
                                 ShippingOrder shippingOrder = new ShippingOrder();
@@ -326,15 +326,32 @@ public class ShippingStrategyQuartz {
                 }
             }
         }
+        log.info("------------自动审单结束------------");
         return Result.success();
     }
 
     public Warehouse orderMatchWarehouse(Order order, OrderDetail detail) {
-        Integer productType = detail.getProductType();
-        StrategyProductType spt = sptService.getOne(Wrappers.<StrategyProductType>lambdaQuery().eq(StrategyProductType::getParamType, 1)
-                .eq(StrategyProductType::getParamId, productType).eq(StrategyProductType::getIsStop, 0));
+        //判断策略生效
+        Object redisStrategy = redisUtil.get("strategyList");
+        List<Strategy> strategyList = JsonUtil.jsonToList(JsonUtil.beanToJson(redisStrategy), Strategy.class);
+        Strategy typeStrategy = strategyList.get(OrderStrategyConstant.PRODUCT_TYPE_ADDRESS - 1);
+        Strategy productStrategy = strategyList.get(OrderStrategyConstant.PRODUCT_ADDRESS - 1);
+        //如果开启商品分类策略
+        StrategyProductType spt = null;
+        if (typeStrategy.getIsStop() == 0) {
+            Integer productType = detail.getProductType();
+            spt = sptService.getOne(Wrappers.<StrategyProductType>lambdaQuery().eq(StrategyProductType::getParamType, 1)
+                    .eq(StrategyProductType::getParamId, productType).eq(StrategyProductType::getIsStop, 0));
+        }
+        //如果商品分类没有匹配到策略 则按商品匹配
         if (null == spt) {
-            return null;
+            //判断商品策略是否开启
+            if (productStrategy.getIsStop() == 0) {
+                spt = sptService.getOne(Wrappers.<StrategyProductType>lambdaQuery().eq(StrategyProductType::getParamType, 2)
+                        .eq(StrategyProductType::getParamId, detail.getProductId()).eq(StrategyProductType::getIsStop, 0));
+            } else {
+                return null;
+            }
         }
         //获取店铺关联仓库
         List<ShopWarehouse> list = shopWarehouseService.list(Wrappers.<ShopWarehouse>lambdaQuery().eq(ShopWarehouse::getShopId, order.getShopId()));
@@ -356,7 +373,7 @@ public class ShippingStrategyQuartz {
                     if (null != wpr) {
                         for (ShopWarehouse shopWarehouse : list) {
                             if (swr.getWarehouseId().equals(shopWarehouse.getWarehouseId())) {
-                                map.put(swr.getWarehouseId(),wpr.getPriority());
+                                map.put(swr.getWarehouseId(), wpr.getPriority());
                             }
                         }
                     }
