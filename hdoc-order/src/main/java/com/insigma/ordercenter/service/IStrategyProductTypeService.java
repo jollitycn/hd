@@ -24,6 +24,8 @@ public interface IStrategyProductTypeService extends IService<StrategyProductTyp
 
     List<StrategyProductTypeVO> strategyProductTypeList(Integer paramType);
 
+    List<StrategyProductTypeVO> strategyProduct(Integer paramType);
+
     Result addStrategyProductType(StrategyProductTypeVO sendReceiveInfoVO);
 
     Result deleteStrategyProductType(Integer strategyProductTypeId);

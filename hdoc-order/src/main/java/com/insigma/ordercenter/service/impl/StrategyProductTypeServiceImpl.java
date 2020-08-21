@@ -39,6 +39,17 @@ public class StrategyProductTypeServiceImpl extends ServiceImpl<StrategyProductT
     @Resource
     private IStrategyWarehouseRelationService strategyWarehouseRelationService;
 
+    @Override
+    public List<StrategyProductTypeVO> strategyProduct(Integer paramType) {
+        List<StrategyProductTypeVO> strategyProductTypeVOS = baseMapper.strategyProduct(paramType);
+        strategyProductTypeVOS.forEach(strategyProductTypeVO -> {
+            List<StrategyWarehouseRelationVO> strategyWarehouseRelationVOList = baseMapper.selectStrategyWarehouseRelationsById(strategyProductTypeVO.getStrategyProductTypeId());
+            List<StrategyRegionRelationVO> strategyRegionRelationVOS = baseMapper.selectStrategyRegionRelationsById(strategyProductTypeVO.getStrategyProductTypeId());
+            strategyProductTypeVO.setStrategyRegionRelations(strategyRegionRelationVOS);
+            strategyProductTypeVO.setStrategyWarehouseRelations(strategyWarehouseRelationVOList);
+        });
+        return strategyProductTypeVOS;
+    }
 
     @Override
     public List<StrategyProductTypeVO> strategyProductTypeList(Integer paramType) {

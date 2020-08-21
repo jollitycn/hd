@@ -17,6 +17,22 @@
             and sd.is_deleted = 0
     </select>
 
+    <select id="strategyProduct" resultType="com.insigma.ordercenter.entity.vo.StrategyProductTypeVO">
+        SELECT
+            spt.param_id,
+            spt.param_type,
+            spt.strategy_name,
+            p.product_name,
+            spt.is_stop,
+            spt.strategy_product_type_id
+        FROM
+            t_strategy_product_type spt
+            LEFT JOIN t_product p ON spt.param_id = p.product_id
+        WHERE
+            spt.param_type = 2
+            AND p.is_deleted = 0
+    </select>
+
     <select id="selectStrategyProductTypeById" resultType="com.insigma.ordercenter.entity.vo.StrategyProductTypeVO">
         SELECT
             spt.param_id,

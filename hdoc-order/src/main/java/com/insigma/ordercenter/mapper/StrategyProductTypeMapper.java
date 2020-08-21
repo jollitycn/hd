@@ -21,6 +21,8 @@ public interface StrategyProductTypeMapper extends BaseMapper<StrategyProductTyp
 
     List<StrategyProductTypeVO> strategyProductTypeList(@Param("paramType")Integer paramType);
 
+    List<StrategyProductTypeVO> strategyProduct(@Param("paramType")Integer paramType);
+
     StrategyProductTypeVO selectStrategyProductTypeById(@Param("strategyProductTypeId") Integer strategyProductTypeId);
 
     List<StrategyRegionRelationVO> selectStrategyRegionRelationsById(@Param("strategyProductTypeId") Integer strategyProductTypeId);
@@ -30,5 +32,7 @@ public interface StrategyProductTypeMapper extends BaseMapper<StrategyProductTyp
     Integer updateStrategyProductTypeIsStop(@Param("paramId")Long paramId);
 
     Integer updateStrategyProductTypeIsOn(@Param("strategyProductTypeId")Integer strategyProductTypeId);
+
+
 
 }
