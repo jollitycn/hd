@@ -18,7 +18,8 @@
         a.is_combo,
         a.product_nc,
         a.unit,
-        a.unit_quantity
+        a.unit_quantity,
+        a.ship_weight
         FROM
         t_product AS a
         LEFT JOIN sys_dictionary b ON a.brand=b.data_code

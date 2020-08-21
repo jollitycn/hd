@@ -67,4 +67,7 @@ public class ProductListPageVO extends BaseVO {
     @ApiModelProperty(value = "商品单位")
     private String unit;
 
+    @ApiModelProperty(value = "物流重量")
+    private Double shipWeight;
+
 }

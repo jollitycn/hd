@@ -74,6 +74,9 @@ public class OrderDetail implements Serializable {
     @ApiModelProperty(value = "是否是补货商品 0否 1是")
     private Integer isSupplement;
 
+    @ApiModelProperty(value = "物流重量")
+    private Double shipWeight;
+
     public static final String ORDER_DETAIL_ID = "order_detail_id";
 
     public static final String ORDER_ID = "order_id";
